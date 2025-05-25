@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, FlatList, StyleSheet, Image } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, FlatList, StyleSheet, Image, TextInput } from 'react-native';
 import { Link } from 'expo-router';
 
 const PLANTS = [
@@ -34,10 +34,21 @@ const PLANTS = [
 ];
 
 export default function Plants() {
+  const [query, setQuery] = useState('');
+  const filteredPlants = PLANTS.filter(p =>
+    p.name.toLowerCase().includes(query.toLowerCase())
+  );
+
   return (
     <View style={styles.container}>
+      <TextInput
+        value={query}
+        onChangeText={setQuery}
+        placeholder="Search plants…"
+        style={styles.search}
+      />
       <FlatList
-        data={PLANTS}
+        data={filteredPlants}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <Link key={item.id} href={`/plants/${item.id}`} asChild>
@@ -59,6 +70,7 @@ export default function Plants() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16, backgroundColor: '#fff' },
+  search: { padding: 8, margin: 16, borderRadius: 8, backgroundColor: '#f0f0f0' },
   card: {
     flexDirection: 'row',
     padding: 12,
