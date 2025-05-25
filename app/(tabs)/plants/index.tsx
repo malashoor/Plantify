@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, FlatList, StyleSheet, Image } from 'react-native';
+import { Link } from 'expo-router';
 
 const PLANTS = [
   {
@@ -39,15 +40,17 @@ export default function Plants() {
         data={PLANTS}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <View style={styles.card}>
-            <Image source={item.image} style={styles.image} resizeMode="cover" />
-            <View style={styles.info}>
-              <Text style={styles.name}>{item.name}</Text>
-              <Text style={styles.description}>{item.description}</Text>
-              <Text style={styles.careLabel}>Care:</Text>
-              <Text style={styles.care}>{item.care}</Text>
+          <Link key={item.id} href={`/plants/${item.id}`} asChild>
+            <View style={styles.card}>
+              <Image source={item.image} style={styles.image} resizeMode="cover" />
+              <View style={styles.info}>
+                <Text style={styles.name}>{item.name}</Text>
+                <Text style={styles.description}>{item.description}</Text>
+                <Text style={styles.careLabel}>Care:</Text>
+                <Text style={styles.care}>{item.care}</Text>
+              </View>
             </View>
-          </View>
+          </Link>
         )}
       />
     </View>
