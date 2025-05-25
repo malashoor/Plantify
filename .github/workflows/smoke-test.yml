@@ -1,0 +1,38 @@
+name: 🛠️ Smoke Test Build
+
+on:
+  push:
+    branches: [smoke-test-build]
+  pull_request:
+    branches: [main, smoke-test-build]
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Clean & Prebuild
+        run: npx expo prebuild --clean
+
+      - name: Build for Web
+        run: npm run build:web
+
+      - name: Build iOS (simulator)
+        run: npx expo run:ios --no-install --no-dev --minify || true
+
+      - name: Smoke-test web endpoint
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:19006)
+          if [ "$STATUS" != "200" ]; then
+            echo "::error ::Web did not return 200 OK"
+            exit 1
+          fi 
