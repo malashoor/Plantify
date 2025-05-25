@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { useSensorHub, SensorReading, SensorType } from '@/app/hooks/useSensorHub';
+import { useSensorHub, SensorReading, SensorType } from '@/hooks/useSensorHub';
 import { getSensorRules, subscribeSensorRules } from '@/services/sensorRulesService';
 import { SensorRule, SensorRuleEvaluationResult } from '@/types/sensorRules';
 import { useNotifications } from '@/hooks/useNotifications';
@@ -412,11 +412,4 @@ function formatSlackMessage(options: FormatSlackMessageOptions): string {
     message += `<@${mention}> `;
   }
   
-  message += `*Parameter:* ${parameter}\n`;
-  message += `*Current:* ${reading}${unit}\n`;
-  message += `*Threshold:* ${condition} ${threshold}${unit}\n`;
-  message += `*Duration:* ${duration}m\n`;
-  message += `*Status:* Parameter has been ${conditionText} threshold for ${duration} minutes.`;
-  
-  return message;
-} 
+  message += `
