@@ -10,6 +10,8 @@ export default function TabLayout() {
           let iconName: React.ComponentProps<typeof MaterialIcons>['name'];
           if (route.name === 'plants') {
             iconName = 'local-florist';
+          } else if (route.name === 'favorites') {
+            iconName = 'favorite';
           } else if (route.name === 'index') {
             iconName = 'home';
           } else if (route.name === 'settings') {
@@ -22,6 +24,7 @@ export default function TabLayout() {
       })}
     >
       <Tabs.Screen name="plants" options={{ title: 'Plants' }} />
+      <Tabs.Screen name="favorites" options={{ title: 'Favorites' }} />
       <Tabs.Screen name="index" options={{ title: 'Home' }} />
       <Tabs.Screen name="settings" options={{ title: 'Settings' }} />
     </Tabs>
