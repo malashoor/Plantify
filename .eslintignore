@@ -1,9 +1,0 @@
-node_modules/
-.expo/
-dist/
-web-build/
-coverage/
-*.config.js
-metro.config.js
-babel.config.js
-jest.config.js 
