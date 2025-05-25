@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <!-- Leaf -->
+  <ellipse cx="400" cy="512" rx="300" ry="450" fill="#2ECC71" />
+  <!-- Droplet -->
+  <path d="M624,162 C624,162 824,462 624,812 C424,462 624,162 624,162 Z" fill="#3498DB" />
+</svg>

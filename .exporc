@@ -1,0 +1,9 @@
+{
+  "cli": {
+    "promptToConfigurePushNotifications": false,
+    "requireFullProjectConfig": false,
+    "appVersionSource": "remote",
+    "autoInstall": true,
+    "nonInteractive": true
+  }
+}

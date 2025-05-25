@@ -1,0 +1,422 @@
+import { useEffect, useRef, useState, useCallback } from 'react';
+import { useSensorHub, SensorReading, SensorType } from '@/app/hooks/useSensorHub';
+import { getSensorRules, subscribeSensorRules } from '@/services/sensorRulesService';
+import { SensorRule, SensorRuleEvaluationResult } from '@/types/sensorRules';
+import { useNotifications } from '@/hooks/useNotifications';
+import { useAuth } from '@/hooks/useAuth';
+import { useTranslation } from '@/utils/i18n';
+import Constants from 'expo-constants';
+
+// Map from sensor parameter to sensor type
+const parameterToSensorType: Record<string, SensorType> = {
+  'pH': 'ph',
+  'EC': 'ec',
+  'temperature': 'temperature',
+  'water_level': 'water_level',
+  'nitrogen': 'nitrogen',
+  'phosphorus': 'phosphorus',
+  'potassium': 'potassium',
+};
+
+// Map of units for each parameter
+const parameterToUnit: Record<string, string> = {
+  'pH': '',
+  'EC': 'mS/cm',
+  'temperature': '°C',
+  'water_level': '%',
+  'nitrogen': 'ppm',
+  'phosphorus': 'ppm',
+  'potassium': 'ppm',
+};
+
+interface UseSensorRulesEngineProps {
+  plantId?: string;
+  systemId?: string;
+  refreshInterval?: number; // in milliseconds
+}
+
+interface RuleEvaluationState {
+  [ruleId: string]: {
+    startTime?: Date;
+    isConditionMet: boolean;
+    lastReadingValue: number;
+    lastTriggeredAt?: Date;
+  };
+}
+
+export function useSensorRulesEngine({ 
+  plantId, 
+  systemId,
+  refreshInterval = 60000 // 1 minute by default
+}: UseSensorRulesEngineProps) {
+  const { user } = useAuth();
+  const { t } = useTranslation();
+  const [rules, setRules] = useState<SensorRule[]>([]);
+  const [isRunning, setIsRunning] = useState(false);
+  const { scheduleNotification, getPlantById } = useNotifications();
+  const ruleStates = useRef<RuleEvaluationState>({});
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const unsubscribeRef = useRef<() => void | null>();
+  
+  // Get the sensor hub
+  const { 
+    addReading: addSensorReading,
+    getLatestReading,
+    subscribeToReadings,
+  } = useSensorHub({ 
+    systemId, 
+    plantId 
+  });
+
+  // Fetch rules on initial load
+  const fetchRules = useCallback(async () => {
+    if (!user) return;
+    
+    try {
+      const fetchedRules = await getSensorRules(plantId);
+      setRules(fetchedRules);
+      
+      // Initialize rule states
+      const newRuleStates: RuleEvaluationState = {};
+      fetchedRules.forEach(rule => {
+        newRuleStates[rule.id] = {
+          isConditionMet: false,
+          lastReadingValue: 0
+        };
+      });
+      
+      ruleStates.current = {
+        ...ruleStates.current,
+        ...newRuleStates
+      };
+    } catch (error) {
+      console.error('Error fetching sensor rules:', error);
+    }
+  }, [user, plantId]);
+
+  // Evaluate a rule against a specific reading
+  const evaluateRule = useCallback((rule: SensorRule, reading: number): boolean => {
+    switch (rule.condition) {
+      case '<':
+        return reading < rule.threshold;
+      case '>':
+        return reading > rule.threshold;
+      case '<=':
+        return reading <= rule.threshold;
+      case '>=':
+        return reading >= rule.threshold;
+      default:
+        return false;
+    }
+  }, []);
+
+  // Execute the appropriate action when a rule is triggered
+  const executeRuleAction = useCallback(async (result: SensorRuleEvaluationResult) => {
+    const { rule, reading, unit } = result;
+    const plant = plantId ? await getPlantById(plantId) : null;
+    const plantName = plant?.name || t('common.yourPlant');
+    
+    // Condition for notification text
+    const conditionText = rule.condition === '>' || rule.condition === '>=' 
+      ? t('sensorRule.above')
+      : t('sensorRule.below');
+    
+    // Create the notification message
+    const title = t('sensorRuleAlert.title', { 
+      parameter: rule.parameter,
+      plantName
+    });
+    
+    const body = t('sensorRuleAlert.body', {
+      parameter: rule.parameter,
+      condition: conditionText,
+      threshold: rule.threshold,
+      unit,
+      duration: rule.duration_minutes
+    });
+    
+    // Send push notification if enabled
+    if (rule.actions.notification) {
+      await scheduleNotification({
+        title,
+        body,
+        data: {
+          type: 'sensor_rule',
+          ruleId: rule.id,
+          plantId: rule.plant_id,
+        },
+      });
+    }
+    
+    // Send SMS if enabled and configured
+    if (rule.actions.sms) {
+      try {
+        await sendSMS({
+          to: user?.phone || '',
+          body: `${title}: ${body}`,
+        });
+      } catch (error) {
+        console.error('Error sending SMS:', error);
+      }
+    }
+    
+    // Send Slack message if enabled and configured
+    if (rule.actions.slack?.channel) {
+      try {
+        await sendSlackMessage({
+          channel: rule.actions.slack.channel,
+          message: formatSlackMessage({
+            plantName,
+            parameter: rule.parameter,
+            reading,
+            unit,
+            threshold: rule.threshold,
+            condition: rule.condition,
+            duration: rule.duration_minutes,
+            mention: rule.actions.slack.mention,
+          }),
+        });
+      } catch (error) {
+        console.error('Error sending Slack message:', error);
+      }
+    }
+    
+    // Mark rule as triggered
+    ruleStates.current[rule.id].lastTriggeredAt = new Date();
+  }, [plantId, t, scheduleNotification, user]);
+
+  // Process sensor readings and evaluate rules
+  const processReading = useCallback((reading: SensorReading) => {
+    if (!isRunning) return;
+    
+    const now = new Date();
+    
+    // Go through each rule and evaluate
+    rules.forEach(rule => {
+      // Skip rules for different parameters than this reading
+      const sensorType = parameterToSensorType[rule.parameter];
+      if (reading.sensor_type !== sensorType) return;
+      
+      const ruleState = ruleStates.current[rule.id];
+      if (!ruleState) return;
+      
+      // Get the reading value
+      const readingValue = reading.value;
+      ruleState.lastReadingValue = readingValue;
+      
+      // Check if condition is met
+      const conditionMet = evaluateRule(rule, readingValue);
+      
+      // If condition state changed
+      if (conditionMet !== ruleState.isConditionMet) {
+        ruleState.isConditionMet = conditionMet;
+        
+        if (conditionMet) {
+          // Start timing when condition becomes true
+          ruleState.startTime = now;
+        } else {
+          // Reset timing when condition becomes false
+          ruleState.startTime = undefined;
+        }
+      }
+      
+      // If condition has been met continuously
+      if (conditionMet && ruleState.startTime) {
+        const elapsedMinutes = (now.getTime() - ruleState.startTime.getTime()) / (1000 * 60);
+        
+        // If we've met the duration threshold and haven't triggered recently
+        if (elapsedMinutes >= rule.duration_minutes) {
+          // Check if we haven't triggered recently (prevent spam)
+          const canTrigger = !ruleState.lastTriggeredAt ||
+            ((now.getTime() - ruleState.lastTriggeredAt.getTime()) / (1000 * 60) >= 30); // 30 min cooldown
+          
+          if (canTrigger) {
+            // Execute the rule action
+            executeRuleAction({
+              triggered: true,
+              reading: readingValue,
+              unit: parameterToUnit[rule.parameter],
+              rule
+            });
+            
+            // Reset the timer
+            ruleState.startTime = now;
+          }
+        }
+      }
+    });
+  }, [rules, isRunning, evaluateRule, executeRuleAction]);
+
+  // Start the engine
+  const startEngine = useCallback(() => {
+    if (isRunning) return;
+    
+    const startTimestamp = new Date();
+    console.log(`Starting sensor rules engine at ${startTimestamp.toISOString()}`);
+    
+    // Subscribe to sensor readings
+    const unsubscribe = subscribeToReadings(processReading);
+    unsubscribeRef.current = unsubscribe;
+    
+    // Set up regular rule fetching
+    timerRef.current = setInterval(fetchRules, refreshInterval);
+    
+    // Subscribe to rule updates
+    const unsubscribeRules = subscribeSensorRules(setRules, plantId);
+    
+    // Set running state
+    setIsRunning(true);
+    
+    return () => {
+      if (unsubscribeRef.current) {
+        unsubscribeRef.current();
+      }
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+      unsubscribeRules();
+      setIsRunning(false);
+    };
+  }, [
+    isRunning, 
+    subscribeToReadings, 
+    processReading, 
+    fetchRules, 
+    refreshInterval, 
+    plantId
+  ]);
+  
+  // Stop the engine
+  const stopEngine = useCallback(() => {
+    console.log('Stopping sensor rules engine');
+    
+    if (unsubscribeRef.current) {
+      unsubscribeRef.current();
+      unsubscribeRef.current = undefined;
+    }
+    
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+    
+    setIsRunning(false);
+  }, []);
+
+  // Clean up on unmount
+  useEffect(() => {
+    fetchRules();
+    
+    return () => {
+      stopEngine();
+    };
+  }, [fetchRules, stopEngine]);
+
+  return {
+    rules,
+    isRunning,
+    startEngine,
+    stopEngine
+  };
+}
+
+// Helper functions for notification delivery
+
+interface SendSMSOptions {
+  to: string;
+  body: string;
+}
+
+async function sendSMS({ to, body }: SendSMSOptions) {
+  // If we have a Twilio endpoint configured
+  const twilioEndpoint = Constants.expoConfig?.extra?.TWILIO_ENDPOINT;
+  
+  if (!twilioEndpoint || !to) {
+    throw new Error('SMS service not configured or phone number missing');
+  }
+  
+  const response = await fetch(twilioEndpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ to, body }),
+  });
+  
+  if (!response.ok) {
+    throw new Error(`Failed to send SMS: ${response.statusText}`);
+  }
+  
+  return await response.json();
+}
+
+interface SendSlackMessageOptions {
+  channel: string;
+  message: string;
+}
+
+async function sendSlackMessage({ channel, message }: SendSlackMessageOptions) {
+  // If we have a Slack webhook URL configured
+  const slackWebhookUrl = Constants.expoConfig?.extra?.SLACK_WEBHOOK_URL;
+  
+  if (!slackWebhookUrl) {
+    throw new Error('Slack webhook URL not configured');
+  }
+  
+  const response = await fetch(slackWebhookUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      channel,
+      text: message,
+    }),
+  });
+  
+  if (!response.ok) {
+    throw new Error(`Failed to send Slack message: ${response.statusText}`);
+  }
+  
+  return await response.json();
+}
+
+interface FormatSlackMessageOptions {
+  plantName: string;
+  parameter: string;
+  reading: number;
+  unit: string;
+  threshold: number;
+  condition: string;
+  duration: number;
+  mention?: string;
+}
+
+function formatSlackMessage(options: FormatSlackMessageOptions): string {
+  const { 
+    plantName, 
+    parameter, 
+    reading, 
+    unit, 
+    threshold, 
+    condition, 
+    duration, 
+    mention 
+  } = options;
+  
+  const conditionText = condition === '>' || condition === '>=' ? 'above' : 'below';
+  
+  let message = `🚨 *${plantName} Sensor Alert*\n\n`;
+  
+  if (mention) {
+    message += `<@${mention}> `;
+  }
+  
+  message += `*Parameter:* ${parameter}\n`;
+  message += `*Current:* ${reading}${unit}\n`;
+  message += `*Threshold:* ${condition} ${threshold}${unit}\n`;
+  message += `*Duration:* ${duration}m\n`;
+  message += `*Status:* Parameter has been ${conditionText} threshold for ${duration} minutes.`;
+  
+  return message;
+} 

@@ -1,0 +1,53 @@
+{
+  "expo": {
+    "sdkVersion": "50.0.0",
+    "name": "Platify",
+    "slug": "platify-app",
+    "icon": "assets/icons/plantify_icon_1024x1024.png",
+    "splash": {
+      "image": "assets/icons/plantify_icon_1024x1024.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "assets/icons/plantify_icon_512x512.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.INTERNET"
+      ],
+      "package": "com.platify.app"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.platify.app",
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "Platify needs access to your microphone to record voice notes for your plant journal",
+        "NSSpeechRecognitionUsageDescription": "Platify needs access to speech recognition to transcribe your voice notes"
+      }
+    },
+    "web": {
+      "favicon": "assets/icons/plantify_icon_180x180.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "@react-native-voice/voice",
+        {
+          "microphonePermission": "Allow Platify to access your microphone for voice notes",
+          "speechRecognitionPermission": "Allow Platify to recognize your speech for voice notes"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "userInterfaceStyle": "automatic",
+    "assetBundlePatterns": ["**/*"],
+    "scheme": "platify",
+    "version": "1.0.0",
+    "orientation": "portrait"
+  }
+}

@@ -1,0 +1,64 @@
+🌿 Plantify - Your AI-Powered Plant Care Assistant
+
+Transform your gardening experience with Plantify, the intelligent plant care companion that helps you identify, grow, and nurture your plants with ease.
+
+🔍 KEY FEATURES:
+
+• Instant Plant Identification
+- Identify any plant with a single photo
+- Get detailed botanical information
+- Learn common and scientific names
+
+🌱 Comprehensive Care Instructions
+- Personalized watering schedules
+- Light and temperature requirements
+- Soil and fertilizer recommendations
+- Season-specific care tips
+
+🔬 Smart Disease Detection
+- Early disease identification
+- Treatment recommendations
+- Prevention tips
+- Health monitoring
+
+💧 Hydroponic System Management
+- Real-time monitoring
+- Nutrient tracking
+- pH and EC management
+- Growth optimization
+
+📱 Garden Management
+- Plant collection tracking
+- Care task reminders
+- Growth progress monitoring
+- Photo documentation
+
+🌤️ Weather-Based Care
+- Local weather integration
+- Adaptive care recommendations
+- Frost and heat warnings
+- Watering adjustments
+
+👥 Community Features
+- Knowledge sharing
+- Expert advice
+- Plant success stories
+- Local gardening tips
+
+Perfect for:
+• Beginner gardeners
+• Experienced plant enthusiasts
+• Hydroponic growers
+• Indoor plant parents
+• Garden centers
+• Landscaping professionals
+
+Download Plantify today and give your plants the expert care they deserve!
+
+Privacy & Security:
+• Your data is securely stored
+• Optional location services
+• Camera used only for plant ID
+• No unnecessary permissions
+
+Note: Some features require a Premium subscription. Free features include basic plant identification and care information.
