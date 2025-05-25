@@ -35,7 +35,7 @@
     "@expo/config-plugins": "~10.0.0",
     "@expo/vector-icons": "^14.0.2",
     "@lucide/lab": "^0.1.2",
-    "@react-native-async-storage/async-storage": "2.1.2",
+    "@react-native-async-storage/async-storage": "^2.1.2",
     "@react-native-community/datetimepicker": "8.3.0",
     "@react-native-community/hooks": "^100.1.0",
     "@react-native-community/netinfo": "^11.4.1",
