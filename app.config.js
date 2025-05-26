@@ -113,14 +113,13 @@ module.exports = {
     ],
     extra: {
       eas: {
-        projectId: 'YOUR_EAS_PROJECT_ID',
+        projectId: 'bf2e612b-23cd-4ac0-be30-d9ad9602656b',
       },
       supabaseUrl: process.env.EXPO_PUBLIC_SUPABASE_URL,
       supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,
       googleClientId: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID,
       appleClientId: process.env.EXPO_PUBLIC_APPLE_CLIENT_ID,
     },
-    owner: 'YOUR_EXPO_USERNAME',
     metro: {
       config: './metro.config.cjs',
     },
