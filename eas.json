@@ -5,6 +5,7 @@
   },
   "build": {
     "development": {
+      "owner": "m_ashoor",
       "developmentClient": true,
       "distribution": "internal",
       "ios": {
@@ -12,6 +13,7 @@
       }
     },
     "preview": {
+      "owner": "m_ashoor",
       "distribution": "internal",
       "ios": {
         "simulator": true,
@@ -25,6 +27,7 @@
       }
     },
     "production": {
+      "owner": "m_ashoor",
       "autoIncrement": true,
       "ios": {
         "resourceClass": "m-medium",
