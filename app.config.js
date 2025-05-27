@@ -120,6 +120,7 @@ module.exports = {
       googleClientId: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID,
       appleClientId: process.env.EXPO_PUBLIC_APPLE_CLIENT_ID,
     },
+    owner: 'm_ashoor',
     metro: {
       config: './metro.config.cjs',
     },
