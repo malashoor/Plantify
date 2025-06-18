@@ -4,29 +4,51 @@ import { MaterialIcons } from '@expo/vector-icons';
 export default function TabLayout() {
   return (
     <Tabs
-      screenOptions={({ route }) => ({
+      screenOptions={({ route }: { route: any }) => ({
         headerShown: false,
-        tabBarIcon: ({ color, size }) => {
-          let iconName: React.ComponentProps<typeof MaterialIcons>['name'];
-          if (route.name === 'plants') {
-            iconName = 'local-florist';
-          } else if (route.name === 'favorites') {
-            iconName = 'favorite';
-          } else if (route.name === 'index') {
+        tabBarActiveTintColor: '#2E7D32',
+        tabBarInactiveTintColor: '#888',
+        tabBarStyle: {
+          backgroundColor: '#fff',
+          borderTopWidth: 1,
+          borderTopColor: '#e0e0e0',
+          paddingBottom: 5,
+          paddingTop: 5,
+          height: 60,
+        },
+        tabBarIcon: ({ color, size }: { color: string; size: number }) => {
+          let iconName: any = 'help-outline';
+          
+          if (route.name === 'index') {
             iconName = 'home';
+          } else if (route.name === 'plants') {
+            iconName = 'local-florist';
+          } else if (route.name === 'identify') {
+            iconName = 'camera-alt';
           } else if (route.name === 'settings') {
             iconName = 'settings';
-          } else {
-            iconName = 'help-outline';
           }
+          
           return <MaterialIcons name={iconName} size={size} color={color} />;
         },
       })}
     >
-      <Tabs.Screen name="plants" options={{ title: 'Plants' }} />
-      <Tabs.Screen name="favorites" options={{ title: 'Favorites' }} />
-      <Tabs.Screen name="index" options={{ title: 'Home' }} />
-      <Tabs.Screen name="settings" options={{ title: 'Settings' }} />
+      <Tabs.Screen 
+        name="index" 
+        options={{ title: 'Home' }} 
+      />
+      <Tabs.Screen 
+        name="plants" 
+        options={{ title: 'Plants' }} 
+      />
+      <Tabs.Screen 
+        name="identify" 
+        options={{ title: 'Identify' }} 
+      />
+      <Tabs.Screen 
+        name="settings" 
+        options={{ title: 'Settings' }} 
+      />
     </Tabs>
   );
 }

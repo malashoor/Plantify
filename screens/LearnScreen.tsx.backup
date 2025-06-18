@@ -1,0 +1,535 @@
+import React, { useState, useCallback } from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  ActivityIndicator,
+  Dimensions,
+  Platform
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
+import { styled } from 'nativewind';
+import { router } from 'expo-router';
+import { useLearningCenter } from '../hooks/useLearningCenter';
+import { useI18n } from '../hooks/useI18n';
+import { useTheme } from '../hooks/useTheme';
+import { LearningModule } from '../types/learn';
+
+const StyledView = styled(View);
+const StyledText = styled(Text);
+const StyledTouchableOpacity = styled(TouchableOpacity);
+const StyledScrollView = styled(ScrollView);
+
+const { width: screenWidth } = Dimensions.get('window');
+
+export default function LearnScreen() {
+  const { t, locale, isRTL } = useI18n();
+  const { theme } = useTheme();
+  const {
+    modules,
+    userProgress,
+    achievements,
+    isLoading,
+    error,
+    totalStudyTime,
+    currentStreak,
+    weeklyGoalProgress,
+    startModule
+  } = useLearningCenter();
+
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+
+  // Filter modules by category
+  const filteredModules = modules.filter(module => 
+    selectedCategory === 'all' || module.category === selectedCategory
+  );
+
+  // Calculate module progress
+  const getModuleProgress = useCallback((module: LearningModule) => {
+    const moduleProgress = userProgress.filter(p => p.moduleId === module.id);
+    const completedLessons = moduleProgress.filter(p => p.status === 'completed').length;
+    const totalLessons = module.lessons.length || 3; // Default to 3 if not populated
+    return totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0;
+  }, [userProgress]);
+
+  // Get difficulty color
+  const getDifficultyColor = (difficulty: string) => {
+    switch (difficulty) {
+      case 'beginner': return '#10B981';
+      case 'intermediate': return '#F59E0B';
+      case 'advanced': return '#EF4444';
+      default: return theme.primary;
+    }
+  };
+
+  // Format time duration
+  const formatDuration = (minutes: number) => {
+    if (minutes < 60) {
+      return `${minutes}${t('learn.minutes')}`;
+    }
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+    return remainingMinutes > 0 
+      ? `${hours}h ${remainingMinutes}m`
+      : `${hours}h`;
+  };
+
+  // Format study time
+  const formatStudyTime = (seconds: number) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    
+    if (hours > 0) {
+      return `${hours}h ${minutes}m`;
+    }
+    return `${minutes}m`;
+  };
+
+  // Handle module selection
+  const handleModulePress = useCallback(async (module: LearningModule) => {
+    await startModule(module);
+    
+    // Navigate to lesson detail screen
+    router.push({
+      pathname: '/lesson-detail',
+      params: { moduleId: module.id }
+    });
+  }, [startModule]);
+
+  // Category filter options
+  const categories = [
+    { id: 'all', label: t('learn.categories.all'), icon: 'grid-outline' },
+    { id: 'fundamentals', label: t('learn.categories.fundamentals'), icon: 'leaf-outline' },
+    { id: 'water_science', label: t('learn.categories.waterScience'), icon: 'water-outline' },
+    { id: 'climate_control', label: t('learn.categories.climateControl'), icon: 'sunny-outline' },
+    { id: 'pest_disease', label: t('learn.categories.pestDisease'), icon: 'bug-outline' },
+    { id: 'maintenance', label: t('learn.categories.maintenance'), icon: 'build-outline' }
+  ];
+
+  // Render category filter
+  const renderCategoryFilter = () => (
+    <StyledView className="mb-6">
+      <StyledScrollView 
+        horizontal 
+        showsHorizontalScrollIndicator={false}
+        className="flex-row"
+      >
+        {categories.map((category) => (
+          <StyledTouchableOpacity
+            key={category.id}
+            className={`mr-3 px-4 py-2 rounded-full ${
+              selectedCategory === category.id ? 'opacity-100' : 'opacity-70'
+            }`}
+            style={{ 
+              backgroundColor: selectedCategory === category.id 
+                ? theme.primary 
+                : theme.surface 
+            }}
+            onPress={() => setSelectedCategory(category.id)}
+            accessibilityRole="button"
+            accessibilityLabel={`${t('learn.filterBy')} ${category.label}`}
+          >
+            <StyledView className="flex-row items-center">
+              <Ionicons 
+                name={category.icon as any} 
+                size={16} 
+                color={selectedCategory === category.id ? 'white' : theme.text} 
+              />
+              <StyledText 
+                className="ml-2 text-sm font-medium"
+                style={{ 
+                  color: selectedCategory === category.id ? 'white' : theme.text 
+                }}
+              >
+                {category.label}
+              </StyledText>
+            </StyledView>
+          </StyledTouchableOpacity>
+        ))}
+      </StyledScrollView>
+    </StyledView>
+  );
+
+  // Render learning stats
+  const renderLearningStats = () => (
+    <StyledView 
+      className="mb-6 p-4 rounded-xl"
+      style={{ backgroundColor: theme.surface }}
+    >
+      <StyledText 
+        className="text-lg font-bold mb-4"
+        style={{ color: theme.text }}
+      >
+        {t('learn.yourProgress')}
+      </StyledText>
+
+      <StyledView className="flex-row justify-between">
+        <StyledView className="flex-1 items-center">
+          <StyledView 
+            className="w-12 h-12 rounded-full items-center justify-center mb-2"
+            style={{ backgroundColor: theme.primary + '20' }}
+          >
+            <MaterialIcons name="schedule" size={24} color={theme.primary} />
+          </StyledView>
+          <StyledText 
+            className="text-2xl font-bold"
+            style={{ color: theme.text }}
+          >
+            {formatStudyTime(totalStudyTime)}
+          </StyledText>
+          <StyledText 
+            className="text-xs text-center"
+            style={{ color: theme.textSecondary }}
+          >
+            {t('learn.totalStudyTime')}
+          </StyledText>
+        </StyledView>
+
+        <StyledView className="flex-1 items-center">
+          <StyledView 
+            className="w-12 h-12 rounded-full items-center justify-center mb-2"
+            style={{ backgroundColor: theme.success + '20' }}
+          >
+            <MaterialIcons name="local-fire-department" size={24} color={theme.success} />
+          </StyledView>
+          <StyledText 
+            className="text-2xl font-bold"
+            style={{ color: theme.text }}
+          >
+            {currentStreak}
+          </StyledText>
+          <StyledText 
+            className="text-xs text-center"
+            style={{ color: theme.textSecondary }}
+          >
+            {t('learn.dayStreak')}
+          </StyledText>
+        </StyledView>
+
+        <StyledView className="flex-1 items-center">
+          <StyledView 
+            className="w-12 h-12 rounded-full items-center justify-center mb-2"
+            style={{ backgroundColor: theme.info + '20' }}
+          >
+            <MaterialIcons name="emoji-events" size={24} color={theme.info} />
+          </StyledView>
+          <StyledText 
+            className="text-2xl font-bold"
+            style={{ color: theme.text }}
+          >
+            {achievements.filter(a => a.unlockedAt).length}
+          </StyledText>
+          <StyledText 
+            className="text-xs text-center"
+            style={{ color: theme.textSecondary }}
+          >
+            {t('learn.achievements')}
+          </StyledText>
+        </StyledView>
+      </StyledView>
+
+      {/* Weekly Goal Progress */}
+      <StyledView className="mt-4">
+        <StyledView className="flex-row justify-between mb-2">
+          <StyledText 
+            className="text-sm font-medium"
+            style={{ color: theme.textSecondary }}
+          >
+            {t('learn.weeklyGoal')}
+          </StyledText>
+          <StyledText 
+            className="text-sm font-medium"
+            style={{ color: theme.textSecondary }}
+          >
+            {Math.round(weeklyGoalProgress)}%
+          </StyledText>
+        </StyledView>
+        <StyledView 
+          className="h-2 rounded-full"
+          style={{ backgroundColor: theme.border }}
+        >
+          <StyledView 
+            className="h-2 rounded-full"
+            style={{ 
+              backgroundColor: theme.primary,
+              width: `${Math.min(100, weeklyGoalProgress)}%`
+            }}
+          />
+        </StyledView>
+      </StyledView>
+    </StyledView>
+  );
+
+  // Render module card
+  const renderModuleCard = (module: LearningModule) => {
+    const progress = getModuleProgress(module);
+    const isUnlocked = module.isUnlocked;
+    
+    return (
+      <StyledTouchableOpacity
+        key={module.id}
+        className={`mb-4 rounded-xl overflow-hidden ${!isUnlocked ? 'opacity-60' : ''}`}
+        onPress={() => isUnlocked && handleModulePress(module)}
+        disabled={!isUnlocked}
+        accessibilityRole="button"
+        accessibilityLabel={`${module.title}. ${module.description}. ${
+          isUnlocked ? t('learn.tapToStart') : t('learn.moduleLockedShort')
+        }`}
+        accessibilityHint={isUnlocked ? t('learn.moduleAccessibilityHint') : ''}
+      >
+        <LinearGradient
+          colors={[module.color + '20', module.color + '10']}
+          className="p-4"
+        >
+          {/* Header */}
+          <StyledView className="flex-row items-center justify-between mb-3">
+            <StyledView className="flex-row items-center flex-1">
+              <StyledView 
+                className="w-10 h-10 rounded-full items-center justify-center mr-3"
+                style={{ backgroundColor: module.color + '30' }}
+              >
+                <Ionicons name={module.moduleIcon as any} size={20} color={module.color} />
+              </StyledView>
+              <StyledView className="flex-1">
+                <StyledText 
+                  className="text-lg font-semibold"
+                  style={{ color: theme.text }}
+                >
+                  {locale === 'ar' && module.titleAr ? module.titleAr : module.title}
+                </StyledText>
+                <StyledView className="flex-row items-center mt-1">
+                  <StyledView 
+                    className="px-2 py-1 rounded"
+                    style={{ backgroundColor: getDifficultyColor(module.difficulty) + '20' }}
+                  >
+                    <StyledText 
+                      className="text-xs font-medium"
+                      style={{ color: getDifficultyColor(module.difficulty) }}
+                    >
+                      {t(`learn.difficulty.${module.difficulty}`)}
+                    </StyledText>
+                  </StyledView>
+                  {!isUnlocked && (
+                    <StyledView className="ml-2 flex-row items-center">
+                      <Ionicons name="lock-closed" size={12} color={theme.textSecondary} />
+                      <StyledText 
+                        className="text-xs ml-1"
+                        style={{ color: theme.textSecondary }}
+                      >
+                        {t('learn.locked')}
+                      </StyledText>
+                    </StyledView>
+                  )}
+                </StyledView>
+              </StyledView>
+            </StyledView>
+          </StyledView>
+
+          {/* Description */}
+          <StyledText 
+            className="text-sm mb-4 leading-5"
+            style={{ color: theme.textSecondary }}
+          >
+            {locale === 'ar' && module.descriptionAr ? module.descriptionAr : module.description}
+          </StyledText>
+
+          {/* Progress Bar */}
+          {isUnlocked && progress > 0 && (
+            <StyledView className="mb-3">
+              <StyledView className="flex-row justify-between mb-1">
+                <StyledText 
+                  className="text-xs"
+                  style={{ color: theme.textSecondary }}
+                >
+                  {t('learn.progress')}
+                </StyledText>
+                <StyledText 
+                  className="text-xs"
+                  style={{ color: theme.textSecondary }}
+                >
+                  {Math.round(progress)}%
+                </StyledText>
+              </StyledView>
+              <StyledView 
+                className="h-1.5 rounded-full"
+                style={{ backgroundColor: theme.border }}
+              >
+                <StyledView 
+                  className="h-1.5 rounded-full"
+                  style={{ 
+                    backgroundColor: module.color,
+                    width: `${progress}%`
+                  }}
+                />
+              </StyledView>
+            </StyledView>
+          )}
+
+          {/* Module Stats */}
+          <StyledView className="flex-row justify-between items-center">
+            <StyledView className="flex-row items-center">
+              <Ionicons name="time-outline" size={16} color={theme.textSecondary} />
+              <StyledText 
+                className="text-sm ml-1"
+                style={{ color: theme.textSecondary }}
+              >
+                {formatDuration(module.estimatedDuration)}
+              </StyledText>
+            </StyledView>
+
+            <StyledView className="flex-row items-center">
+              <MaterialIcons name="quiz" size={16} color={theme.textSecondary} />
+              <StyledText 
+                className="text-sm ml-1"
+                style={{ color: theme.textSecondary }}
+              >
+                {module.lessons.length || 3} {t('learn.lessons')}
+              </StyledText>
+            </StyledView>
+
+            {isUnlocked && (
+              <StyledView className="flex-row items-center">
+                <MaterialIcons name="play-arrow" size={16} color={module.color} />
+                <StyledText 
+                  className="text-sm ml-1 font-medium"
+                  style={{ color: module.color }}
+                >
+                  {progress > 0 ? t('learn.continue') : t('learn.start')}
+                </StyledText>
+              </StyledView>
+            )}
+          </StyledView>
+
+          {/* Prerequisites */}
+          {!isUnlocked && module.prerequisites.length > 0 && (
+            <StyledView className="mt-3 pt-3 border-t" style={{ borderTopColor: theme.border }}>
+              <StyledText 
+                className="text-xs font-medium mb-1"
+                style={{ color: theme.textSecondary }}
+              >
+                {t('learn.requiresCompletion')}:
+              </StyledText>
+              <StyledText 
+                className="text-xs"
+                style={{ color: theme.textSecondary }}
+              >
+                {module.prerequisites
+                  .map(id => modules.find(m => m.id === id)?.title)
+                  .filter(Boolean)
+                  .join(', ')}
+              </StyledText>
+            </StyledView>
+          )}
+        </LinearGradient>
+      </StyledTouchableOpacity>
+    );
+  };
+
+  return (
+    <SafeAreaView className="flex-1" style={{ backgroundColor: theme.background }}>
+      {/* Header */}
+      <StyledView 
+        className="flex-row items-center justify-between p-4 border-b"
+        style={{ borderBottomColor: theme.border }}
+      >
+        <StyledTouchableOpacity
+          onPress={() => router.back()}
+          accessibilityRole="button"
+          accessibilityLabel={t('common.back')}
+        >
+          <Ionicons name="arrow-back" size={24} color={theme.text} />
+        </StyledTouchableOpacity>
+        
+        <StyledText 
+          className="text-xl font-bold"
+          style={{ color: theme.text }}
+        >
+          {t('learn.title')}
+        </StyledText>
+        
+        <StyledTouchableOpacity
+          onPress={() => router.push('/learn/bookmarks')}
+          accessibilityRole="button"
+          accessibilityLabel={t('learn.bookmarks')}
+        >
+          <Ionicons name="bookmark-outline" size={24} color={theme.text} />
+        </StyledTouchableOpacity>
+      </StyledView>
+
+      {/* Error Display */}
+      {error && (
+        <StyledView 
+          className="mx-4 mt-4 p-3 rounded-lg"
+          style={{ backgroundColor: theme.error + '20' }}
+        >
+          <StyledText style={{ color: theme.error }}>
+            {error}
+          </StyledText>
+        </StyledView>
+      )}
+
+      {/* Loading */}
+      {isLoading ? (
+        <StyledView className="flex-1 items-center justify-center">
+          <ActivityIndicator size="large" color={theme.primary} />
+          <StyledText 
+            className="mt-4 text-base"
+            style={{ color: theme.textSecondary }}
+          >
+            {t('learn.loadingModules')}
+          </StyledText>
+        </StyledView>
+      ) : (
+        <StyledScrollView 
+          className="flex-1 p-4"
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Learning Stats */}
+          {renderLearningStats()}
+
+          {/* Category Filter */}
+          {renderCategoryFilter()}
+
+          {/* Modules */}
+          <StyledView className="mb-6">
+            <StyledText 
+              className="text-lg font-bold mb-4"
+              style={{ color: theme.text }}
+            >
+              {selectedCategory === 'all' 
+                ? t('learn.allModules') 
+                : t('learn.categoryModules', { 
+                    category: categories.find(c => c.id === selectedCategory)?.label 
+                  })
+              }
+            </StyledText>
+            
+            {filteredModules.map(renderModuleCard)}
+          </StyledView>
+
+          {/* Empty State */}
+          {filteredModules.length === 0 && (
+            <StyledView className="flex-1 items-center justify-center py-12">
+              <MaterialIcons name="school" size={64} color={theme.textSecondary} />
+              <StyledText 
+                className="text-lg font-semibold mt-4 mb-2 text-center"
+                style={{ color: theme.text }}
+              >
+                {t('learn.noModulesFound')}
+              </StyledText>
+              <StyledText 
+                className="text-base text-center"
+                style={{ color: theme.textSecondary }}
+              >
+                {t('learn.tryDifferentCategory')}
+              </StyledText>
+            </StyledView>
+          )}
+        </StyledScrollView>
+      )}
+    </SafeAreaView>
+  );
+} 

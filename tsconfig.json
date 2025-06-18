@@ -6,7 +6,49 @@
     "baseUrl": ".",
     "paths": {
       "@/*": [
-        "./*"
+        "src/*"
+      ],
+      "@components/*": [
+        "src/components/*"
+      ],
+      "@screens/*": [
+        "src/screens/*"
+      ],
+      "@hooks/*": [
+        "src/hooks/*"
+      ],
+      "@services/*": [
+        "src/services/*"
+      ],
+      "@providers/*": [
+        "src/providers/*"
+      ],
+      "@types/*": [
+        "src/types/*"
+      ],
+      "@lib/*": [
+        "src/lib/*"
+      ],
+      "@app/*": [
+        "./app/*"
+      ],
+      "@src/*": [
+        "./src/*"
+      ],
+      "@utils/*": [
+        "./src/utils/*"
+      ],
+      "@data/*": [
+        "./src/data/*"
+      ],
+      "@constants/*": [
+        "./constants/*"
+      ],
+      "@theme/*": [
+        "./src/theme/*"
+      ],
+      "@layouts/*": [
+        "src/components/layout/*"
       ]
     },
     "allowSyntheticDefaultImports": true,
@@ -21,16 +63,25 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "typeRoots": [
+      "./node_modules/@types",
       "./types",
-      "./node_modules/@types"
+      "."
     ],
     "allowJs": true,
     "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "types": [
+      "jest",
+      "react-native",
+      "node"
+    ]
   },
   "include": [
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "global.d.ts",
+    "types/**/*.d.ts",
+    "nativewind-env.d.ts"
   ],
   "exclude": [
     "node_modules",

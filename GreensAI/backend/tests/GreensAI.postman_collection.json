@@ -1,0 +1,76 @@
+{
+  "info": {
+    "_postman_id": "7e9c2b3a-4f5d-4e1a-8c8a-1b2c3d4e5f6g",
+    "name": "GreensAI IAP Validation",
+    "description": "API endpoints for GreensAI in-app purchase validation",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Validate iOS Receipt",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"receipt\": \"{{ios_receipt}}\",\n    \"platform\": \"ios\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/validate-receipt",
+          "host": ["{{base_url}}"],
+          "path": ["api", "validate-receipt"]
+        },
+        "description": "Validate an iOS App Store receipt"
+      }
+    },
+    {
+      "name": "Validate Android Receipt",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"receipt\": \"{{android_receipt}}\",\n    \"platform\": \"android\",\n    \"productId\": \"{{android_product_id}}\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/validate-receipt",
+          "host": ["{{base_url}}"],
+          "path": ["api", "validate-receipt"]
+        },
+        "description": "Validate a Google Play Store receipt"
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://greensai.vercel.app",
+      "type": "string"
+    },
+    {
+      "key": "ios_receipt",
+      "value": "your_base64_encoded_receipt",
+      "type": "string"
+    },
+    {
+      "key": "android_receipt",
+      "value": "your_purchase_token",
+      "type": "string"
+    },
+    {
+      "key": "android_product_id",
+      "value": "your_product_id",
+      "type": "string"
+    }
+  ]
+} 

@@ -1,0 +1,217 @@
+{
+  "alerts": {
+    "affectedPlants": "Affected plants",
+    "tapToAcknowledge": "Tap to acknowledge this alert",
+    "weatherAlerts": {
+      "title": "Weather Alerts",
+      "heat": {
+        "critical": "Extreme heat warning",
+        "warning": "High temperature alert"
+      },
+      "cold": {
+        "critical": "Frost warning",
+        "warning": "Low temperature alert"
+      },
+      "wind": {
+        "critical": "Severe wind warning",
+        "warning": "High wind alert"
+      },
+      "humidity": {
+        "high": "High humidity alert",
+        "low": "Low humidity alert"
+      }
+    }
+  },
+  "settings": {
+    "smartWatering": {
+      "title": "Smart Watering",
+      "description": "Automatically adjust watering schedules based on weather conditions",
+      "toggle": "Enable Smart Watering",
+      "rainThreshold": "Skip watering if {{value}}mm or more rain expected",
+      "heatThreshold": "Increase watering above {{value}}°C",
+      "windThreshold": "Consider wind effects above {{value}}m/s",
+      "humidityThreshold": "Adjust for low humidity below {{value}}%"
+    }
+  },
+  "watering": {
+    "skip": "Skip watering",
+    "increase": "Increase watering",
+    "monitor": "Monitor moisture",
+    "recommendations": {
+      "title": "Watering Recommendations",
+      "urgent": {
+        "water": "Water immediately",
+        "reason": "Critical moisture level expected by {{days}} for {{environment}}"
+      },
+      "skip": {
+        "rain": "Skip watering",
+        "rainReason": "Rain expected ({{amount}}mm forecast)"
+      },
+      "water": {
+        "soon": "Water soon",
+        "reason": "Moisture will be low by {{days}} for {{environment}}{{factors ? '. Factors: ' + factors : ''}}"
+      },
+      "monitor": {
+        "declining": "Monitor moisture",
+        "declineReason": "Levels are gradually declining",
+        "stable": "Moisture optimal",
+        "stableReason": "Current levels are within target range"
+      },
+      "hydroponic": {
+        "nutrientsDue": "Nutrients due",
+        "nutrientsDueReason": "Add {{solution}} solution ({{ppm}} PPM)",
+        "nutrientsSoon": "Nutrients needed soon",
+        "nutrientsSoonReason": "Next nutrient cycle due {{days}}",
+        "stable": "System stable",
+        "stableReason": "Next nutrient cycle in {{days}} days"
+      },
+      "species": {
+        "overwatering": "Avoid overwatering",
+        "overwateringReason": "This species is sensitive to excess moisture"
+      },
+      "accessibility": {
+        "tapToSchedule": "Tap to schedule watering for this recommendation"
+      }
+    }
+  },
+  "moisture": {
+    "forecast": {
+      "title": "Moisture Forecast"
+    },
+    "current": "Current",
+    "predicted": "Predicted",
+    "factors": "Affecting Factors",
+    "override": "Override watering schedule",
+    "nextWatering": "Next watering: {{date}} at {{time}}",
+    "factor": {
+      "droughtTolerant": "Drought-tolerant species",
+      "moistureLoving": "Moisture-loving species",
+      "indoor": "Indoor environment",
+      "highTemp": "High temperature impact",
+      "lowHumidity": "Low humidity conditions",
+      "highWind": "High wind exposure",
+      "rainExpected": "Rain in forecast",
+      "overwateringSensitive": "Sensitive to overwatering",
+      "temperatureSensitive": "Temperature-sensitive species",
+      "retentionHigh": "Good moisture retention",
+      "retentionLow": "Poor moisture retention",
+      "seasonalChange": "Seasonal adjustment"
+    },
+    "risk": {
+      "low": "Optimal moisture conditions",
+      "medium": "Monitor moisture levels",
+      "high": "Risk of under-watering"
+    },
+    "tips": {
+      "overwatering": "This plant is sensitive to overwatering - let soil dry between waterings",
+      "underwatering": "This plant prefers consistent moisture - check soil regularly",
+      "temperature": "Adjust watering based on temperature changes",
+      "wind": "Protect from strong winds to prevent moisture loss",
+      "humidity": "Consider using a humidity tray or misting",
+      "seasonal": {
+        "summer": "Increase watering frequency in summer",
+        "winter": "Reduce watering in winter dormancy"
+      }
+    },
+    "timeline": {
+      "title": "7-Day Moisture Forecast",
+      "current": "Current Level",
+      "optimal": "Optimal Range",
+      "optimalRange": "Optimal moisture: {{min}}% - {{max}}%",
+      "rainExpected": "Expected rainfall: {{amount}}mm",
+      "confidence": {
+        "high": "High confidence prediction",
+        "medium": "Medium confidence prediction",
+        "low": "Low confidence prediction"
+      },
+      "factors": {
+        "temperature": "Temperature impact",
+        "humidity": "Humidity effect",
+        "wind": "Wind exposure",
+        "rain": "Rainfall forecast"
+      },
+      "tips": {
+        "risingTrend": "Moisture levels trending up",
+        "fallingTrend": "Moisture levels trending down",
+        "stableTrend": "Stable moisture levels",
+        "needsWater": "Watering recommended soon",
+        "skipWatering": "Skip next scheduled watering",
+        "watchWeather": "Monitor weather changes"
+      }
+    }
+  },
+  "environment": {
+    "indoor": {
+      "soil": "Indoor Soil",
+      "hydroponic": "Indoor Hydroponic"
+    },
+    "outdoor": {
+      "soil": "Outdoor Soil",
+      "hydroponic": "Outdoor Hydroponic"
+    }
+  },
+  "weather": {
+    "highTemp": "high temperature",
+    "strongWind": "strong wind",
+    "lowHumidity": "low humidity"
+  },
+  "filters": {
+    "all": "All Plants",
+    "indoor": "Indoor",
+    "outdoor": "Outdoor",
+    "hydroponic": "Hydroponic",
+    "accessibility": {
+      "tab": "{{filter}} ({{count}} plants). Double tap to filter plants by this environment.",
+      "selected": "Currently showing {{filter}} plants",
+      "restored": "Filter restored: {{filter}}",
+      "changed": "Filter changed to {{filter}}",
+      "error": "Could not restore your filter preference"
+    }
+  },
+  "dashboard": {
+    "filterHeading": "Filter by Environment",
+    "noPlants": "No plants found for this environment",
+    "addFirstPlant": "Add your first plant"
+  },
+  "plantCard": {
+    "nextWatering": "Next: {{date}}",
+    "accessibility": {
+      "card": "{{name}}, {{environment}}. Tap to view details."
+    }
+  },
+  "actions": {
+    "addPlant": "Add Plant",
+    "ok": "OK"
+  },
+  "sorting": {
+    "criteria": {
+      "nextWatering": "Next Watering",
+      "moisture": "Moisture Level",
+      "name": "Plant Name"
+    },
+    "direction": {
+      "asc": "ascending",
+      "desc": "descending"
+    },
+    "primaryLabel": "Primary Sort",
+    "secondaryLabel": "Then By",
+    "descriptionSingle": "{{criteria}} ({{direction}})",
+    "descriptionCombined": "{{primary}} ({{primaryDir}}), then by {{secondary}} ({{secondaryDir}})",
+    "accessibility": {
+      "button": "Sort plants - currently sorted by {{current}}",
+      "buttonHint": "Double tap to change sort order",
+      "primaryHint": "Set as primary sort criteria",
+      "secondaryHint": "Set as secondary sort criteria",
+      "toggleDirection": "Toggle sort direction - currently {{direction}}",
+      "restored": "Restored previous sort: {{criteria}}",
+      "changed": "Sort changed to: {{criteria}}"
+    }
+  },
+  "accessibility": {
+    "motion": {
+      "reduced": "Animations disabled for reduced motion",
+      "enabled": "Animations enabled",
+      "sortingComplete": "Plant list reordered"
+    }
+  }
+} 

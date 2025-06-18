@@ -1,4 +1,4 @@
-# Plant Identification App with Supabase Integration
+# GreensAI - Plant Identification App with Supabase Integration
 
 This is a React Native Expo application for plant identification, care, and hydroponic gardening support with Supabase integration for backend services.
 
@@ -44,41 +44,12 @@ If you encounter errors related to Expo or dependencies:
 
 ## Supabase Setup Instructions
 
-To connect your Supabase account to this application:
+The application is configured with the following Supabase credentials:
 
-1. **Create a Supabase Account**:
-
-   - Go to [Supabase](https://supabase.com/) and sign up for an account
-   - Create a new project
-
-2. **Get Your API Keys**:
-
-   - In your Supabase project dashboard, go to Project Settings > API
-   - Copy the "Project URL" and "anon public" key
-
-3. **Configure Environment Variables**:
-
-   - Create or edit the `.env` file in the root of your project
-   - Add the following variables:
-     ```
-     EXPO_PUBLIC_SUPABASE_URL=your_project_url
-     EXPO_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
-     ```
-
-4. **Restart Your Development Server**:
-
-   - Stop your current development server
-   - Run `npm run clean` to restart with a clean cache
-
-5. **Run Migrations**:
-
-   - In the Supabase dashboard, go to the SQL Editor
-   - Copy and paste the contents of each migration file from the `supabase/migrations` folder
-   - Run each migration to set up your database schema
-
-6. **Verify Connection**:
-   - Check the Supabase connection status in the Profile tab of the app
-   - If connected, you'll see a green indicator
+```env
+EXPO_PUBLIC_SUPABASE_URL=https://olgxhameijbqxjafrvxz.supabase.co
+EXPO_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9sZ3hoYW1laWpicXhqYWZydnh6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA4MzQzOTgsImV4cCI6MjA1NjQxMDM5OH0.ldF_a9ccd8odjpBtrACmo85RqMpJaoeXVLaVuBKVhkE
+```
 
 ## Database Schema
 
@@ -102,8 +73,8 @@ The application uses the following tables:
 
 ```env
 # Supabase Configuration
-EXPO_PUBLIC_SUPABASE_URL=your_supabase_url
-EXPO_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+EXPO_PUBLIC_SUPABASE_URL=https://olgxhameijbqxjafrvxz.supabase.co
+EXPO_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9sZ3hoYW1laWpicXhqYWZydnh6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA4MzQzOTgsImV4cCI6MjA1NjQxMDM5OH0.ldF_a9ccd8odjpBtrACmo85RqMpJaoeXVLaVuBKVhkE
 
 # Storage Configuration
 EXPO_PUBLIC_STORAGE_URL=your_storage_url
@@ -173,12 +144,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ### 1. Environment Variables
 
-Create a `.env` file in the root directory with the following variables:
+The application is configured with the following environment variables:
 
 ```env
-EXPO_PUBLIC_SUPABASE_URL=your_supabase_project_url
-EXPO_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-EXPO_PUBLIC_APP_URL=plantai://
+EXPO_PUBLIC_SUPABASE_URL=https://olgxhameijbqxjafrvxz.supabase.co
+EXPO_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9sZ3hoYW1laWpicXhqYWZydnh6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA4MzQzOTgsImV4cCI6MjA1NjQxMDM5OH0.ldF_a9ccd8odjpBtrACmo85RqMpJaoeXVLaVuBKVhkE
+EXPO_PUBLIC_APP_URL=greensai://
 EXPO_PUBLIC_GOOGLE_CLIENT_ID=your_google_client_id
 EXPO_PUBLIC_APPLE_CLIENT_ID=your_apple_client_id
 ```
@@ -196,7 +167,7 @@ EXPO_PUBLIC_APPLE_CLIENT_ID=your_apple_client_id
 4. Create OAuth 2.0 credentials (Web application type)
 5. Add authorized redirect URIs:
    - `https://[YOUR_PROJECT_REF].supabase.co/auth/v1/callback`
-   - `plantai://auth/callback`
+   - `greensai://auth/callback`
 6. Copy the Client ID and Client Secret
 7. Add them to your Supabase project in Authentication → Providers → Google
 
@@ -204,7 +175,7 @@ EXPO_PUBLIC_APPLE_CLIENT_ID=your_apple_client_id
 1. Go to [Apple Developer Console](https://developer.apple.com)
 2. Register your app and create a Service ID
 3. Configure Sign In with Apple:
-   - Add `plantai://auth/callback` as a return URL
+   - Add `greensai://auth/callback` as a return URL
    - Add `https://[YOUR_PROJECT_REF].supabase.co/auth/v1/callback` as a return URL
 4. Generate a key and download it
 5. Add the key and Service ID to your Supabase project in Authentication → Providers → Apple
@@ -263,3 +234,67 @@ npx expo run:android
 3. Commit your changes (`git commit -m 'Add some amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
+
+# 🌱 Plantify v1.0
+
+## 🚀 Production-Ready Launch Instructions
+
+### 🔐 Security & Auth
+- Ensure your `.env` contains valid Supabase credentials:
+  - `EXPO_PUBLIC_SUPABASE_URL=https://olgxhameijbqxjafrvxz.supabase.co`
+  - `EXPO_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9sZ3hoYW1laWpicXhqYWZydnh6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA4MzQzOTgsImV4cCI6MjA1NjQxMDM5OH0.ldF_a9ccd8odjpBtrACmo85RqMpJaoeXVLaVuBKVhkE`
+- The Supabase client (`app/lib/supabase.ts`) is imported across all screens.
+- Auth guards (`useProtectedRoute`) are used on all protected screens.
+- Forgot password logic is implemented and verified with Supabase email.
+
+### 🌱 Core Features
+- Registration flow works with new account creation.
+- Login with existing account is confirmed.
+- Dashboard loads with dynamic data from Supabase or mock fallback.
+- Logout clears session and redirects to onboarding/login.
+
+### 🧭 Navigation
+- Tab-based routing (expo-router) works end-to-end.
+- Back navigation functions on web and device.
+- Links between login ↔ register ↔ forgot password are functional.
+- Dashboard quick actions route to the correct screens.
+
+### 🌐 Internationalization
+- Language toggle visually updates the onboarding screen.
+- [Optional] i18n setup for translations using `react-i18next`.
+- [Optional] RTL mirrored layout confirmation.
+
+### 🧪 Manual Testing
+- Test on web: `npx expo start` then press `w`.
+- Test on Android device: press `a` or scan QR with Expo Go.
+- Test on iOS simulator: press `i` or scan QR with Expo Go.
+- [Optional] Use TestFlight/internal testing for iOS.
+- [Optional] Use Play Console closed testing for Android.
+
+---
+
+## 📦 Build & Deployment
+
+### 🛠 Build Commands (Expo EAS)
+```bash
+eas build --platform ios --profile production
+eas build --platform android --profile production
+```
+
+### 🔑 Apple + Google Accounts
+- Apple Developer Account ready
+- Google Play Console account set up
+- App icons and splash screen uploaded
+- App name and description finalized
+
+---
+
+## 🗃️ Environment Setup
+
+1. **Create a `.env` file in your project root:**
+   ```env
+   EXPO_PUBLIC_SUPABASE_URL=https://olgxhameijbqxjafrvxz.supabase.co
+   EXPO_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9sZ3hoYW1laWpicXhqYWZydnh6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA4MzQzOTgsImV4cCI6MjA1NjQxMDM5OH0.ldF_a9ccd8odjpBtrACmo85RqMpJaoeXVLaVuBKVhkE
+   SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+   APP_ENV=production
+   ```

@@ -19,12 +19,26 @@ module.exports = (() => {
     'web.tsx',
   ];
 
-  // Add proper alias for react-native-web
+  // Add proper alias for react-native-web and TypeScript paths
   config.resolver.extraNodeModules = {
     'react-native': path.resolve(__dirname, 'node_modules/react-native-web'),
     fs: path.resolve(__dirname, 'web-shims.js'),
     path: path.resolve(__dirname, 'web-shims.js'),
     os: path.resolve(__dirname, 'web-shims.js'),
+  };
+
+  // Add TypeScript path mapping support
+  config.resolver.alias = {
+    '@': path.resolve(__dirname, '.'),
+    'components': path.resolve(__dirname, 'components'),
+    'hooks': path.resolve(__dirname, 'hooks'),
+    'lib': path.resolve(__dirname, 'lib'),
+    'types': path.resolve(__dirname, 'types'),
+    'utils': path.resolve(__dirname, 'utils'),
+    'data': path.resolve(__dirname, 'data'),
+    'services': path.resolve(__dirname, 'services'),
+    'constants': path.resolve(__dirname, 'constants'),
+    'theme': path.resolve(__dirname, 'theme'),
   };
 
   // Optimize Metro configuration

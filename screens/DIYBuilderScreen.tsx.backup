@@ -1,0 +1,1235 @@
+import React, { useState, useCallback, useEffect } from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  TextInput,
+  Alert,
+  ActivityIndicator,
+  Image,
+  Dimensions,
+  Platform
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons, MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
+import { styled } from 'nativewind';
+import { router } from 'expo-router';
+import * as ImagePicker from 'expo-image-picker';
+import { useDIYBuilder } from '../hooks/useDIYBuilder';
+import { useI18n } from '../hooks/useI18n';
+import { useTheme } from '../hooks/useTheme';
+import { 
+  SystemType, 
+  CalculationInput, 
+  MaterialsList,
+  UserBuildImage,
+  BuildStep
+} from '../types/diy-builder';
+
+const StyledView = styled(View);
+const StyledText = styled(Text);
+const StyledTouchableOpacity = styled(TouchableOpacity);
+const StyledTextInput = styled(TextInput);
+const StyledScrollView = styled(ScrollView);
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+
+type ViewMode = 'selection' | 'calculator' | 'guide' | 'journal' | 'materials';
+
+interface CalculatorState {
+  systemLength: string;
+  systemWidth: string;
+  systemHeight: string;
+  plantCount: string;
+  plantSpacing: string;
+  buildName: string;
+}
+
+export default function DIYBuilderScreen() {
+  const { t, locale, isRTL } = useI18n();
+  const { theme } = useTheme();
+  const {
+    systemTypes,
+    selectedSystemType,
+    currentBuild,
+    calculationResults,
+    materialsList,
+    isLoading,
+    error,
+    selectSystemType,
+    calculateMaterials,
+    generateMaterialsList,
+    exportMaterialsList,
+    startNewBuild,
+    completeStep,
+    announceProgress,
+    calculatePumpRequirements
+  } = useDIYBuilder();
+
+  const [viewMode, setViewMode] = useState<ViewMode>('selection');
+  const [calculatorState, setCalculatorState] = useState<CalculatorState>({
+    systemLength: '8',
+    systemWidth: '4',
+    systemHeight: '2',
+    plantCount: '12',
+    plantSpacing: '6',
+    buildName: ''
+  });
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [stepNotes, setStepNotes] = useState('');
+  const [selectedImages, setSelectedImages] = useState<UserBuildImage[]>([]);
+
+  // Accessibility announcement on view change
+  useEffect(() => {
+    const announcements = {
+      selection: t('diy.voice.systemSelection'),
+      calculator: t('diy.voice.calculator'),
+      guide: t('diy.voice.guide'),
+      journal: t('diy.voice.journal'),
+      materials: t('diy.voice.materials')
+    };
+    
+    announceProgress(announcements[viewMode]);
+  }, [viewMode, announceProgress, t]);
+
+  // Handle system selection
+  const handleSystemSelect = useCallback((system: SystemType) => {
+    selectSystemType(system);
+    setViewMode('calculator');
+    
+    // Update build name with system type
+    setCalculatorState(prev => ({
+      ...prev,
+      buildName: prev.buildName || `${system.name} Build`
+    }));
+  }, [selectSystemType]);
+
+  // Handle calculations
+  const handleCalculate = useCallback(async () => {
+    if (!selectedSystemType) return;
+
+    try {
+      const inputs: CalculationInput = {
+        systemLength: parseFloat(calculatorState.systemLength),
+        systemWidth: parseFloat(calculatorState.systemWidth),
+        systemHeight: parseFloat(calculatorState.systemHeight),
+        plantCount: parseInt(calculatorState.plantCount),
+        plantSpacing: parseFloat(calculatorState.plantSpacing)
+      };
+
+      // Validate inputs
+      if (Object.values(inputs).some(val => isNaN(val) || val <= 0)) {
+        Alert.alert(t('diy.error'), t('diy.invalidInputs'));
+        return;
+      }
+
+      const results = calculateMaterials(inputs);
+      
+      // Start new build
+      await startNewBuild(
+        selectedSystemType.id,
+        calculatorState.buildName || `${selectedSystemType.name} Build`,
+        inputs
+      );
+
+      setViewMode('materials');
+      announceProgress(t('diy.voice.calculationComplete'));
+    } catch (error) {
+      console.error('Calculation failed:', error);
+      Alert.alert(t('diy.error'), t('diy.calculationFailed'));
+    }
+  }, [selectedSystemType, calculatorState, calculateMaterials, startNewBuild, t, announceProgress]);
+
+  // Handle step completion
+  const handleStepComplete = useCallback(async () => {
+    if (!currentBuild || !buildSteps) return;
+
+    const currentStep = buildSteps[currentStepIndex];
+    if (!currentStep) return;
+
+    try {
+      await completeStep(currentStep.id, stepNotes, selectedImages);
+      
+      if (currentStepIndex < buildSteps.length - 1) {
+        setCurrentStepIndex(prev => prev + 1);
+        setStepNotes('');
+        setSelectedImages([]);
+      } else {
+        // Build completed
+        Alert.alert(
+          t('diy.buildComplete.title'),
+          t('diy.buildComplete.message'),
+          [{ text: t('common.ok'), onPress: () => setViewMode('journal') }]
+        );
+      }
+    } catch (error) {
+      console.error('Failed to complete step:', error);
+      Alert.alert(t('diy.error'), t('diy.stepCompletionFailed'));
+    }
+  }, [currentBuild, currentStepIndex, stepNotes, selectedImages, completeStep, t]);
+
+  // Handle image selection
+  const handleImagePicker = useCallback(async () => {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsMultipleSelection: true,
+        quality: 0.8,
+        aspect: [4, 3]
+      });
+
+      if (!result.canceled && result.assets) {
+        const newImages: UserBuildImage[] = result.assets.map((asset, index) => ({
+          id: `img_${Date.now()}_${index}`,
+          stepId: buildSteps?.[currentStepIndex]?.id,
+          imageUri: asset.uri,
+          caption: stepNotes || t('diy.buildProgress'),
+          timestamp: new Date(),
+          type: 'progress'
+        }));
+        
+        setSelectedImages(prev => [...prev, ...newImages]);
+      }
+    } catch (error) {
+      console.error('Image picker failed:', error);
+      Alert.alert(t('diy.error'), t('diy.imagePickerFailed'));
+    }
+  }, [stepNotes, currentStepIndex, t]);
+
+  // Mock build steps data (in a real app, this would come from the template)
+  const buildSteps: BuildStep[] = selectedSystemType ? [
+    {
+      id: 'step_1',
+      stepNumber: 1,
+      title: t('diy.steps.planning.title'),
+      description: t('diy.steps.planning.description'),
+      estimatedTime: 30,
+      tools: [],
+      materials: [],
+      images: [],
+      tips: [t('diy.steps.planning.tip1'), t('diy.steps.planning.tip2')],
+      warnings: [],
+      checklistItems: [
+        { id: 'check_1', text: t('diy.steps.planning.check1'), required: true },
+        { id: 'check_2', text: t('diy.steps.planning.check2'), required: true }
+      ]
+    },
+    {
+      id: 'step_2',
+      stepNumber: 2,
+      title: t('diy.steps.preparation.title'),
+      description: t('diy.steps.preparation.description'),
+      estimatedTime: 45,
+      tools: [],
+      materials: [],
+      images: [],
+      tips: [t('diy.steps.preparation.tip1')],
+      warnings: [t('diy.steps.preparation.warning1')],
+      checklistItems: [
+        { id: 'check_3', text: t('diy.steps.preparation.check1'), required: true }
+      ]
+    },
+    {
+      id: 'step_3',
+      stepNumber: 3,
+      title: t('diy.steps.assembly.title'),
+      description: t('diy.steps.assembly.description'),
+      estimatedTime: 120,
+      tools: [],
+      materials: [],
+      images: [],
+      tips: [t('diy.steps.assembly.tip1')],
+      warnings: [t('diy.steps.assembly.warning1')],
+      checklistItems: [
+        { id: 'check_4', text: t('diy.steps.assembly.check1'), required: true }
+      ]
+    }
+  ] : [];
+
+  // Render system selection
+  const renderSystemSelection = () => (
+    <StyledView className="flex-1 p-4">
+      <StyledText 
+        className="text-2xl font-bold mb-6 text-center"
+        style={{ color: theme.text }}
+      >
+        {t('diy.selectSystem')}
+      </StyledText>
+
+      <StyledScrollView 
+        className="flex-1"
+        showsVerticalScrollIndicator={false}
+      >
+        {systemTypes.map((system) => (
+          <StyledTouchableOpacity
+            key={system.id}
+            className="mb-4 rounded-xl overflow-hidden"
+            onPress={() => handleSystemSelect(system)}
+            accessibilityRole="button"
+            accessibilityLabel={`${t('diy.selectSystem')} ${system.name}`}
+            accessibilityHint={system.description}
+          >
+            <LinearGradient
+              colors={[theme.primary + '20', theme.primary + '10']}
+              className="p-4"
+            >
+              <StyledView className="flex-row items-center justify-between mb-3">
+                <StyledText 
+                  className="text-lg font-semibold flex-1"
+                  style={{ color: theme.text }}
+                >
+                  {system.name}
+                </StyledText>
+                <StyledView 
+                  className="px-3 py-1 rounded-full"
+                  style={{ backgroundColor: getDifficultyColor(system.difficulty) }}
+                >
+                  <StyledText className="text-white text-sm font-medium">
+                    {t(`diy.difficulty.${system.difficulty}`)}
+                  </StyledText>
+                </StyledView>
+              </StyledView>
+
+              <StyledText 
+                className="text-sm mb-3 leading-5"
+                style={{ color: theme.textSecondary }}
+              >
+                {system.description}
+              </StyledText>
+
+              <StyledView className="flex-row justify-between items-center">
+                <StyledView className="flex-row items-center">
+                  <Ionicons name="time-outline" size={16} color={theme.textSecondary} />
+                  <StyledText 
+                    className="text-sm ml-1"
+                    style={{ color: theme.textSecondary }}
+                  >
+                    {system.estimatedTime}h
+                  </StyledText>
+                </StyledView>
+
+                <StyledView className="flex-row items-center">
+                  <MaterialIcons name="attach-money" size={16} color={theme.textSecondary} />
+                  <StyledText 
+                    className="text-sm"
+                    style={{ color: theme.textSecondary }}
+                  >
+                    ${system.estimatedCost.min}-${system.estimatedCost.max}
+                  </StyledText>
+                </StyledView>
+
+                <StyledView className="flex-row items-center">
+                  <FontAwesome5 name="seedling" size={14} color={theme.textSecondary} />
+                  <StyledText 
+                    className="text-sm ml-1"
+                    style={{ color: theme.textSecondary }}
+                  >
+                    {system.capacity.plants} plants
+                  </StyledText>
+                </StyledView>
+              </StyledView>
+
+              <StyledView className="mt-3 pt-3 border-t-1" style={{ borderTopColor: theme.border }}>
+                <StyledText 
+                  className="text-xs font-medium mb-1"
+                  style={{ color: theme.textSecondary }}
+                >
+                  {t('diy.bestFor')}:
+                </StyledText>
+                <StyledText 
+                  className="text-sm"
+                  style={{ color: theme.text }}
+                >
+                  {system.bestFor.join(', ')}
+                </StyledText>
+              </StyledView>
+            </LinearGradient>
+          </StyledTouchableOpacity>
+        ))}
+      </StyledScrollView>
+    </StyledView>
+  );
+
+  // Render calculator
+  const renderCalculator = () => (
+    <StyledView className="flex-1 p-4">
+      <StyledView className="flex-row items-center justify-between mb-6">
+        <StyledTouchableOpacity
+          onPress={() => setViewMode('selection')}
+          className="p-2"
+          accessibilityRole="button"
+          accessibilityLabel={t('common.back')}
+        >
+          <Ionicons 
+            name={isRTL ? "chevron-forward" : "chevron-back"} 
+            size={24} 
+            color={theme.text} 
+          />
+        </StyledTouchableOpacity>
+        
+        <StyledText 
+          className="text-xl font-bold flex-1 text-center"
+          style={{ color: theme.text }}
+        >
+          {selectedSystemType?.name}
+        </StyledText>
+        
+        <StyledView className="w-8" />
+      </StyledView>
+
+      <StyledScrollView 
+        className="flex-1"
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Build Name */}
+        <StyledView className="mb-6">
+          <StyledText 
+            className="text-lg font-semibold mb-2"
+            style={{ color: theme.text }}
+          >
+            {t('diy.buildName')}
+          </StyledText>
+          <StyledTextInput
+            className="p-4 rounded-xl text-base"
+            style={{ 
+              backgroundColor: theme.surface,
+              color: theme.text,
+              borderWidth: 1,
+              borderColor: theme.border
+            }}
+            value={calculatorState.buildName}
+            onChangeText={(text) => setCalculatorState(prev => ({ ...prev, buildName: text }))}
+            placeholder={t('diy.buildNamePlaceholder')}
+            placeholderTextColor={theme.textSecondary}
+            accessibilityLabel={t('diy.buildName')}
+          />
+        </StyledView>
+
+        {/* System Dimensions */}
+        <StyledView className="mb-6">
+          <StyledText 
+            className="text-lg font-semibold mb-4"
+            style={{ color: theme.text }}
+          >
+            {t('diy.dimensions')}
+          </StyledText>
+          
+          <StyledView className="flex-row justify-between mb-3">
+            <StyledView className="flex-1 mr-2">
+              <StyledText 
+                className="text-sm font-medium mb-2"
+                style={{ color: theme.textSecondary }}
+              >
+                {t('diy.length')} (ft)
+              </StyledText>
+              <StyledTextInput
+                className="p-3 rounded-lg text-center"
+                style={{ 
+                  backgroundColor: theme.surface,
+                  color: theme.text,
+                  borderWidth: 1,
+                  borderColor: theme.border
+                }}
+                value={calculatorState.systemLength}
+                onChangeText={(text) => setCalculatorState(prev => ({ ...prev, systemLength: text }))}
+                keyboardType="numeric"
+                accessibilityLabel={t('diy.length')}
+              />
+            </StyledView>
+
+            <StyledView className="flex-1 mx-1">
+              <StyledText 
+                className="text-sm font-medium mb-2"
+                style={{ color: theme.textSecondary }}
+              >
+                {t('diy.width')} (ft)
+              </StyledText>
+              <StyledTextInput
+                className="p-3 rounded-lg text-center"
+                style={{ 
+                  backgroundColor: theme.surface,
+                  color: theme.text,
+                  borderWidth: 1,
+                  borderColor: theme.border
+                }}
+                value={calculatorState.systemWidth}
+                onChangeText={(text) => setCalculatorState(prev => ({ ...prev, systemWidth: text }))}
+                keyboardType="numeric"
+                accessibilityLabel={t('diy.width')}
+              />
+            </StyledView>
+
+            <StyledView className="flex-1 ml-2">
+              <StyledText 
+                className="text-sm font-medium mb-2"
+                style={{ color: theme.textSecondary }}
+              >
+                {t('diy.height')} (ft)
+              </StyledText>
+              <StyledTextInput
+                className="p-3 rounded-lg text-center"
+                style={{ 
+                  backgroundColor: theme.surface,
+                  color: theme.text,
+                  borderWidth: 1,
+                  borderColor: theme.border
+                }}
+                value={calculatorState.systemHeight}
+                onChangeText={(text) => setCalculatorState(prev => ({ ...prev, systemHeight: text }))}
+                keyboardType="numeric"
+                accessibilityLabel={t('diy.height')}
+              />
+            </StyledView>
+          </StyledView>
+        </StyledView>
+
+        {/* Plant Configuration */}
+        <StyledView className="mb-6">
+          <StyledText 
+            className="text-lg font-semibold mb-4"
+            style={{ color: theme.text }}
+          >
+            {t('diy.plantConfiguration')}
+          </StyledText>
+          
+          <StyledView className="flex-row justify-between">
+            <StyledView className="flex-1 mr-2">
+              <StyledText 
+                className="text-sm font-medium mb-2"
+                style={{ color: theme.textSecondary }}
+              >
+                {t('diy.plantCount')}
+              </StyledText>
+              <StyledTextInput
+                className="p-3 rounded-lg text-center"
+                style={{ 
+                  backgroundColor: theme.surface,
+                  color: theme.text,
+                  borderWidth: 1,
+                  borderColor: theme.border
+                }}
+                value={calculatorState.plantCount}
+                onChangeText={(text) => setCalculatorState(prev => ({ ...prev, plantCount: text }))}
+                keyboardType="numeric"
+                accessibilityLabel={t('diy.plantCount')}
+              />
+            </StyledView>
+
+            <StyledView className="flex-1 ml-2">
+              <StyledText 
+                className="text-sm font-medium mb-2"
+                style={{ color: theme.textSecondary }}
+              >
+                {t('diy.spacing')} (in)
+              </StyledText>
+              <StyledTextInput
+                className="p-3 rounded-lg text-center"
+                style={{ 
+                  backgroundColor: theme.surface,
+                  color: theme.text,
+                  borderWidth: 1,
+                  borderColor: theme.border
+                }}
+                value={calculatorState.plantSpacing}
+                onChangeText={(text) => setCalculatorState(prev => ({ ...prev, plantSpacing: text }))}
+                keyboardType="numeric"
+                accessibilityLabel={t('diy.spacing')}
+              />
+            </StyledView>
+          </StyledView>
+        </StyledView>
+
+        {/* Calculate Button */}
+        <StyledTouchableOpacity
+          className="mt-6 rounded-xl overflow-hidden"
+          onPress={handleCalculate}
+          disabled={isLoading}
+          accessibilityRole="button"
+          accessibilityLabel={t('diy.calculateMaterials')}
+        >
+          <LinearGradient
+            colors={[theme.primary, theme.primary + 'CC']}
+            className="p-4 flex-row items-center justify-center"
+          >
+            {isLoading ? (
+              <ActivityIndicator color="white" />
+            ) : (
+              <>
+                <MaterialIcons name="calculate" size={24} color="white" />
+                <StyledText className="text-white text-lg font-semibold ml-2">
+                  {t('diy.calculateMaterials')}
+                </StyledText>
+              </>
+            )}
+          </LinearGradient>
+        </StyledTouchableOpacity>
+      </StyledScrollView>
+    </StyledView>
+  );
+
+  // Get difficulty color
+  const getDifficultyColor = (difficulty: string) => {
+    switch (difficulty) {
+      case 'beginner': return '#10B981';
+      case 'intermediate': return '#F59E0B';
+      case 'advanced': return '#EF4444';
+      default: return theme.primary;
+    }
+  };
+
+  // Render materials list
+  const renderMaterialsList = () => (
+    <StyledView className="flex-1 p-4">
+      <StyledView className="flex-row items-center justify-between mb-6">
+        <StyledTouchableOpacity
+          onPress={() => setViewMode('calculator')}
+          className="p-2"
+          accessibilityRole="button"
+          accessibilityLabel={t('common.back')}
+        >
+          <Ionicons 
+            name={isRTL ? "chevron-forward" : "chevron-back"} 
+            size={24} 
+            color={theme.text} 
+          />
+        </StyledTouchableOpacity>
+        
+        <StyledText 
+          className="text-xl font-bold flex-1 text-center"
+          style={{ color: theme.text }}
+        >
+          {t('diy.materialsList')}
+        </StyledText>
+        
+        <StyledTouchableOpacity
+          onPress={() => setViewMode('guide')}
+          className="p-2"
+          accessibilityRole="button"
+          accessibilityLabel={t('diy.startBuild')}
+        >
+          <MaterialIcons name="build" size={24} color={theme.primary} />
+        </StyledTouchableOpacity>
+      </StyledView>
+
+      {calculationResults && (
+        <StyledScrollView 
+          className="flex-1"
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Cost Summary */}
+          <StyledView 
+            className="mb-6 p-4 rounded-xl"
+            style={{ backgroundColor: theme.surface }}
+          >
+            <StyledText 
+              className="text-lg font-bold mb-2"
+              style={{ color: theme.text }}
+            >
+              {t('diy.costSummary')}
+            </StyledText>
+            <StyledText 
+              className="text-3xl font-bold"
+              style={{ color: theme.primary }}
+            >
+              ${calculationResults.totalCost.toFixed(2)}
+            </StyledText>
+            <StyledText 
+              className="text-sm mt-1"
+              style={{ color: theme.textSecondary }}
+            >
+              {t('diy.estimatedTotal')}
+            </StyledText>
+          </StyledView>
+
+          {/* Materials List */}
+          <StyledView className="mb-6">
+            <StyledText 
+              className="text-lg font-semibold mb-4"
+              style={{ color: theme.text }}
+            >
+              {t('diy.requiredMaterials')}
+            </StyledText>
+            
+            {calculationResults.materials.map((material, index) => (
+              <StyledView 
+                key={index}
+                className="mb-3 p-4 rounded-xl"
+                style={{ backgroundColor: theme.surface }}
+              >
+                <StyledView className="flex-row justify-between items-start mb-2">
+                  <StyledText 
+                    className="text-base font-semibold flex-1"
+                    style={{ color: theme.text }}
+                  >
+                    {material.materialId.replace(/_/g, ' ').toUpperCase()}
+                  </StyledText>
+                  <StyledText 
+                    className="text-lg font-bold ml-2"
+                    style={{ color: theme.primary }}
+                  >
+                    {material.calculatedQuantity}
+                  </StyledText>
+                </StyledView>
+                <StyledText 
+                  className="text-sm mb-2"
+                  style={{ color: theme.textSecondary }}
+                >
+                  {material.explanation}
+                </StyledText>
+                <StyledText 
+                  className="text-xs"
+                  style={{ color: theme.textSecondary }}
+                >
+                  {t('diy.formula')}: {material.formula}
+                </StyledText>
+              </StyledView>
+            ))}
+          </StyledView>
+
+          {/* Warnings */}
+          {calculationResults.warnings.length > 0 && (
+            <StyledView className="mb-6">
+              <StyledText 
+                className="text-lg font-semibold mb-3"
+                style={{ color: theme.text }}
+              >
+                ⚠️ {t('diy.warnings')}
+              </StyledText>
+              {calculationResults.warnings.map((warning, index) => (
+                <StyledView 
+                  key={index}
+                  className="mb-2 p-3 rounded-lg"
+                  style={{ backgroundColor: theme.warning + '20' }}
+                >
+                  <StyledText style={{ color: theme.warning }}>
+                    {warning}
+                  </StyledText>
+                </StyledView>
+              ))}
+            </StyledView>
+          )}
+
+          {/* Recommendations */}
+          {calculationResults.recommendations.length > 0 && (
+            <StyledView className="mb-6">
+              <StyledText 
+                className="text-lg font-semibold mb-3"
+                style={{ color: theme.text }}
+              >
+                💡 {t('diy.recommendations')}
+              </StyledText>
+              {calculationResults.recommendations.map((rec, index) => (
+                <StyledView 
+                  key={index}
+                  className="mb-2 p-3 rounded-lg"
+                  style={{ backgroundColor: theme.info + '20' }}
+                >
+                  <StyledText style={{ color: theme.info }}>
+                    {rec}
+                  </StyledText>
+                </StyledView>
+              ))}
+            </StyledView>
+          )}
+
+          {/* Export Button */}
+          <StyledTouchableOpacity
+            className="mt-4 rounded-xl overflow-hidden"
+            onPress={() => materialsList && exportMaterialsList(materialsList, 'csv')}
+            accessibilityRole="button"
+            accessibilityLabel={t('diy.exportList')}
+          >
+            <LinearGradient
+              colors={[theme.success, theme.success + 'CC']}
+              className="p-4 flex-row items-center justify-center"
+            >
+              <MaterialIcons name="file-download" size={24} color="white" />
+              <StyledText className="text-white text-lg font-semibold ml-2">
+                {t('diy.exportList')}
+              </StyledText>
+            </LinearGradient>
+          </StyledTouchableOpacity>
+        </StyledScrollView>
+      )}
+    </StyledView>
+  );
+
+  // Render step-by-step guide
+  const renderStepGuide = () => {
+    const currentStep = buildSteps[currentStepIndex];
+    const progress = currentBuild ? (currentBuild.completedSteps.length / buildSteps.length) * 100 : 0;
+
+    return (
+      <StyledView className="flex-1 p-4">
+        <StyledView className="flex-row items-center justify-between mb-6">
+          <StyledTouchableOpacity
+            onPress={() => setViewMode('materials')}
+            className="p-2"
+            accessibilityRole="button"
+            accessibilityLabel={t('common.back')}
+          >
+            <Ionicons 
+              name={isRTL ? "chevron-forward" : "chevron-back"} 
+              size={24} 
+              color={theme.text} 
+            />
+          </StyledTouchableOpacity>
+          
+          <StyledText 
+            className="text-xl font-bold flex-1 text-center"
+            style={{ color: theme.text }}
+          >
+            {t('diy.buildGuide')}
+          </StyledText>
+          
+          <StyledTouchableOpacity
+            onPress={() => setViewMode('journal')}
+            className="p-2"
+            accessibilityRole="button"
+            accessibilityLabel={t('diy.journal')}
+          >
+            <MaterialIcons name="photo-library" size={24} color={theme.primary} />
+          </StyledTouchableOpacity>
+        </StyledView>
+
+        {/* Progress Bar */}
+        <StyledView className="mb-6">
+          <StyledView className="flex-row justify-between mb-2">
+            <StyledText 
+              className="text-sm font-medium"
+              style={{ color: theme.textSecondary }}
+            >
+              {t('diy.progress')}
+            </StyledText>
+            <StyledText 
+              className="text-sm font-medium"
+              style={{ color: theme.textSecondary }}
+            >
+              {Math.round(progress)}%
+            </StyledText>
+          </StyledView>
+          <StyledView 
+            className="h-2 rounded-full"
+            style={{ backgroundColor: theme.surface }}
+          >
+            <StyledView 
+              className="h-2 rounded-full"
+              style={{ 
+                backgroundColor: theme.primary,
+                width: `${progress}%`
+              }}
+            />
+          </StyledView>
+        </StyledView>
+
+        {currentStep ? (
+          <StyledScrollView 
+            className="flex-1"
+            showsVerticalScrollIndicator={false}
+          >
+            {/* Step Header */}
+            <StyledView 
+              className="mb-6 p-4 rounded-xl"
+              style={{ backgroundColor: theme.surface }}
+            >
+              <StyledText 
+                className="text-2xl font-bold mb-2"
+                style={{ color: theme.text }}
+              >
+                {t('diy.step')} {currentStep.stepNumber}: {currentStep.title}
+              </StyledText>
+              <StyledText 
+                className="text-base leading-6 mb-3"
+                style={{ color: theme.textSecondary }}
+              >
+                {currentStep.description}
+              </StyledText>
+              <StyledView className="flex-row items-center">
+                <Ionicons name="time-outline" size={16} color={theme.textSecondary} />
+                <StyledText 
+                  className="text-sm ml-1"
+                  style={{ color: theme.textSecondary }}
+                >
+                  {currentStep.estimatedTime} {t('diy.minutes')}
+                </StyledText>
+              </StyledView>
+            </StyledView>
+
+            {/* Tips */}
+            {currentStep.tips.length > 0 && (
+              <StyledView className="mb-6">
+                <StyledText 
+                  className="text-lg font-semibold mb-3"
+                  style={{ color: theme.text }}
+                >
+                  💡 {t('diy.tips')}
+                </StyledText>
+                {currentStep.tips.map((tip, index) => (
+                  <StyledView 
+                    key={index}
+                    className="mb-2 p-3 rounded-lg"
+                    style={{ backgroundColor: theme.info + '20' }}
+                  >
+                    <StyledText style={{ color: theme.info }}>
+                      {tip}
+                    </StyledText>
+                  </StyledView>
+                ))}
+              </StyledView>
+            )}
+
+            {/* Warnings */}
+            {currentStep.warnings.length > 0 && (
+              <StyledView className="mb-6">
+                <StyledText 
+                  className="text-lg font-semibold mb-3"
+                  style={{ color: theme.text }}
+                >
+                  ⚠️ {t('diy.warnings')}
+                </StyledText>
+                {currentStep.warnings.map((warning, index) => (
+                  <StyledView 
+                    key={index}
+                    className="mb-2 p-3 rounded-lg"
+                    style={{ backgroundColor: theme.warning + '20' }}
+                  >
+                    <StyledText style={{ color: theme.warning }}>
+                      {warning}
+                    </StyledText>
+                  </StyledView>
+                ))}
+              </StyledView>
+            )}
+
+            {/* Checklist */}
+            <StyledView className="mb-6">
+              <StyledText 
+                className="text-lg font-semibold mb-3"
+                style={{ color: theme.text }}
+              >
+                ✅ {t('diy.checklist')}
+              </StyledText>
+              {currentStep.checklistItems.map((item, index) => (
+                <StyledView 
+                  key={index}
+                  className="mb-2 p-3 rounded-lg flex-row items-center"
+                  style={{ backgroundColor: theme.surface }}
+                >
+                  <MaterialIcons 
+                    name="check-box-outline-blank" 
+                    size={24} 
+                    color={theme.textSecondary} 
+                  />
+                  <StyledText 
+                    className="ml-3 flex-1"
+                    style={{ color: theme.text }}
+                  >
+                    {item.text}
+                  </StyledText>
+                </StyledView>
+              ))}
+            </StyledView>
+
+            {/* Notes Input */}
+            <StyledView className="mb-6">
+              <StyledText 
+                className="text-lg font-semibold mb-2"
+                style={{ color: theme.text }}
+              >
+                {t('diy.notes')}
+              </StyledText>
+              <StyledTextInput
+                className="p-4 rounded-xl text-base"
+                style={{ 
+                  backgroundColor: theme.surface,
+                  color: theme.text,
+                  borderWidth: 1,
+                  borderColor: theme.border,
+                  minHeight: 100
+                }}
+                value={stepNotes}
+                onChangeText={setStepNotes}
+                placeholder={t('diy.notesPlaceholder')}
+                placeholderTextColor={theme.textSecondary}
+                multiline
+                accessibilityLabel={t('diy.notes')}
+              />
+            </StyledView>
+
+            {/* Image Selection */}
+            <StyledView className="mb-6">
+              <StyledView className="flex-row items-center justify-between mb-3">
+                <StyledText 
+                  className="text-lg font-semibold"
+                  style={{ color: theme.text }}
+                >
+                  {t('diy.photos')}
+                </StyledText>
+                <StyledTouchableOpacity
+                  onPress={handleImagePicker}
+                  className="flex-row items-center px-3 py-2 rounded-lg"
+                  style={{ backgroundColor: theme.primary + '20' }}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('diy.addPhoto')}
+                >
+                  <MaterialIcons name="add-a-photo" size={16} color={theme.primary} />
+                  <StyledText 
+                    className="ml-1 text-sm font-medium"
+                    style={{ color: theme.primary }}
+                  >
+                    {t('diy.addPhoto')}
+                  </StyledText>
+                </StyledTouchableOpacity>
+              </StyledView>
+              
+              {selectedImages.length > 0 && (
+                <StyledScrollView 
+                  horizontal 
+                  showsHorizontalScrollIndicator={false}
+                  className="mb-3"
+                >
+                  {selectedImages.map((img, index) => (
+                    <Image
+                      key={index}
+                      source={{ uri: img.imageUri }}
+                      className="w-20 h-20 rounded-lg mr-2"
+                      style={{ backgroundColor: theme.surface }}
+                    />
+                  ))}
+                </StyledScrollView>
+              )}
+            </StyledView>
+
+            {/* Complete Step Button */}
+            <StyledTouchableOpacity
+              className="mt-4 rounded-xl overflow-hidden"
+              onPress={handleStepComplete}
+              accessibilityRole="button"
+              accessibilityLabel={t('diy.completeStep')}
+            >
+              <LinearGradient
+                colors={[theme.success, theme.success + 'CC']}
+                className="p-4 flex-row items-center justify-center"
+              >
+                <MaterialIcons name="check-circle" size={24} color="white" />
+                <StyledText className="text-white text-lg font-semibold ml-2">
+                  {currentStepIndex < buildSteps.length - 1 
+                    ? t('diy.completeStep') 
+                    : t('diy.finishBuild')
+                  }
+                </StyledText>
+              </LinearGradient>
+            </StyledTouchableOpacity>
+          </StyledScrollView>
+        ) : (
+          <StyledView className="flex-1 items-center justify-center">
+            <StyledText 
+              className="text-lg"
+              style={{ color: theme.textSecondary }}
+            >
+              {t('diy.noStepsAvailable')}
+            </StyledText>
+          </StyledView>
+        )}
+      </StyledView>
+    );
+  };
+
+  // Render build journal
+  const renderBuildJournal = () => (
+    <StyledView className="flex-1 p-4">
+      <StyledView className="flex-row items-center justify-between mb-6">
+        <StyledTouchableOpacity
+          onPress={() => setViewMode('guide')}
+          className="p-2"
+          accessibilityRole="button"
+          accessibilityLabel={t('common.back')}
+        >
+          <Ionicons 
+            name={isRTL ? "chevron-forward" : "chevron-back"} 
+            size={24} 
+            color={theme.text} 
+          />
+        </StyledTouchableOpacity>
+        
+        <StyledText 
+          className="text-xl font-bold flex-1 text-center"
+          style={{ color: theme.text }}
+        >
+          {t('diy.buildJournal')}
+        </StyledText>
+        
+        <StyledView className="w-8" />
+      </StyledView>
+
+      {currentBuild ? (
+        <StyledScrollView 
+          className="flex-1"
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Build Info */}
+          <StyledView 
+            className="mb-6 p-4 rounded-xl"
+            style={{ backgroundColor: theme.surface }}
+          >
+            <StyledText 
+              className="text-2xl font-bold mb-2"
+              style={{ color: theme.text }}
+            >
+              {currentBuild.name}
+            </StyledText>
+            <StyledText 
+              className="text-sm mb-1"
+              style={{ color: theme.textSecondary }}
+            >
+              {t('diy.started')}: {currentBuild.startDate.toLocaleDateString()}
+            </StyledText>
+            <StyledText 
+              className="text-sm mb-3"
+              style={{ color: theme.textSecondary }}
+            >
+              {t('diy.status')}: {t(`diy.buildStatus.${currentBuild.status}`)}
+            </StyledText>
+            <StyledView className="flex-row justify-between">
+              <StyledText 
+                className="text-sm"
+                style={{ color: theme.textSecondary }}
+              >
+                {t('diy.completed')}: {currentBuild.completedSteps.length}/{buildSteps.length}
+              </StyledText>
+              <StyledText 
+                className="text-sm"
+                style={{ color: theme.textSecondary }}
+              >
+                {t('diy.estimatedCost')}: ${currentBuild.estimatedCost.toFixed(2)}
+              </StyledText>
+            </StyledView>
+          </StyledView>
+
+          {/* Build Images */}
+          {currentBuild.images.length > 0 && (
+            <StyledView className="mb-6">
+              <StyledText 
+                className="text-lg font-semibold mb-3"
+                style={{ color: theme.text }}
+              >
+                📸 {t('diy.buildPhotos')}
+              </StyledText>
+              <StyledView className="flex-row flex-wrap">
+                {currentBuild.images.map((img, index) => (
+                  <StyledView key={index} className="w-1/2 p-1">
+                    <Image
+                      source={{ uri: img.imageUri }}
+                      className="w-full h-32 rounded-lg"
+                      style={{ backgroundColor: theme.surface }}
+                    />
+                    <StyledText 
+                      className="text-xs mt-1 text-center"
+                      style={{ color: theme.textSecondary }}
+                    >
+                      {img.caption}
+                    </StyledText>
+                  </StyledView>
+                ))}
+              </StyledView>
+            </StyledView>
+          )}
+
+          {/* Build Notes */}
+          {currentBuild.notes && (
+            <StyledView className="mb-6">
+              <StyledText 
+                className="text-lg font-semibold mb-3"
+                style={{ color: theme.text }}
+              >
+                📝 {t('diy.buildNotes')}
+              </StyledText>
+              <StyledView 
+                className="p-4 rounded-xl"
+                style={{ backgroundColor: theme.surface }}
+              >
+                <StyledText 
+                  className="text-base leading-6"
+                  style={{ color: theme.text }}
+                >
+                  {currentBuild.notes}
+                </StyledText>
+              </StyledView>
+            </StyledView>
+          )}
+        </StyledScrollView>
+      ) : (
+        <StyledView className="flex-1 items-center justify-center">
+          <StyledText 
+            className="text-lg"
+            style={{ color: theme.textSecondary }}
+          >
+            {t('diy.noBuildActive')}
+          </StyledText>
+        </StyledView>
+      )}
+    </StyledView>
+  );
+
+  // Main render based on view mode
+  const renderContent = () => {
+    switch (viewMode) {
+      case 'selection':
+        return renderSystemSelection();
+      case 'calculator':
+        return renderCalculator();
+      case 'materials':
+        return renderMaterialsList();
+      case 'guide':
+        return renderStepGuide();
+      case 'journal':
+        return renderBuildJournal();
+      default:
+        return renderSystemSelection();
+    }
+  };
+
+  return (
+    <SafeAreaView className="flex-1" style={{ backgroundColor: theme.background }}>
+      {/* Header */}
+      <StyledView 
+        className="flex-row items-center justify-between p-4 border-b"
+        style={{ borderBottomColor: theme.border }}
+      >
+        <StyledTouchableOpacity
+          onPress={() => router.back()}
+          accessibilityRole="button"
+          accessibilityLabel={t('common.back')}
+        >
+          <Ionicons name="arrow-back" size={24} color={theme.text} />
+        </StyledTouchableOpacity>
+        
+        <StyledText 
+          className="text-xl font-bold"
+          style={{ color: theme.text }}
+        >
+          {t('diy.title')}
+        </StyledText>
+        
+        <StyledView className="w-6" />
+      </StyledView>
+
+      {/* Error Display */}
+      {error && (
+        <StyledView 
+          className="mx-4 mt-4 p-3 rounded-lg"
+          style={{ backgroundColor: theme.error + '20' }}
+        >
+          <StyledText style={{ color: theme.error }}>
+            {error}
+          </StyledText>
+        </StyledView>
+      )}
+
+      {/* Content */}
+      {renderContent()}
+    </SafeAreaView>
+  );
+} 

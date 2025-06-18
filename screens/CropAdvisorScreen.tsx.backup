@@ -1,0 +1,737 @@
+import React, { useState, useCallback, useRef } from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  TextInput,
+  ActivityIndicator,
+  Dimensions,
+  Platform,
+  KeyboardAvoidingView
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
+import { useCropAdvisor } from '../hooks/useCropAdvisor';
+import { useTranslation } from 'react-i18next';
+import { useTheme } from '../hooks/useTheme';
+import { Recommendation, StressIndicator, PlantProfile } from '../types/crop-advisor';
+
+const { width: screenWidth } = Dimensions.get('window');
+
+export default function CropAdvisorScreen() {
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.language === 'ar';
+  const { theme } = useTheme();
+  const {
+    currentAnalysis,
+    activeRecommendations,
+    plantProfiles,
+    selectedPlantId,
+    conversationHistory,
+    isThinking,
+    monitoringActive,
+    isLoading,
+    error,
+    askAI,
+    applyRecommendation,
+    selectPlant,
+    startMonitoring,
+    stopMonitoring
+  } = useCropAdvisor();
+
+  const [question, setQuestion] = useState('');
+  const [selectedTab, setSelectedTab] = useState<'health' | 'recommendations' | 'conversation'>('health');
+  const scrollViewRef = useRef<ScrollView>(null);
+
+  // Get selected plant
+  const selectedPlant = plantProfiles.find(p => p.id === selectedPlantId);
+
+  // Handle AI question
+  const handleAskQuestion = useCallback(async () => {
+    if (!question.trim()) return;
+    
+    try {
+      await askAI(question);
+      setQuestion('');
+      
+      // Scroll to bottom to show new response
+      setTimeout(() => {
+        scrollViewRef.current?.scrollToEnd({ animated: true });
+      }, 100);
+    } catch (error) {
+      console.error('Failed to ask question:', error);
+    }
+  }, [question, askAI]);
+
+  // Handle recommendation application
+  const handleApplyRecommendation = useCallback(async (recommendation: Recommendation) => {
+    try {
+      await applyRecommendation(recommendation);
+    } catch (error) {
+      console.error('Failed to apply recommendation:', error);
+    }
+  }, [applyRecommendation]);
+
+  // Get health color based on status
+  const getHealthColor = (status: string) => {
+    switch (status) {
+      case 'excellent': return theme.success;
+      case 'good': return '#10B981';
+      case 'fair': return theme.warning;
+      case 'poor': return '#F59E0B';
+      case 'critical': return theme.error;
+      default: return theme.textSecondary;
+    }
+  };
+
+  // Get priority color
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case 'critical': return theme.error;
+      case 'high': return '#F59E0B';
+      case 'medium': return theme.info;
+      case 'low': return theme.textSecondary;
+      default: return theme.textSecondary;
+    }
+  };
+
+  // Render plant selector
+  const renderPlantSelector = () => (
+    <View style={{ marginBottom: 16 }}>
+      <ScrollView 
+        horizontal 
+        showsHorizontalScrollIndicator={false}
+        style={{ flexDirection: 'row' }}
+      >
+        {plantProfiles.map((plant) => (
+          <TouchableOpacity
+            key={plant.id}
+            style={[
+              { 
+                marginRight: 12,
+                paddingHorizontal: 16,
+                paddingVertical: 8,
+                borderRadius: 20,
+                backgroundColor: selectedPlantId === plant.id 
+                  ? theme.primary 
+                  : theme.surface,
+                opacity: selectedPlantId === plant.id ? 1 : 0.7
+              }
+            ]}
+            onPress={() => selectPlant(plant.id)}
+            accessibilityRole="button"
+            accessibilityLabel={`${t('advisor.selectPlant')} ${plant.name}`}
+          >
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Ionicons 
+                name="leaf-outline" 
+                size={16} 
+                color={selectedPlantId === plant.id ? 'white' : theme.text} 
+              />
+              <Text 
+                style={{ 
+                  marginLeft: 8,
+                  fontSize: 14,
+                  fontWeight: '500',
+                  color: selectedPlantId === plant.id ? 'white' : theme.text 
+                }}
+              >
+                {plant.name}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        ))}
+        
+        <TouchableOpacity
+          style={{
+            paddingHorizontal: 16,
+            paddingVertical: 8,
+            borderRadius: 20,
+            borderWidth: 2,
+            borderStyle: 'dashed',
+            borderColor: theme.border
+          }}
+          onPress={() => router.push('/add-plant')}
+          accessibilityRole="button"
+          accessibilityLabel={t('advisor.addPlant')}
+        >
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Ionicons name="add" size={16} color={theme.textSecondary} />
+            <Text 
+              style={{ 
+                marginLeft: 8,
+                fontSize: 14,
+                color: theme.textSecondary 
+              }}
+            >
+              {t('advisor.addPlant')}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </ScrollView>
+    </View>
+  );
+
+  // Render health overview
+  const renderHealthOverview = () => {
+    if (!selectedPlant || !currentAnalysis) {
+      return (
+        <StyledView className="items-center justify-center py-12">
+          <MaterialIcons name="eco" size={64} color={theme.textSecondary} />
+          <StyledText 
+            className="text-lg font-semibold mt-4 mb-2 text-center"
+            style={{ color: theme.text }}
+          >
+            {selectedPlant ? t('advisor.analyzing') : t('advisor.noPlants')}
+          </StyledText>
+          {selectedPlant && (
+            <ActivityIndicator size="large" color={theme.primary} />
+          )}
+        </StyledView>
+      );
+    }
+
+    const { plantHealth } = currentAnalysis;
+
+    return (
+      <StyledView>
+        {/* Overall Health Card */}
+        <StyledView 
+          className="mb-6 p-4 rounded-xl"
+          style={{ backgroundColor: theme.surface }}
+        >
+          <StyledView className="flex-row items-center justify-between mb-4">
+            <StyledText 
+              className="text-lg font-bold"
+              style={{ color: theme.text }}
+            >
+              {t('advisor.plantHealth')}
+            </StyledText>
+            <StyledView 
+              className="px-3 py-1 rounded-full"
+              style={{ backgroundColor: getHealthColor(plantHealth.overall) + '20' }}
+            >
+              <StyledText 
+                className="text-sm font-medium"
+                style={{ color: getHealthColor(plantHealth.overall) }}
+              >
+                {t(`advisor.${plantHealth.overall}`)}
+              </StyledText>
+            </StyledView>
+          </StyledView>
+
+          {/* Health Components */}
+          <StyledView className="space-y-3">
+            {Object.entries(plantHealth.components).map(([component, score]) => (
+              <StyledView key={component} className="flex-row items-center justify-between">
+                <StyledText 
+                  className="text-sm flex-1"
+                  style={{ color: theme.textSecondary }}
+                >
+                  {t(`advisor.healthComponents.${component}`)}
+                </StyledText>
+                <StyledView className="flex-1 mx-3">
+                  <StyledView 
+                    className="h-2 rounded-full"
+                    style={{ backgroundColor: theme.border }}
+                  >
+                    <StyledView 
+                      className="h-2 rounded-full"
+                      style={{ 
+                        backgroundColor: score >= 80 ? theme.success : score >= 60 ? theme.warning : theme.error,
+                        width: `${score}%`
+                      }}
+                    />
+                  </StyledView>
+                </StyledView>
+                <StyledText 
+                  className="text-sm font-medium"
+                  style={{ color: theme.text }}
+                >
+                  {score}%
+                </StyledText>
+              </StyledView>
+            ))}
+          </StyledView>
+        </StyledView>
+
+        {/* Stress Indicators */}
+        {plantHealth.activeStressors.length > 0 && (
+          <StyledView 
+            className="mb-6 p-4 rounded-xl"
+            style={{ backgroundColor: theme.surface }}
+          >
+            <StyledText 
+              className="text-lg font-bold mb-4"
+              style={{ color: theme.text }}
+            >
+              {t('advisor.stressIndicators')}
+            </StyledText>
+            
+            {plantHealth.activeStressors.map((stress: StressIndicator) => (
+              <StyledView 
+                key={stress.id}
+                className="mb-3 p-3 rounded-lg"
+                style={{ backgroundColor: theme.background }}
+              >
+                <StyledView className="flex-row items-center justify-between mb-2">
+                  <StyledText 
+                    className="font-medium"
+                    style={{ color: theme.text }}
+                  >
+                    {stress.type.replace('_', ' ').toUpperCase()}
+                  </StyledText>
+                  <StyledView 
+                    className="px-2 py-1 rounded"
+                    style={{ backgroundColor: getPriorityColor(stress.severity) + '20' }}
+                  >
+                    <StyledText 
+                      className="text-xs font-medium"
+                      style={{ color: getPriorityColor(stress.severity) }}
+                    >
+                      {t(`advisor.severity.${stress.severity}`)}
+                    </StyledText>
+                  </StyledView>
+                </StyledView>
+                <StyledText 
+                  className="text-sm"
+                  style={{ color: theme.textSecondary }}
+                >
+                  {stress.symptoms.join(', ')}
+                </StyledText>
+              </StyledView>
+            ))}
+          </StyledView>
+        )}
+
+        {/* Monitoring Controls */}
+        <StyledView 
+          className="mb-6 p-4 rounded-xl"
+          style={{ backgroundColor: theme.surface }}
+        >
+          <StyledView className="flex-row items-center justify-between">
+            <StyledView>
+              <StyledText 
+                className="text-lg font-bold"
+                style={{ color: theme.text }}
+              >
+                {t('advisor.monitoring')}
+              </StyledText>
+              <StyledText 
+                className="text-sm"
+                style={{ color: theme.textSecondary }}
+              >
+                {monitoringActive ? t('advisor.monitoringActive') : t('advisor.startMonitoring')}
+              </StyledText>
+            </StyledView>
+            <StyledTouchableOpacity
+              className="px-4 py-2 rounded-lg"
+              style={{ 
+                backgroundColor: monitoringActive ? theme.error + '20' : theme.primary + '20' 
+              }}
+              onPress={monitoringActive ? stopMonitoring : startMonitoring}
+              accessibilityRole="button"
+              accessibilityLabel={monitoringActive ? t('advisor.stopMonitoring') : t('advisor.startMonitoring')}
+            >
+              <StyledText 
+                className="font-medium"
+                style={{ 
+                  color: monitoringActive ? theme.error : theme.primary 
+                }}
+              >
+                {monitoringActive ? t('advisor.stopMonitoring') : t('advisor.startMonitoring')}
+              </StyledText>
+            </StyledTouchableOpacity>
+          </StyledView>
+        </StyledView>
+      </StyledView>
+    );
+  };
+
+  // Render recommendations
+  const renderRecommendations = () => (
+    <StyledView>
+      <StyledText 
+        className="text-lg font-bold mb-4"
+        style={{ color: theme.text }}
+      >
+        {t('advisor.recommendations')}
+      </StyledText>
+
+      {activeRecommendations.length === 0 ? (
+        <StyledView className="items-center justify-center py-12">
+          <MaterialIcons name="check-circle" size={64} color={theme.success} />
+          <StyledText 
+            className="text-lg font-semibold mt-4 text-center"
+            style={{ color: theme.text }}
+          >
+            {t('advisor.noRecommendations')}
+          </StyledText>
+        </StyledView>
+      ) : (
+        activeRecommendations.map((recommendation) => (
+          <StyledView 
+            key={recommendation.id}
+            className="mb-4 p-4 rounded-xl"
+            style={{ backgroundColor: theme.surface }}
+          >
+            <StyledView className="flex-row items-center justify-between mb-3">
+              <StyledView className="flex-1">
+                <StyledText 
+                  className="text-lg font-semibold"
+                  style={{ color: theme.text }}
+                >
+                  {recommendation.title}
+                </StyledText>
+                <StyledView className="flex-row items-center mt-1">
+                  <StyledView 
+                    className="px-2 py-1 rounded"
+                    style={{ backgroundColor: getPriorityColor(recommendation.priority) + '20' }}
+                  >
+                    <StyledText 
+                      className="text-xs font-medium"
+                      style={{ color: getPriorityColor(recommendation.priority) }}
+                    >
+                      {t(`advisor.priority.${recommendation.priority}`)}
+                    </StyledText>
+                  </StyledView>
+                  <StyledText 
+                    className="text-xs ml-2"
+                    style={{ color: theme.textSecondary }}
+                  >
+                    {t(`advisor.confidenceLevels.${recommendation.confidence}`)} {t('advisor.confidence')}
+                  </StyledText>
+                </StyledView>
+              </StyledView>
+            </StyledView>
+
+            <StyledText 
+              className="text-sm mb-4"
+              style={{ color: theme.textSecondary }}
+            >
+              {recommendation.description}
+            </StyledText>
+
+            {recommendation.expectedResults.length > 0 && (
+              <StyledView className="mb-4">
+                <StyledText 
+                  className="text-sm font-medium mb-2"
+                  style={{ color: theme.text }}
+                >
+                  Expected Results:
+                </StyledText>
+                {recommendation.expectedResults.map((result, index) => (
+                  <StyledText 
+                    key={index}
+                    className="text-sm"
+                    style={{ color: theme.textSecondary }}
+                  >
+                    • {result}
+                  </StyledText>
+                ))}
+              </StyledView>
+            )}
+
+            <StyledView className="flex-row justify-between">
+              <StyledTouchableOpacity
+                className="flex-1 mr-2 py-2 px-4 rounded-lg border"
+                style={{ borderColor: theme.border }}
+                onPress={() => {/* View details */}}
+                accessibilityRole="button"
+                accessibilityLabel={t('advisor.viewDetails')}
+              >
+                <StyledText 
+                  className="text-center font-medium"
+                  style={{ color: theme.text }}
+                >
+                  {t('advisor.viewDetails')}
+                </StyledText>
+              </StyledTouchableOpacity>
+
+              <StyledTouchableOpacity
+                className="flex-1 ml-2 py-2 px-4 rounded-lg"
+                style={{ backgroundColor: theme.primary }}
+                onPress={() => handleApplyRecommendation(recommendation)}
+                disabled={!!recommendation.appliedAt}
+                accessibilityRole="button"
+                accessibilityLabel={
+                  recommendation.appliedAt 
+                    ? t('advisor.applied')
+                    : t('advisor.applyRecommendation')
+                }
+              >
+                <StyledText 
+                  className="text-center font-medium text-white"
+                >
+                  {recommendation.appliedAt 
+                    ? t('advisor.applied')
+                    : t('advisor.applyRecommendation')
+                  }
+                </StyledText>
+              </StyledTouchableOpacity>
+            </StyledView>
+          </StyledView>
+        ))
+      )}
+    </StyledView>
+  );
+
+  // Render conversation
+  const renderConversation = () => (
+    <StyledView className="flex-1">
+      {/* Example Questions */}
+      {conversationHistory.length === 0 && (
+        <StyledView className="mb-6">
+          <StyledText 
+            className="text-lg font-bold mb-4"
+            style={{ color: theme.text }}
+          >
+            {t('advisor.exampleQuestions')}
+          </StyledText>
+          {Object.entries(t('advisor.questions')).map(([key, questionText]) => (
+            <StyledTouchableOpacity
+              key={key}
+              className="mb-2 p-3 rounded-lg"
+              style={{ backgroundColor: theme.surface }}
+              onPress={() => setQuestion(questionText)}
+              accessibilityRole="button"
+              accessibilityLabel={`${t('advisor.askAboutPlant')}: ${questionText}`}
+            >
+              <StyledText style={{ color: theme.text }}>
+                {questionText}
+              </StyledText>
+            </StyledTouchableOpacity>
+          ))}
+        </StyledView>
+      )}
+
+      {/* Conversation History */}
+      <StyledScrollView 
+        ref={scrollViewRef}
+        className="flex-1 mb-4"
+        showsVerticalScrollIndicator={false}
+      >
+        {conversationHistory.map((response) => (
+          <StyledView key={response.id} className="mb-4">
+            <StyledView 
+              className="p-4 rounded-xl"
+              style={{ backgroundColor: theme.surface }}
+            >
+              <StyledText style={{ color: theme.text }}>
+                {response.answer}
+              </StyledText>
+              
+              {response.actionButtons.length > 0 && (
+                <StyledView className="flex-row flex-wrap mt-3">
+                  {response.actionButtons.map((button) => (
+                    <StyledTouchableOpacity
+                      key={button.id}
+                      className="mr-2 mb-2 px-3 py-1 rounded-full"
+                      style={{ backgroundColor: theme.primary + '20' }}
+                      onPress={() => {
+                        if (button.route) {
+                          router.push({
+                            pathname: button.route,
+                            params: button.parameters
+                          });
+                        }
+                      }}
+                      accessibilityRole="button"
+                      accessibilityLabel={button.label}
+                    >
+                      <StyledText 
+                        className="text-sm"
+                        style={{ color: theme.primary }}
+                      >
+                        {button.label}
+                      </StyledText>
+                    </StyledTouchableOpacity>
+                  ))}
+                </StyledView>
+              )}
+            </StyledView>
+          </StyledView>
+        ))}
+        
+        {isThinking && (
+          <StyledView 
+            className="p-4 rounded-xl"
+            style={{ backgroundColor: theme.surface }}
+          >
+            <StyledView className="flex-row items-center">
+              <ActivityIndicator size="small" color={theme.primary} />
+              <StyledText 
+                className="ml-2"
+                style={{ color: theme.textSecondary }}
+              >
+                {t('advisor.thinking')}
+              </StyledText>
+            </StyledView>
+          </StyledView>
+        )}
+      </StyledScrollView>
+
+      {/* Question Input */}
+      <StyledView 
+        className="flex-row items-center p-3 rounded-xl"
+        style={{ backgroundColor: theme.surface }}
+      >
+        <StyledTextInput
+          className="flex-1 text-base"
+          style={{ color: theme.text }}
+          placeholder={t('advisor.askQuestion')}
+          placeholderTextColor={theme.textSecondary}
+          value={question}
+          onChangeText={setQuestion}
+          multiline
+          maxLength={500}
+          editable={!isThinking}
+          accessibilityLabel={t('advisor.askQuestion')}
+          accessibilityHint={t('advisor.askAboutPlant')}
+        />
+        <StyledTouchableOpacity
+          className="ml-3 p-2 rounded-full"
+          style={{ backgroundColor: question.trim() ? theme.primary : theme.border }}
+          onPress={handleAskQuestion}
+          disabled={!question.trim() || isThinking}
+          accessibilityRole="button"
+          accessibilityLabel={t('common.send')}
+        >
+          <Ionicons 
+            name="send" 
+            size={20} 
+            color={question.trim() ? 'white' : theme.textSecondary} 
+          />
+        </StyledTouchableOpacity>
+      </StyledView>
+    </StyledView>
+  );
+
+  // Render tab content
+  const renderTabContent = () => {
+    switch (selectedTab) {
+      case 'health':
+        return renderHealthOverview();
+      case 'recommendations':
+        return renderRecommendations();
+      case 'conversation':
+        return renderConversation();
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <SafeAreaView className="flex-1" style={{ backgroundColor: theme.background }}>
+      {/* Header */}
+      <StyledView 
+        className="flex-row items-center justify-between p-4 border-b"
+        style={{ borderBottomColor: theme.border }}
+      >
+        <StyledTouchableOpacity
+          onPress={() => router.back()}
+          accessibilityRole="button"
+          accessibilityLabel={t('common.back')}
+        >
+          <Ionicons name="arrow-back" size={24} color={theme.text} />
+        </StyledTouchableOpacity>
+        
+        <StyledView className="items-center">
+          <StyledText 
+            className="text-xl font-bold"
+            style={{ color: theme.text }}
+          >
+            {t('advisor.title')}
+          </StyledText>
+          <StyledText 
+            className="text-sm"
+            style={{ color: theme.textSecondary }}
+          >
+            {t('advisor.subtitle')}
+          </StyledText>
+        </StyledView>
+        
+        <StyledTouchableOpacity
+          onPress={() => router.push('/advisor/settings')}
+          accessibilityRole="button"
+          accessibilityLabel={t('advisor.settings')}
+        >
+          <Ionicons name="settings-outline" size={24} color={theme.text} />
+        </StyledTouchableOpacity>
+      </StyledView>
+
+      {/* Error Display */}
+      {error && (
+        <StyledView 
+          className="mx-4 mt-4 p-3 rounded-lg"
+          style={{ backgroundColor: theme.error + '20' }}
+        >
+          <StyledText style={{ color: theme.error }}>
+            {error}
+          </StyledText>
+        </StyledView>
+      )}
+
+      {/* Plant Selector */}
+      <StyledView className="p-4">
+        {renderPlantSelector()}
+      </StyledView>
+
+      {/* Tabs */}
+      <StyledView 
+        className="flex-row mx-4 mb-4 p-1 rounded-xl"
+        style={{ backgroundColor: theme.surface }}
+      >
+        {[
+          { id: 'health', label: t('advisor.plantHealth'), icon: 'medical' },
+          { id: 'recommendations', label: t('advisor.recommendations'), icon: 'lightbulb' },
+          { id: 'conversation', label: t('advisor.conversation'), icon: 'chat-bubble' }
+        ].map((tab) => (
+          <StyledTouchableOpacity
+            key={tab.id}
+            className={`flex-1 flex-row items-center justify-center py-2 px-3 rounded-lg ${
+              selectedTab === tab.id ? 'opacity-100' : 'opacity-70'
+            }`}
+            style={{ 
+              backgroundColor: selectedTab === tab.id ? theme.primary : 'transparent'
+            }}
+            onPress={() => setSelectedTab(tab.id as any)}
+            accessibilityRole="tab"
+            accessibilityLabel={tab.label}
+            accessibilityState={{ selected: selectedTab === tab.id }}
+          >
+            <Ionicons 
+              name={tab.icon as any} 
+              size={16} 
+              color={selectedTab === tab.id ? 'white' : theme.text} 
+            />
+            <StyledText 
+              className="ml-2 text-sm font-medium"
+              style={{ 
+                color: selectedTab === tab.id ? 'white' : theme.text 
+              }}
+            >
+              {tab.label}
+            </StyledText>
+          </StyledTouchableOpacity>
+        ))}
+      </StyledView>
+
+      {/* Tab Content */}
+      <KeyboardAvoidingView 
+        className="flex-1"
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <StyledScrollView 
+          className="flex-1 px-4"
+          showsVerticalScrollIndicator={false}
+        >
+          {renderTabContent()}
+        </StyledScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
+  );
+} 

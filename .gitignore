@@ -7,7 +7,6 @@ node_modules*/
 .expo/
 dist/
 web-build/
-expo-env.d.ts
 
 # native
 *.orig.*
@@ -16,6 +15,8 @@ expo-env.d.ts
 *.p12
 *.key
 *.mobileprovision
+/android/
+/ios/
 
 # metro
 .metro-health-check*
@@ -37,3 +38,66 @@ yarn-error.*
 
 # embedded repos
 landing/
+.vercel
+
+# OSX
+.DS_Store
+
+# Xcode
+build/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+*.xccheckout
+*.moved-aside
+DerivedData
+*.hmap
+*.ipa
+*.xcuserstate
+ios/.xcode.env.local
+
+# Android/IntelliJ
+build/
+.idea
+.gradle
+local.properties
+*.iml
+*.hprof
+.cxx/
+*.keystore
+!debug.keystore
+
+# Ruby / CocoaPods
+/ios/Pods/
+/vendor/bundle/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Testing
+coverage/
+.jest/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Temporary files
+*.log
+*.log.*
+.DS_Store
+*.tmp
+*.temp
+
+# Watchman
+.watchmanconfig

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TextInput } from 'react-native';
-import { PLANTS } from '@/data/plants';
+import { PLANTS } from '@data/plants';
 import PlantCard from '@components/PlantCard';
 
 export default function Plants() {

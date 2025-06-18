@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
-import { useFavorites } from '@hooks/useFavorites';
-import { PLANTS } from '@/data/plants';
-import PlantCard from '@components/PlantCard';
+import { useFavorites } from '../../hooks/useFavorites';
+import { PLANTS } from '../../src/data/plants';
+import PlantCard from '../../src/components/PlantCard';
 
 export default function Favorites() {
   const { favorites } = useFavorites();

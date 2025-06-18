@@ -7,32 +7,36 @@ module.exports = function(api) {
   return {
     presets: ['babel-preset-expo'],
     plugins: [
-      [
-        'react-native-reanimated/plugin',
-        {
-          relativeSourceLocation: true,
-        },
-      ],
+      // Handle React Native reanimated
+      'react-native-reanimated/plugin',
+      // Handle module resolution
       [
         'module-resolver',
         {
-          root: ['./'],
-          extensions: ['.ios.js', '.android.js', '.js', '.ts', '.tsx', '.json'],
+          root: ['.'],
+          extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
           alias: {
-            '@': './app',
-            '@components': './app/components',
-            '@assets': './assets',
-            '@constants': './app/constants',
-            '@utils': './app/utils',
-            '@screens': './app/screens',
-            '@hooks': './app/hooks',
-            '@contexts': './app/contexts',
-            '@services': './app/services',
-            '@types': './app/types',
-            '@layouts': './app/components/layout',
+            '@': './src',
+            '@components': './src/components',
+            '@screens': './src/screens',
+            '@hooks': './src/hooks',
+            '@services': './src/services',
+            '@providers': './src/providers',
+            '@types': './src/types',
+            '@lib': './src/lib',
+            '@layouts': './src/components/layout'
           },
         },
       ],
+      // Handle environment variables
+      ['module:react-native-dotenv', {
+        moduleName: '@env',
+        path: '.env',
+        blacklist: null,
+        whitelist: null,
+        safe: true,
+        allowUndefined: false,
+      }],
     ],
   };
 }; 

@@ -1,6 +1,13 @@
 /// <reference types="react" />
 /// <reference types="react-native" />
 
+// Environment variables from .env file
+declare module '@env' {
+  export const SUPABASE_URL: string;
+  export const SUPABASE_ANON_KEY: string;
+  export const SUPABASE_SERVICE_ROLE: string;
+}
+
 declare module 'expo-image' {
   import { ImageProps } from 'react-native';
   export interface ImageProps extends ImageProps {
@@ -23,31 +30,25 @@ declare module 'react-i18next' {
   };
 }
 
+// Asset imports
+declare module '*.png' {
+  const value: any;
+  export default value;
+}
+
+declare module '*.jpg' {
+  const value: any;
+  export default value;
+}
+
+declare module '*.jpeg' {
+  const value: any;
+  export default value;
+}
+
 // Fix for React Native JSX components
 declare module 'react-native' {
-  interface ViewProps {
-    children?: React.ReactNode;
-  }
-  interface TextProps {
-    children?: React.ReactNode;
-  }
-  interface TouchableOpacityProps {
-    children?: React.ReactNode;
-  }
-  interface TextInputProps {
-    editable?: boolean;
-  }
-  interface ActivityIndicatorProps {
-    color?: string;
-    size?: 'small' | 'large' | number;
-  }
-
-  export const View: React.FC<ViewProps>;
-  export const Text: React.FC<TextProps>;
-  export const TextInput: React.FC<TextInputProps>;
-  export const TouchableOpacity: React.FC<TouchableOpacityProps>;
-  export const ActivityIndicator: React.FC<ActivityIndicatorProps>;
-  export const ScrollView: React.FC<ViewProps>;
+  export * from 'react-native';
 }
 
 // Fix for React JSX
