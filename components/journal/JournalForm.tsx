@@ -33,7 +33,7 @@ const createTheme = (colorScheme: 'light' | 'dark' | null) => ({
     textSecondary: colorScheme === 'dark' ? '#BBBBBB' : '#666666',
     primary: '#45B36B',
     border: colorScheme === 'dark' ? '#444444' : '#E0E0E0',
-  }
+  },
 });
 
 const MOOD_OPTIONS = [
@@ -116,7 +116,7 @@ export const JournalForm: React.FC<JournalFormProps> = ({
               },
             ]}
             value={formData.title}
-            onChangeText={(text) => setFormData(prev => ({ ...prev, title: text }))}
+            onChangeText={text => setFormData(prev => ({ ...prev, title: text }))}
             placeholder="Enter a title for your journal entry..."
             placeholderTextColor={theme.colors.textSecondary}
             maxLength={100}
@@ -136,7 +136,7 @@ export const JournalForm: React.FC<JournalFormProps> = ({
               },
             ]}
             value={formData.content}
-            onChangeText={(text) => setFormData(prev => ({ ...prev, content: text }))}
+            onChangeText={text => setFormData(prev => ({ ...prev, content: text }))}
             placeholder="Write about your plant's progress, observations, or thoughts..."
             placeholderTextColor={theme.colors.textSecondary}
             multiline
@@ -149,13 +149,14 @@ export const JournalForm: React.FC<JournalFormProps> = ({
         <View style={styles.section}>
           <Text style={[styles.label, { color: theme.colors.text }]}>Plant Health Mood</Text>
           <View style={styles.moodContainer}>
-            {MOOD_OPTIONS.map((mood) => (
+            {MOOD_OPTIONS.map(mood => (
               <TouchableOpacity
                 key={mood.key}
                 style={[
                   styles.moodOption,
                   {
-                    backgroundColor: formData.mood === mood.key ? mood.color + '20' : theme.colors.surface,
+                    backgroundColor:
+                      formData.mood === mood.key ? mood.color + '20' : theme.colors.surface,
                     borderColor: formData.mood === mood.key ? mood.color : theme.colors.border,
                   },
                 ]}
@@ -208,11 +209,14 @@ export const JournalForm: React.FC<JournalFormProps> = ({
               <Ionicons name="add" size={20} color="white" />
             </TouchableOpacity>
           </View>
-          
+
           {formData.tags && formData.tags.length > 0 && (
             <View style={styles.tagsContainer}>
               {formData.tags.map((tag, index) => (
-                <View key={index} style={[styles.tag, { backgroundColor: theme.colors.primary + '20' }]}>
+                <View
+                  key={index}
+                  style={[styles.tag, { backgroundColor: theme.colors.primary + '20' }]}
+                >
                   <Text style={[styles.tagText, { color: theme.colors.primary }]}>{tag}</Text>
                   <TouchableOpacity onPress={() => removeTag(tag)}>
                     <Ionicons name="close" size={16} color={theme.colors.primary} />
@@ -234,7 +238,7 @@ export const JournalForm: React.FC<JournalFormProps> = ({
               <Text style={[styles.buttonText, { color: theme.colors.textSecondary }]}>Cancel</Text>
             </TouchableOpacity>
           )}
-          
+
           <TouchableOpacity
             style={[
               styles.button,
@@ -245,9 +249,7 @@ export const JournalForm: React.FC<JournalFormProps> = ({
             onPress={handleSubmit}
             disabled={isLoading}
           >
-            <Text style={styles.submitButtonText}>
-              {isLoading ? 'Saving...' : 'Save Entry'}
-            </Text>
+            <Text style={styles.submitButtonText}>{isLoading ? 'Saving...' : 'Save Entry'}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -364,4 +366,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
-}); 
+});

@@ -33,7 +33,7 @@ export default function VoiceAnnouncement({
           pitch,
           queueMode: 1, // Add to queue
         };
-        
+
         // @ts-ignore - Android specific API
         if (AccessibilityInfo.announceForAccessibility) {
           // @ts-ignore - Android specific API
@@ -55,14 +55,10 @@ export function useVoiceAnnouncement() {
     messages: string[],
     options: Partial<VoiceAnnouncementProps> = {}
   ) => {
-    const {
-      delay = 0,
-      rate = 0.5,
-      pitch = 1.0,
-    } = options;
+    const { delay = 0, rate = 0.5, pitch = 1.0 } = options;
 
     for (let i = 0; i < messages.length; i++) {
-      await new Promise<void>((resolve) => {
+      await new Promise<void>(resolve => {
         setTimeout(() => {
           if (Platform.OS === 'ios') {
             AccessibilityInfo.announceForAccessibility(messages[i]);
@@ -73,7 +69,7 @@ export function useVoiceAnnouncement() {
               pitch,
               queueMode: 1,
             };
-            
+
             // @ts-ignore - Android specific API
             if (AccessibilityInfo.announceForAccessibility) {
               // @ts-ignore - Android specific API
@@ -89,4 +85,4 @@ export function useVoiceAnnouncement() {
   return {
     announceQueue,
   };
-} 
+}

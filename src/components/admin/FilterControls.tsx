@@ -18,20 +18,14 @@ export function FilterControls({ onFilterChange, selectedFilter = 'all' }: Filte
     <View style={styles.container}>
       <Text style={styles.title}>Time Period</Text>
       <View style={styles.filterRow}>
-        {filters.map((filter) => (
+        {filters.map(filter => (
           <TouchableOpacity
             key={filter.id}
-            style={[
-              styles.filterButton,
-              selectedFilter === filter.id && styles.filterButtonActive,
-            ]}
+            style={[styles.filterButton, selectedFilter === filter.id && styles.filterButtonActive]}
             onPress={() => onFilterChange?.(filter.id)}
           >
             <Text
-              style={[
-                styles.filterText,
-                selectedFilter === filter.id && styles.filterTextActive,
-              ]}
+              style={[styles.filterText, selectedFilter === filter.id && styles.filterTextActive]}
             >
               {filter.label}
             </Text>
@@ -85,4 +79,4 @@ const styles = StyleSheet.create({
   filterTextActive: {
     color: '#fff',
   },
-}); 
+});

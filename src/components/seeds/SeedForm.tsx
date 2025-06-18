@@ -51,10 +51,7 @@ export function SeedForm({ initialValues, onSubmit, isLoading }: SeedFormProps) 
       }
     } catch (error) {
       console.error('Error fetching location:', error);
-      Alert.alert(
-        t('seeds.location.error_title'),
-        t('seeds.location.error_message')
-      );
+      Alert.alert(t('seeds.location.error_title'), t('seeds.location.error_message'));
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     } finally {
       setIsLoadingLocation(false);
@@ -63,10 +60,7 @@ export function SeedForm({ initialValues, onSubmit, isLoading }: SeedFormProps) 
 
   const handleSubmit = async () => {
     if (!name.trim() || !species.trim()) {
-      Alert.alert(
-        t('seeds.form.validation_error'),
-        t('seeds.form.required_fields')
-      );
+      Alert.alert(t('seeds.form.validation_error'), t('seeds.form.required_fields'));
       return;
     }
 
@@ -92,10 +86,7 @@ export function SeedForm({ initialValues, onSubmit, isLoading }: SeedFormProps) 
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     } catch (error) {
       console.error('Error submitting seed:', error);
-      Alert.alert(
-        t('seeds.form.submit_error'),
-        t('seeds.form.try_again')
-      );
+      Alert.alert(t('seeds.form.submit_error'), t('seeds.form.try_again'));
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     }
   };
@@ -120,11 +111,7 @@ export function SeedForm({ initialValues, onSubmit, isLoading }: SeedFormProps) 
           accessibilityRole="button"
           accessibilityLabel={t('seeds.location.retry')}
         >
-          <Ionicons
-            name="location-outline"
-            size={20}
-            color={isDark ? '#9CA3AF' : '#6B7280'}
-          />
+          <Ionicons name="location-outline" size={20} color={isDark ? '#9CA3AF' : '#6B7280'} />
           <Text style={[styles.locationText, isDark && styles.locationTextDark]}>
             {t('seeds.location.not_available')}
           </Text>
@@ -134,11 +121,7 @@ export function SeedForm({ initialValues, onSubmit, isLoading }: SeedFormProps) 
 
     return (
       <View style={styles.locationContainer}>
-        <Ionicons
-          name="location"
-          size={20}
-          color={isDark ? '#22C55E' : '#16A34A'}
-        />
+        <Ionicons name="location" size={20} color={isDark ? '#22C55E' : '#16A34A'} />
         <Text style={[styles.locationText, isDark && styles.locationTextDark]}>
           {location.city && location.country
             ? `${location.city}, ${location.country}`
@@ -153,11 +136,7 @@ export function SeedForm({ initialValues, onSubmit, isLoading }: SeedFormProps) 
       {renderLocationInfo()}
 
       <TextInput
-        style={[
-          styles.input,
-          isDark && styles.inputDark,
-          Platform.OS === 'ios' && styles.iosInput,
-        ]}
+        style={[styles.input, isDark && styles.inputDark, Platform.OS === 'ios' && styles.iosInput]}
         placeholder={t('seeds.form.name_placeholder')}
         placeholderTextColor={isDark ? '#9CA3AF' : '#6B7280'}
         value={name}
@@ -167,11 +146,7 @@ export function SeedForm({ initialValues, onSubmit, isLoading }: SeedFormProps) 
       />
 
       <TextInput
-        style={[
-          styles.input,
-          isDark && styles.inputDark,
-          Platform.OS === 'ios' && styles.iosInput,
-        ]}
+        style={[styles.input, isDark && styles.inputDark, Platform.OS === 'ios' && styles.iosInput]}
         placeholder={t('seeds.form.species_placeholder')}
         placeholderTextColor={isDark ? '#9CA3AF' : '#6B7280'}
         value={species}
@@ -180,11 +155,7 @@ export function SeedForm({ initialValues, onSubmit, isLoading }: SeedFormProps) 
         accessibilityHint={t('seeds.form.species_hint')}
       />
 
-      <EnvironmentSelector
-        value={environment}
-        onChange={setEnvironment}
-        disabled={isLoading}
-      />
+      <EnvironmentSelector value={environment} onChange={setEnvironment} disabled={isLoading} />
 
       <TextInput
         style={[
@@ -293,4 +264,4 @@ const styles = StyleSheet.create({
   submitButtonTextDark: {
     color: '#064E3B',
   },
-}); 
+});

@@ -47,4 +47,4 @@ export function AdminStack() {
       />
     </Stack.Navigator>
   );
-} 
+}

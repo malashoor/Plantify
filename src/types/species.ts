@@ -47,4 +47,4 @@ export interface SpeciesProfile {
     environment: string[];
     seasonal: string[];
   };
-} 
+}

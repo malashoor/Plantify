@@ -1,4 +1,11 @@
-export type SensorParameter = 'pH' | 'EC' | 'temperature' | 'nitrogen' | 'phosphorus' | 'potassium' | 'water_level';
+export type SensorParameter =
+  | 'pH'
+  | 'EC'
+  | 'temperature'
+  | 'nitrogen'
+  | 'phosphorus'
+  | 'potassium'
+  | 'water_level';
 export type SensorCondition = '<' | '>' | '<=' | '>=';
 
 export interface SlackActionConfig {
@@ -54,4 +61,4 @@ export type SensorRuleEvaluationResult = {
   reading: number;
   unit: string;
   rule: SensorRule;
-}; 
+};

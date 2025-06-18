@@ -11,12 +11,12 @@ const createTheme = (colorScheme: 'light' | 'dark' | null) => ({
     background: colorScheme === 'dark' ? '#1E1E1E' : '#FFFFFF',
     text: colorScheme === 'dark' ? '#FFFFFF' : '#000000',
     primary: '#4CAF50',
-  }
+  },
 });
 
-export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ 
-  message = 'Loading...', 
-  size = 'large' 
+export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
+  message = 'Loading...',
+  size = 'large',
 }) => {
   const colorScheme = useColorScheme();
   const theme = createTheme(colorScheme);
@@ -24,11 +24,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <ActivityIndicator size={size} color={theme.colors.primary} />
-      {message && (
-        <Text style={[styles.message, { color: theme.colors.text }]}>
-          {message}
-        </Text>
-      )}
+      {message && <Text style={[styles.message, { color: theme.colors.text }]}>{message}</Text>}
     </View>
   );
 };
@@ -45,4 +41,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 16,
   },
-}); 
+});

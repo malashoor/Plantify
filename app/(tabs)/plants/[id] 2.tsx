@@ -56,4 +56,4 @@ const styles = StyleSheet.create({
   description: { fontSize: 16, color: '#555', textAlign: 'center', marginBottom: 16 },
   sectionTitle: { fontSize: 18, fontWeight: '600', marginBottom: 4 },
   care: { fontSize: 16, color: '#333', textAlign: 'center' },
-}); 
+});

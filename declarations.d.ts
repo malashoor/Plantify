@@ -56,12 +56,17 @@ declare module 'react' {
   interface ReactElement {
     children?: React.ReactNode;
   }
-  
+
   // Add missing React hooks
-  export function useState<T>(initialState: T | (() => T)): [T, (newState: T | ((prevState: T) => T)) => void];
+  export function useState<T>(
+    initialState: T | (() => T)
+  ): [T, (newState: T | ((prevState: T) => T)) => void];
   export function useEffect(effect: () => void | (() => void), deps?: readonly any[]): void;
-  export function useCallback<T extends (...args: any[]) => any>(callback: T, deps: readonly any[]): T;
+  export function useCallback<T extends (...args: any[]) => any>(
+    callback: T,
+    deps: readonly any[]
+  ): T;
   export function useMemo<T>(factory: () => T, deps: readonly any[]): T;
   export function useRef<T>(initialValue: T): { current: T };
   export function useContext<T>(context: React.Context<T>): T;
-} 
+}

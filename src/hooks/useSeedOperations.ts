@@ -10,7 +10,9 @@ export function useSeedOperations() {
   const createSeed = async (input: CreateSeedInput): Promise<Seed> => {
     setIsLoading(true);
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) {
         throw new Error(t('errors.auth.not_authenticated'));
       }
@@ -44,7 +46,9 @@ export function useSeedOperations() {
   const updateSeed = async (id: string, input: UpdateSeedInput): Promise<Seed> => {
     setIsLoading(true);
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) {
         throw new Error(t('errors.auth.not_authenticated'));
       }
@@ -79,16 +83,14 @@ export function useSeedOperations() {
   const deleteSeed = async (id: string): Promise<void> => {
     setIsLoading(true);
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) {
         throw new Error(t('errors.auth.not_authenticated'));
       }
 
-      const { error } = await supabase
-        .from('seeds')
-        .delete()
-        .eq('id', id)
-        .eq('user_id', user.id);
+      const { error } = await supabase.from('seeds').delete().eq('id', id).eq('user_id', user.id);
 
       if (error) throw error;
     } finally {
@@ -102,4 +104,4 @@ export function useSeedOperations() {
     deleteSeed,
     isLoading,
   };
-} 
+}

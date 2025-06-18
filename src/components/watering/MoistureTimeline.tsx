@@ -55,36 +55,42 @@ export const MoistureTimeline: React.FC<MoistureTimelineProps> = ({
   }, [profile, weather, lastWatering, isIndoor]);
 
   const calculateInitialMoisture = (): number => {
-    const daysSinceWatering = Math.max(0, (new Date().getTime() - lastWatering.getTime()) / (1000 * 60 * 60 * 24));
+    const daysSinceWatering = Math.max(
+      0,
+      (new Date().getTime() - lastWatering.getTime()) / (1000 * 60 * 60 * 24)
+    );
     const baseRetention = profile.moisture.retentionScore;
     const initialMoisture = Math.max(
       profile.moisture.moistureThresholds.min,
-      1 - (daysSinceWatering / (baseRetention * 10))
+      1 - daysSinceWatering / (baseRetention * 10)
     );
     return initialMoisture;
   };
 
-  const predictMoisture = (date: Date, currentMoisture: number): { moisture: number; optimal: number; confidence: number } => {
+  const predictMoisture = (
+    date: Date,
+    currentMoisture: number
+  ): { moisture: number; optimal: number; confidence: number } => {
     let moisture = currentMoisture;
     const optimal = profile.moisture.moistureThresholds.optimal;
     let confidence = 0.9; // Base confidence
 
     // Daily moisture loss
     const baseLoss = (1 - profile.moisture.retentionScore) * 0.2;
-    
+
     // Temperature impact
     const tempFactor = Math.max(0, (weather.temperature - 20) / 30);
     moisture -= baseLoss * (1 + tempFactor);
-    
+
     // Humidity impact
     const humidityFactor = Math.max(0, (70 - weather.humidity) / 70);
     moisture -= baseLoss * humidityFactor;
-    
+
     // Wind impact
     if (profile.moisture.sensitivities.wind && !isIndoor) {
       const windFactor = Math.min(1, weather.windSpeed / 20);
       moisture -= baseLoss * windFactor;
-      confidence *= (1 - windFactor * 0.2);
+      confidence *= 1 - windFactor * 0.2;
     }
 
     // Rain impact
@@ -153,7 +159,7 @@ export const MoistureTimeline: React.FC<MoistureTimelineProps> = ({
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{t('moisture.timeline.title')}</Text>
-      
+
       <LineChart
         data={chartData}
         width={screenWidth - 32}
@@ -255,4 +261,4 @@ const styles = StyleSheet.create({
     color: '#1976d2',
     fontStyle: 'italic',
   },
-}); 
+});

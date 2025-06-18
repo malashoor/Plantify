@@ -9,4 +9,4 @@ export function useRolePermissions() {
     isModerator: false,
     isUser: true,
   };
-} 
+}

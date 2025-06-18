@@ -24,7 +24,7 @@ const ErrorDisplay: React.FC<{
     if (error) {
       trackError(error, {
         component: 'ImageProcessingErrorBoundary',
-        errorType: error instanceof ImageProcessingError ? error.code : 'UNKNOWN'
+        errorType: error instanceof ImageProcessingError ? error.code : 'UNKNOWN',
       });
     }
   }, [error]);
@@ -65,14 +65,14 @@ export class ImageProcessingErrorBoundary extends Component<Props, State> {
     super(props);
     this.state = {
       hasError: false,
-      error: null
+      error: null,
     };
   }
 
   static getDerivedStateFromError(error: Error): State {
     return {
       hasError: true,
-      error
+      error,
     };
   }
 
@@ -83,7 +83,7 @@ export class ImageProcessingErrorBoundary extends Component<Props, State> {
   handleRetry = () => {
     this.setState({
       hasError: false,
-      error: null
+      error: null,
     });
     this.props.onRetry?.();
   };
@@ -112,29 +112,29 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   errorTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 8,
-    color: '#e74c3c'
+    color: '#e74c3c',
   },
   errorMessage: {
     fontSize: 14,
     color: '#34495e',
     textAlign: 'center',
-    marginBottom: 16
+    marginBottom: 16,
   },
   retryButton: {
     backgroundColor: '#3498db',
     paddingHorizontal: 20,
     paddingVertical: 10,
-    borderRadius: 6
+    borderRadius: 6,
   },
   retryText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: '600'
-  }
-}); 
+    fontWeight: '600',
+  },
+});

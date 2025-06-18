@@ -25,47 +25,47 @@ const weatherConditions: Record<WeatherCondition, WeatherData> = {
       temperature: 35,
       humidity: 45,
       condition: 'sunny',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     },
     forecast: {
       daily: Array.from({ length: 5 }, (_, i) => ({
         date: new Date(Date.now() + i * 86400000).toISOString(),
         temperature: { min: 28, max: 38 },
-        condition: 'sunny'
-      }))
-    }
+        condition: 'sunny',
+      })),
+    },
   },
   rainy: {
     current: {
       temperature: 18,
       humidity: 85,
       condition: 'rain',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     },
     forecast: {
       daily: Array.from({ length: 5 }, (_, i) => ({
         date: new Date(Date.now() + i * 86400000).toISOString(),
         temperature: { min: 15, max: 22 },
         condition: 'rain',
-        precipitation: 25
-      }))
-    }
+        precipitation: 25,
+      })),
+    },
   },
   normal: {
     current: {
       temperature: 22,
       humidity: 65,
       condition: 'partly_cloudy',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     },
     forecast: {
       daily: Array.from({ length: 5 }, (_, i) => ({
         date: new Date(Date.now() + i * 86400000).toISOString(),
         temperature: { min: 18, max: 25 },
-        condition: 'partly_cloudy'
-      }))
-    }
-  }
+        condition: 'partly_cloudy',
+      })),
+    },
+  },
 };
 
 export const weatherScenarios = {
@@ -85,11 +85,11 @@ export const weatherScenarios = {
   simulateTimeoutThenRecover(timeoutDuration: number) {
     // First set timeout
     mockServerState.setMockResponse('/api/weather/current', {
-      delay: timeoutDuration
+      delay: timeoutDuration,
     });
 
     mockServerState.setMockResponse('/api/weather/forecast', {
-      delay: timeoutDuration
+      delay: timeoutDuration,
     });
 
     // Schedule recovery
@@ -106,12 +106,12 @@ export const weatherScenarios = {
     const response = {
       status: 429,
       headers: {
-        'Retry-After': '3600'
+        'Retry-After': '3600',
       },
       error: {
         code: 'QUOTA_EXCEEDED',
-        message: 'OpenWeather API quota exceeded. Try again in 1 hour.'
-      }
+        message: 'OpenWeather API quota exceeded. Try again in 1 hour.',
+      },
     };
 
     mockServerState.setMockResponse('/api/weather/current', response);
@@ -132,13 +132,13 @@ export const weatherScenarios = {
 
     const interval = setInterval(() => {
       currentStep++;
-      const currentTemp = startTemp + (tempStep * currentStep);
+      const currentTemp = startTemp + tempStep * currentStep;
 
       mockServerState.updateState('weather', 'current', {
         temperature: Math.round(currentTemp),
         humidity: 65,
         condition: currentTemp > 25 ? 'sunny' : 'partly_cloudy',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
 
       if (currentStep >= steps) {
@@ -164,13 +164,13 @@ export const weatherScenarios = {
           status: 500,
           error: {
             code: 'WEATHER_UPDATE_FAILED',
-            message: 'Failed to fetch weather data'
-          }
+            message: 'Failed to fetch weather data',
+          },
         };
       }
       return {
         status: 200,
-        data: weatherConditions.normal.current
+        data: weatherConditions.normal.current,
       };
     };
 
@@ -190,5 +190,5 @@ export const weatherScenarios = {
     mockServerState.clearMockResponse('/api/weather/current');
     mockServerState.clearMockResponse('/api/weather/forecast');
     this.setWeatherCondition('normal');
-  }
-}; 
+  },
+};

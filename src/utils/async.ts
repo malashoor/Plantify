@@ -45,20 +45,17 @@ export const retryWithBackoff = async <T>(
       return await fn();
     } catch (error) {
       lastError = error as Error;
-      
+
       if (attempt === maxAttempts) {
         break;
       }
 
-      const backoffDelay = Math.min(
-        baseDelay * Math.pow(2, attempt - 1),
-        maxDelay
-      );
-      
+      const backoffDelay = Math.min(baseDelay * Math.pow(2, attempt - 1), maxDelay);
+
       await delay(backoffDelay);
       attempt++;
     }
   }
 
   throw lastError!;
-}; 
+};

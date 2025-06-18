@@ -3,7 +3,9 @@ import { View, Text, StyleSheet } from 'react-native';
 import { testSupabaseConnection } from '@lib/testSupabase';
 
 export default function TestScreen() {
-  const [connectionStatus, setConnectionStatus] = useState<'loading' | 'success' | 'error'>('loading');
+  const [connectionStatus, setConnectionStatus] = useState<'loading' | 'success' | 'error'>(
+    'loading'
+  );
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   useEffect(() => {
@@ -27,9 +29,7 @@ export default function TestScreen() {
         <Text style={styles.status}>
           Status: {connectionStatus === 'loading' ? 'Testing...' : connectionStatus}
         </Text>
-        {connectionStatus === 'error' && (
-          <Text style={styles.error}>{errorMessage}</Text>
-        )}
+        {connectionStatus === 'error' && <Text style={styles.error}>{errorMessage}</Text>}
       </View>
     </View>
   );
@@ -58,4 +58,4 @@ const styles = StyleSheet.create({
     color: 'red',
     textAlign: 'center',
   },
-}); 
+});

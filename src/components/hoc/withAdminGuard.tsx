@@ -4,9 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { checkIsAdmin } from '../../utils/supabase';
 import { Text } from '../ui/Text';
 
-export function withAdminGuard<P extends object>(
-  WrappedComponent: React.ComponentType<P>
-) {
+export function withAdminGuard<P extends object>(WrappedComponent: React.ComponentType<P>) {
   return function AdminGuardComponent(props: P) {
     const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
     const navigation = useNavigation();
@@ -38,4 +36,4 @@ export function withAdminGuard<P extends object>(
 
     return <WrappedComponent {...props} />;
   };
-} 
+}

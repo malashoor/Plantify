@@ -37,30 +37,30 @@ export function useGrowthData(plantId?: string) {
           height: 115,
           health: 'good',
           leafCount: 12,
-          notes: 'Initial measurement when purchased'
+          notes: 'Initial measurement when purchased',
         },
         {
           date: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString(),
           height: 118,
           health: 'good',
           leafCount: 14,
-          notes: 'New leaf growth visible'
+          notes: 'New leaf growth visible',
         },
         {
           date: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
           height: 122,
           health: 'excellent',
           leafCount: 16,
-          notes: 'Responding well to fertilizer'
+          notes: 'Responding well to fertilizer',
         },
         {
           date: new Date().toISOString(),
           height: 125,
           health: 'excellent',
           leafCount: 18,
-          notes: 'Consistent growth, very healthy'
-        }
-      ]
+          notes: 'Consistent growth, very healthy',
+        },
+      ],
     },
     {
       plantId: 'plant-2',
@@ -74,23 +74,23 @@ export function useGrowthData(plantId?: string) {
           height: 60,
           health: 'good',
           leafCount: 8,
-          notes: 'Healthy when received'
+          notes: 'Healthy when received',
         },
         {
           date: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString(),
           height: 63,
           health: 'good',
           leafCount: 9,
-          notes: 'Slow but steady growth'
+          notes: 'Slow but steady growth',
         },
         {
           date: new Date().toISOString(),
           height: 65,
           health: 'excellent',
           leafCount: 10,
-          notes: 'New shoot emerging'
-        }
-      ]
+          notes: 'New shoot emerging',
+        },
+      ],
     },
     {
       plantId: 'plant-3',
@@ -104,24 +104,24 @@ export function useGrowthData(plantId?: string) {
           height: 35,
           health: 'good',
           leafCount: 15,
-          notes: 'Small cutting, starting to establish'
+          notes: 'Small cutting, starting to establish',
         },
         {
           date: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
           height: 40,
           health: 'excellent',
           leafCount: 22,
-          notes: 'Rapid vine growth'
+          notes: 'Rapid vine growth',
         },
         {
           date: new Date().toISOString(),
           height: 45,
           health: 'excellent',
           leafCount: 28,
-          notes: 'Very fast grower, may need pruning soon'
-        }
-      ]
-    }
+          notes: 'Very fast grower, may need pruning soon',
+        },
+      ],
+    },
   ];
 
   const fetchGrowthData = async () => {
@@ -153,7 +153,10 @@ export function useGrowthData(plantId?: string) {
     }
   };
 
-  const addGrowthMeasurement = async (plantId: string, measurement: Omit<GrowthDataPoint, 'date'>) => {
+  const addGrowthMeasurement = async (
+    plantId: string,
+    measurement: Omit<GrowthDataPoint, 'date'>
+  ) => {
     setIsLoading(true);
     setError(null);
 
@@ -165,31 +168,35 @@ export function useGrowthData(plantId?: string) {
 
       const newMeasurement: GrowthDataPoint = {
         ...measurement,
-        date: new Date().toISOString()
+        date: new Date().toISOString(),
       };
 
-      setGrowthData(prev => prev.map(data => {
-        if (data.plantId === plantId) {
-          const updatedData = [...data.data, newMeasurement].sort(
-            (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-          );
-          
-          // Calculate new growth rate
-          const firstPoint = updatedData[0];
-          const lastPoint = updatedData[updatedData.length - 1];
-          const daysDiff = (new Date(lastPoint.date).getTime() - new Date(firstPoint.date).getTime()) / (1000 * 60 * 60 * 24);
-          const heightDiff = lastPoint.height - firstPoint.height;
-          const growthRate = daysDiff > 0 ? (heightDiff / daysDiff) * 30 : 0; // cm per month
+      setGrowthData(prev =>
+        prev.map(data => {
+          if (data.plantId === plantId) {
+            const updatedData = [...data.data, newMeasurement].sort(
+              (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+            );
 
-          return {
-            ...data,
-            data: updatedData,
-            currentHeight: measurement.height,
-            growthRate: Math.round(growthRate * 10) / 10
-          };
-        }
-        return data;
-      }));
+            // Calculate new growth rate
+            const firstPoint = updatedData[0];
+            const lastPoint = updatedData[updatedData.length - 1];
+            const daysDiff =
+              (new Date(lastPoint.date).getTime() - new Date(firstPoint.date).getTime()) /
+              (1000 * 60 * 60 * 24);
+            const heightDiff = lastPoint.height - firstPoint.height;
+            const growthRate = daysDiff > 0 ? (heightDiff / daysDiff) * 30 : 0; // cm per month
+
+            return {
+              ...data,
+              data: updatedData,
+              currentHeight: measurement.height,
+              growthRate: Math.round(growthRate * 10) / 10,
+            };
+          }
+          return data;
+        })
+      );
 
       setIsLoading(false);
     } catch (err) {
@@ -207,7 +214,8 @@ export function useGrowthData(plantId?: string) {
 
     const { data } = plantData;
     const totalGrowth = data[data.length - 1].height - data[0].height;
-    const daysSinceStart = (new Date().getTime() - new Date(data[0].date).getTime()) / (1000 * 60 * 60 * 24);
+    const daysSinceStart =
+      (new Date().getTime() - new Date(data[0].date).getTime()) / (1000 * 60 * 60 * 24);
     const averageGrowthPerDay = totalGrowth / daysSinceStart;
     const averageGrowthPerMonth = averageGrowthPerDay * 30;
 
@@ -217,7 +225,7 @@ export function useGrowthData(plantId?: string) {
       averageGrowthPerMonth: Math.round(averageGrowthPerMonth * 10) / 10,
       measurementCount: data.length,
       currentHeight: data[data.length - 1].height,
-      startHeight: data[0].height
+      startHeight: data[0].height,
     };
   };
 
@@ -231,6 +239,6 @@ export function useGrowthData(plantId?: string) {
     error,
     refetch: fetchGrowthData,
     addGrowthMeasurement,
-    getGrowthStats
+    getGrowthStats,
   };
-} 
+}

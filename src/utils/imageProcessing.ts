@@ -13,14 +13,17 @@ export const IMAGE_CONFIG = {
   QUALITY: {
     HIGH: 0.9,
     MEDIUM: 0.7,
-    LOW: 0.5
+    LOW: 0.5,
   },
   MEMORY_THRESHOLD: 0.8, // 80% of available memory
-  TEMP_DIRECTORY: `${FileSystem.cacheDirectory}ImageManipulator`
+  TEMP_DIRECTORY: `${FileSystem.cacheDirectory}ImageManipulator`,
 } as const;
 
 export class ImageProcessingError extends Error {
-  constructor(message: string, public code: string) {
+  constructor(
+    message: string,
+    public code: string
+  ) {
     super(message);
     this.name = 'ImageProcessingError';
   }
@@ -50,17 +53,11 @@ export async function checkImageSize(uri: string): Promise<number> {
   try {
     const fileInfo = await FileSystem.getInfoAsync(uri);
     if (!fileInfo.exists) {
-      throw new ImageProcessingError(
-        'Image file does not exist',
-        'FILE_NOT_FOUND'
-      );
+      throw new ImageProcessingError('Image file does not exist', 'FILE_NOT_FOUND');
     }
     return fileInfo.size || 0;
   } catch (error) {
-    throw new ImageProcessingError(
-      'Failed to check image size',
-      'SIZE_CHECK_FAILED'
-    );
+    throw new ImageProcessingError('Failed to check image size', 'SIZE_CHECK_FAILED');
   }
 }
 
@@ -69,7 +66,7 @@ export async function checkMemoryAvailability(): Promise<boolean> {
     try {
       const memory = await DeviceInfo.getFreeDiskStorage();
       const totalMemory = await DeviceInfo.getTotalDiskStorage();
-      return (memory / totalMemory) > (1 - IMAGE_CONFIG.MEMORY_THRESHOLD);
+      return memory / totalMemory > 1 - IMAGE_CONFIG.MEMORY_THRESHOLD;
     } catch {
       // If we can't check memory, assume it's okay but log warning
       console.warn('Unable to check memory availability');
@@ -80,22 +77,14 @@ export async function checkMemoryAvailability(): Promise<boolean> {
   return true;
 }
 
-export async function compressImage(
-  uri: string, 
-  options: CompressOptions = {}
-): Promise<string> {
-  const {
-    width = 1024,
-    quality = 0.7,
-    format = ImageManipulator.SaveFormat.JPEG
-  } = options;
+export async function compressImage(uri: string, options: CompressOptions = {}): Promise<string> {
+  const { width = 1024, quality = 0.7, format = ImageManipulator.SaveFormat.JPEG } = options;
 
   try {
-    const manipResult = await ImageManipulator.manipulateAsync(
-      uri,
-      [{ resize: { width } }],
-      { compress: quality, format }
-    );
+    const manipResult = await ImageManipulator.manipulateAsync(uri, [{ resize: { width } }], {
+      compress: quality,
+      format,
+    });
     return manipResult.uri;
   } catch (error) {
     console.error('Failed to compress image:', error);
@@ -139,11 +128,7 @@ export async function validateImage(uri: string): Promise<boolean> {
     }
 
     // Try to load image metadata
-    await ImageManipulator.manipulateAsync(
-      uri,
-      [],
-      { compress: 1 }
-    );
+    await ImageManipulator.manipulateAsync(uri, [], { compress: 1 });
 
     return true;
   } catch {
@@ -152,11 +137,11 @@ export async function validateImage(uri: string): Promise<boolean> {
 }
 
 export async function compressImage(uri: string, options = {}) {
-  const manipResult = await ImageManipulator.manipulateAsync(
-    uri,
-    [{ resize: { width: 1024 } }],
-    { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG, ...options }
-  );
+  const manipResult = await ImageManipulator.manipulateAsync(uri, [{ resize: { width: 1024 } }], {
+    compress: 0.7,
+    format: ImageManipulator.SaveFormat.JPEG,
+    ...options,
+  });
   return manipResult.uri;
 }
 
@@ -166,4 +151,4 @@ export async function cleanup(uri: string) {
   } catch {
     // ignore cleanup errors
   }
-} 
+}

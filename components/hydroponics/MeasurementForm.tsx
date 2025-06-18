@@ -37,7 +37,7 @@ const createTheme = (colorScheme: 'light' | 'dark' | null) => ({
     success: '#4CAF50',
     warning: '#FF9800',
     error: '#F44336',
-  }
+  },
 });
 
 export const MeasurementForm: React.FC<MeasurementFormProps> = ({
@@ -92,7 +92,7 @@ export const MeasurementForm: React.FC<MeasurementFormProps> = ({
 
   const updateField = (field: keyof MeasurementFormData, value: string) => {
     const numericFields = ['ph_level', 'ec_level', 'water_temperature'];
-    
+
     setFormData(prev => ({
       ...prev,
       [field]: numericFields.includes(field) ? parseFloat(value) || 0 : value,
@@ -106,23 +106,25 @@ export const MeasurementForm: React.FC<MeasurementFormProps> = ({
 
   const getStatusColor = (field: keyof MeasurementFormData): string => {
     const value = formData[field] as number;
-    
+
     switch (field) {
       case 'ph_level':
         if (value >= 5.5 && value <= 6.5) return theme.colors.success;
-        if ((value >= 5.0 && value < 5.5) || (value > 6.5 && value <= 7.0)) return theme.colors.warning;
+        if ((value >= 5.0 && value < 5.5) || (value > 6.5 && value <= 7.0))
+          return theme.colors.warning;
         return theme.colors.error;
-      
+
       case 'ec_level':
         if (value >= 1.2 && value <= 2.0) return theme.colors.success;
-        if ((value >= 1.0 && value < 1.2) || (value > 2.0 && value <= 2.5)) return theme.colors.warning;
+        if ((value >= 1.0 && value < 1.2) || (value > 2.0 && value <= 2.5))
+          return theme.colors.warning;
         return theme.colors.error;
-      
+
       case 'water_temperature':
         if (value >= 18 && value <= 24) return theme.colors.success;
         if ((value >= 15 && value < 18) || (value > 24 && value <= 28)) return theme.colors.warning;
         return theme.colors.error;
-      
+
       default:
         return theme.colors.text;
     }
@@ -130,23 +132,23 @@ export const MeasurementForm: React.FC<MeasurementFormProps> = ({
 
   const getStatusText = (field: keyof MeasurementFormData): string => {
     const value = formData[field] as number;
-    
+
     switch (field) {
       case 'ph_level':
         if (value >= 5.5 && value <= 6.5) return 'Optimal';
         if ((value >= 5.0 && value < 5.5) || (value > 6.5 && value <= 7.0)) return 'Acceptable';
         return 'Needs adjustment';
-      
+
       case 'ec_level':
         if (value >= 1.2 && value <= 2.0) return 'Optimal';
         if ((value >= 1.0 && value < 1.2) || (value > 2.0 && value <= 2.5)) return 'Acceptable';
         return 'Needs adjustment';
-      
+
       case 'water_temperature':
         if (value >= 18 && value <= 24) return 'Optimal';
         if ((value >= 15 && value < 18) || (value > 24 && value <= 28)) return 'Acceptable';
         return 'Needs adjustment';
-      
+
       default:
         return '';
     }
@@ -171,7 +173,7 @@ export const MeasurementForm: React.FC<MeasurementFormProps> = ({
               {getStatusText('ph_level')}
             </Text>
           </View>
-          
+
           <TextInput
             style={[
               styles.input,
@@ -182,21 +184,19 @@ export const MeasurementForm: React.FC<MeasurementFormProps> = ({
               },
             ]}
             value={formData.ph_level.toString()}
-            onChangeText={(value) => updateField('ph_level', value)}
+            onChangeText={value => updateField('ph_level', value)}
             placeholder="6.0"
             placeholderTextColor={theme.colors.textSecondary}
             keyboardType="decimal-pad"
             maxLength={4}
           />
-          
+
           <Text style={[styles.hint, { color: theme.colors.textSecondary }]}>
             Ideal range: 5.5 - 6.5
           </Text>
-          
+
           {errors.ph_level && (
-            <Text style={[styles.error, { color: theme.colors.error }]}>
-              {errors.ph_level}
-            </Text>
+            <Text style={[styles.error, { color: theme.colors.error }]}>{errors.ph_level}</Text>
           )}
         </View>
 
@@ -209,7 +209,7 @@ export const MeasurementForm: React.FC<MeasurementFormProps> = ({
               {getStatusText('ec_level')}
             </Text>
           </View>
-          
+
           <TextInput
             style={[
               styles.input,
@@ -220,21 +220,19 @@ export const MeasurementForm: React.FC<MeasurementFormProps> = ({
               },
             ]}
             value={formData.ec_level.toString()}
-            onChangeText={(value) => updateField('ec_level', value)}
+            onChangeText={value => updateField('ec_level', value)}
             placeholder="1.5"
             placeholderTextColor={theme.colors.textSecondary}
             keyboardType="decimal-pad"
             maxLength={4}
           />
-          
+
           <Text style={[styles.hint, { color: theme.colors.textSecondary }]}>
             Ideal range: 1.2 - 2.0 mS/cm
           </Text>
-          
+
           {errors.ec_level && (
-            <Text style={[styles.error, { color: theme.colors.error }]}>
-              {errors.ec_level}
-            </Text>
+            <Text style={[styles.error, { color: theme.colors.error }]}>{errors.ec_level}</Text>
           )}
         </View>
 
@@ -247,7 +245,7 @@ export const MeasurementForm: React.FC<MeasurementFormProps> = ({
               {getStatusText('water_temperature')}
             </Text>
           </View>
-          
+
           <TextInput
             style={[
               styles.input,
@@ -258,17 +256,17 @@ export const MeasurementForm: React.FC<MeasurementFormProps> = ({
               },
             ]}
             value={formData.water_temperature.toString()}
-            onChangeText={(value) => updateField('water_temperature', value)}
+            onChangeText={value => updateField('water_temperature', value)}
             placeholder="20"
             placeholderTextColor={theme.colors.textSecondary}
             keyboardType="decimal-pad"
             maxLength={4}
           />
-          
+
           <Text style={[styles.hint, { color: theme.colors.textSecondary }]}>
             Ideal range: 18°C - 24°C
           </Text>
-          
+
           {errors.water_temperature && (
             <Text style={[styles.error, { color: theme.colors.error }]}>
               {errors.water_temperature}
@@ -282,7 +280,7 @@ export const MeasurementForm: React.FC<MeasurementFormProps> = ({
             <Ionicons name="document-text" size={20} color={theme.colors.textSecondary} />
             <Text style={[styles.label, { color: theme.colors.text }]}>Notes (Optional)</Text>
           </View>
-          
+
           <TextInput
             style={[
               styles.textArea,
@@ -293,7 +291,7 @@ export const MeasurementForm: React.FC<MeasurementFormProps> = ({
               },
             ]}
             value={formData.notes}
-            onChangeText={(value) => updateField('notes', value)}
+            onChangeText={value => updateField('notes', value)}
             placeholder="Any observations or notes about this measurement..."
             placeholderTextColor={theme.colors.textSecondary}
             multiline
@@ -311,7 +309,7 @@ export const MeasurementForm: React.FC<MeasurementFormProps> = ({
           >
             <Text style={[styles.buttonText, { color: theme.colors.textSecondary }]}>Cancel</Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity
             style={[
               styles.button,
@@ -423,4 +421,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
-}); 
+});

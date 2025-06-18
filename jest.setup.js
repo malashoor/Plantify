@@ -64,8 +64,8 @@ Object.defineProperty(global, 'window', {
 
 // Mock React Native components and modules
 jest.mock('react-native', () => {
-  const mockComponent = (name) => {
-    const component = (props) => {
+  const mockComponent = name => {
+    const component = props => {
       return React.createElement(name, props, props.children);
     };
     component.displayName = name;
@@ -73,9 +73,9 @@ jest.mock('react-native', () => {
   };
 
   const RN = jest.requireActual('react-native');
-  
-  const createListComponent = (name) => {
-    const Component = (props) => {
+
+  const createListComponent = name => {
+    const Component = props => {
       const {
         data,
         renderItem,
@@ -90,12 +90,14 @@ jest.mock('react-native', () => {
       } = props;
 
       const content = [];
-      
+
       if (ListHeaderComponent) {
         content.push(
-          React.createElement('div', { key: 'header' }, 
-            React.isValidElement(ListHeaderComponent) 
-              ? ListHeaderComponent 
+          React.createElement(
+            'div',
+            { key: 'header' },
+            React.isValidElement(ListHeaderComponent)
+              ? ListHeaderComponent
               : React.createElement(ListHeaderComponent)
           )
         );
@@ -110,7 +112,9 @@ jest.mock('react-native', () => {
         );
       } else if (ListEmptyComponent) {
         content.push(
-          React.createElement('div', { key: 'empty' },
+          React.createElement(
+            'div',
+            { key: 'empty' },
             React.isValidElement(ListEmptyComponent)
               ? ListEmptyComponent
               : React.createElement(ListEmptyComponent)
@@ -120,7 +124,9 @@ jest.mock('react-native', () => {
 
       if (ListFooterComponent) {
         content.push(
-          React.createElement('div', { key: 'footer' },
+          React.createElement(
+            'div',
+            { key: 'footer' },
             React.isValidElement(ListFooterComponent)
               ? ListFooterComponent
               : React.createElement(ListFooterComponent)
@@ -143,7 +149,7 @@ jest.mock('react-native', () => {
     Platform: {
       ...RN.Platform,
       OS: 'ios',
-      select: jest.fn((obj) => obj.ios || obj.default),
+      select: jest.fn(obj => obj.ios || obj.default),
     },
     Dimensions: {
       ...RN.Dimensions,
@@ -153,13 +159,13 @@ jest.mock('react-native', () => {
       ...RN.PixelRatio,
       get: jest.fn(() => 2),
       getFontScale: jest.fn(() => 1),
-      getPixelSizeForLayoutSize: jest.fn((size) => size * 2),
-      roundToNearestPixel: jest.fn((size) => size),
+      getPixelSizeForLayoutSize: jest.fn(size => size * 2),
+      roundToNearestPixel: jest.fn(size => size),
     },
     StyleSheet: {
       ...RN.StyleSheet,
-      create: jest.fn((styles) => styles),
-      flatten: jest.fn((styles) => styles),
+      create: jest.fn(styles => styles),
+      flatten: jest.fn(styles => styles),
     },
     NativeModules: {
       ...RN.NativeModules,
@@ -247,7 +253,9 @@ jest.mock('expo-router', () => ({
   useSegments: () => [],
   usePathname: () => '/',
   Link: 'Link',
-  Stack: 'Stack',
+  Stack: {
+    Screen: 'Stack.Screen',
+  },
   Tabs: 'Tabs',
 }));
 
@@ -399,4 +407,4 @@ jest.mock('react-native/Libraries/Utilities/Platform', () => ({
 }));
 
 // Mock timers
-jest.useFakeTimers(); 
+jest.useFakeTimers();

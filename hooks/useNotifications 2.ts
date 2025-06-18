@@ -12,4 +12,4 @@ export const useNotifications = () => {
     getPlantById: () => Promise.resolve(null),
     getAlertTemplate: () => ({ title: '', body: '' }),
   };
-}; 
+};

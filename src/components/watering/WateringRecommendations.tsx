@@ -47,13 +47,16 @@ export const WateringRecommendations: React.FC<WateringRecommendationsProps> = (
     const recommendations: Recommendation[] = [];
     const envFactors = profile.moisture.environmentFactors[environment];
     const isHydroponic = growingMethod.type === 'hydroponic';
-    
+
     // For hydroponic systems, focus on nutrient cycle
     if (isHydroponic) {
       if (growingMethod.nutrientSchedule) {
         const daysSinceLastWatering = differenceInDays(new Date(), lastWatering);
-        const nextNutrientDate = addDays(lastWatering, growingMethod.nutrientSchedule.frequencyDays);
-        
+        const nextNutrientDate = addDays(
+          lastWatering,
+          growingMethod.nutrientSchedule.frequencyDays
+        );
+
         if (daysSinceLastWatering >= growingMethod.nutrientSchedule.frequencyDays) {
           recommendations.push({
             type: 'nutrients',
@@ -91,38 +94,43 @@ export const WateringRecommendations: React.FC<WateringRecommendationsProps> = (
             environmentLabel: t(`environment.${environment}.hydroponic`),
           });
         }
-        
+
         return recommendations;
       }
     }
 
     // For soil-based plants, consider environment factors
     const belowOptimalPoint = timelineData.find(point => {
-      const adjustedThreshold = environment === 'indoor'
-        ? profile.moisture.moistureThresholds.optimal
-        : profile.moisture.moistureThresholds.optimal * (1 - envFactors.evaporationRate);
+      const adjustedThreshold =
+        environment === 'indoor'
+          ? profile.moisture.moistureThresholds.optimal
+          : profile.moisture.moistureThresholds.optimal * (1 - envFactors.evaporationRate);
       return point.moisture < adjustedThreshold;
     });
 
     const criticalPoint = timelineData.find(point => {
-      const adjustedThreshold = environment === 'indoor'
-        ? profile.moisture.moistureThresholds.min
-        : profile.moisture.moistureThresholds.min * (1 - envFactors.evaporationRate);
+      const adjustedThreshold =
+        environment === 'indoor'
+          ? profile.moisture.moistureThresholds.min
+          : profile.moisture.moistureThresholds.min * (1 - envFactors.evaporationRate);
       return point.moisture < adjustedThreshold;
     });
 
     // Check weather impact based on environment
-    const weatherImpact = environment === 'outdoor' ? {
-      highTemp: weather.temperature > 30 * (1 + envFactors.temperatureSensitivity),
-      strongWind: weather.windSpeed > 20 * envFactors.windSensitivity,
-      lowHumidity: weather.humidity < 30 * envFactors.humidityDependence,
-      rainSoon: weather.rainForecast > profile.moisture.moistureThresholds.optimal * 10,
-    } : {
-      highTemp: false,
-      strongWind: false,
-      lowHumidity: false,
-      rainSoon: false,
-    };
+    const weatherImpact =
+      environment === 'outdoor'
+        ? {
+            highTemp: weather.temperature > 30 * (1 + envFactors.temperatureSensitivity),
+            strongWind: weather.windSpeed > 20 * envFactors.windSensitivity,
+            lowHumidity: weather.humidity < 30 * envFactors.humidityDependence,
+            rainSoon: weather.rainForecast > profile.moisture.moistureThresholds.optimal * 10,
+          }
+        : {
+            highTemp: false,
+            strongWind: false,
+            lowHumidity: false,
+            rainSoon: false,
+          };
 
     if (criticalPoint) {
       recommendations.push({
@@ -212,7 +220,7 @@ export const WateringRecommendations: React.FC<WateringRecommendationsProps> = (
   return (
     <View style={[styles.container, isRTL && styles.containerRTL]}>
       <Text style={styles.title}>{t('recommendations.title')}</Text>
-      
+
       {recommendations.map((recommendation, index) => (
         <Pressable
           key={index}
@@ -220,9 +228,7 @@ export const WateringRecommendations: React.FC<WateringRecommendationsProps> = (
           accessibilityRole="button"
           accessibilityLabel={`${recommendation.message}. ${recommendation.reason}`}
           accessibilityHint={
-            recommendation.date
-              ? t('recommendations.accessibility.tapToSchedule')
-              : undefined
+            recommendation.date ? t('recommendations.accessibility.tapToSchedule') : undefined
           }
         >
           <Surface
@@ -321,4 +327,4 @@ const styles = StyleSheet.create({
   environmentChipText: {
     fontSize: 12,
   },
-}); 
+});

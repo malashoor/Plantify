@@ -62,12 +62,7 @@ export default function LanguagePickerModal({ isVisible, onClose }: LanguagePick
   };
 
   return (
-    <Modal
-      visible={isVisible}
-      transparent
-      animationType="none"
-      statusBarTranslucent
-    >
+    <Modal visible={isVisible} transparent animationType="none" statusBarTranslucent>
       <BlurView
         intensity={Platform.OS === 'ios' ? 25 : 100}
         tint={isDark ? 'dark' : 'light'}
@@ -85,11 +80,7 @@ export default function LanguagePickerModal({ isVisible, onClose }: LanguagePick
         >
           {/* Header */}
           <View style={styles.header}>
-            <Ionicons 
-              name="language" 
-              size={32} 
-              color={isDark ? '#A3E635' : '#45B36B'} 
-            />
+            <Ionicons name="language" size={32} color={isDark ? '#A3E635' : '#45B36B'} />
             <Text style={[styles.title, isDark && styles.textDark]}>
               {t('languagePicker.title')}
             </Text>
@@ -113,27 +104,27 @@ export default function LanguagePickerModal({ isVisible, onClose }: LanguagePick
                 accessibilityRole="button"
                 accessibilityLabel={t('languagePicker.selectLanguage', { language: lang.name })}
               >
-                <Text style={[
-                  styles.languageName,
-                  isDark && styles.textDark,
-                  i18n.language === code && styles.languageNameSelected,
-                ]}>
+                <Text
+                  style={[
+                    styles.languageName,
+                    isDark && styles.textDark,
+                    i18n.language === code && styles.languageNameSelected,
+                  ]}
+                >
                   {lang.name}
                 </Text>
-                <Text style={[
-                  styles.languageNative,
-                  isDark && styles.textLightDark,
-                  i18n.language === code && styles.languageNativeSelected,
-                ]}>
+                <Text
+                  style={[
+                    styles.languageNative,
+                    isDark && styles.textLightDark,
+                    i18n.language === code && styles.languageNativeSelected,
+                  ]}
+                >
                   {lang.nativeName}
                 </Text>
                 {i18n.language === code && (
                   <View style={[styles.checkmark, isDark && styles.checkmarkDark]}>
-                    <Ionicons 
-                      name="checkmark" 
-                      size={16} 
-                      color={isDark ? '#111827' : '#FFFFFF'} 
-                    />
+                    <Ionicons name="checkmark" size={16} color={isDark ? '#111827' : '#FFFFFF'} />
                   </View>
                 )}
               </TouchableOpacity>
@@ -147,9 +138,7 @@ export default function LanguagePickerModal({ isVisible, onClose }: LanguagePick
             accessibilityRole="button"
             accessibilityLabel={t('languagePicker.continue')}
           >
-            <Text style={styles.continueButtonText}>
-              {t('languagePicker.continue')}
-            </Text>
+            <Text style={styles.continueButtonText}>{t('languagePicker.continue')}</Text>
           </TouchableOpacity>
         </Animated.View>
       </BlurView>
@@ -268,4 +257,4 @@ const styles = StyleSheet.create({
   textLightDark: {
     color: '#9CA3AF',
   },
-}); 
+});

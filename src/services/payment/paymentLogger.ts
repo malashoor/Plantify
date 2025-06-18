@@ -15,12 +15,12 @@ export async function logPaymentFailure(log: PaymentFailureLog): Promise<void> {
     await fetch(`${API_BASE_URL}/log/payment-failure`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         ...log,
-        timestamp: new Date().toISOString()
-      })
+        timestamp: new Date().toISOString(),
+      }),
     });
   } catch (error) {
     // Don't throw on logging errors, just console.error
@@ -37,18 +37,15 @@ export async function getPaymentFailureLogs(
     const queryParams = new URLSearchParams({
       userId,
       ...(startDate && { startDate: startDate.toISOString() }),
-      ...(endDate && { endDate: endDate.toISOString() })
+      ...(endDate && { endDate: endDate.toISOString() }),
     });
 
-    const response = await fetch(
-      `${API_BASE_URL}/log/payment-failures?${queryParams}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }
-    );
+    const response = await fetch(`${API_BASE_URL}/log/payment-failures?${queryParams}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
     if (!response.ok) {
       throw new Error('Failed to fetch payment failure logs');
@@ -59,4 +56,4 @@ export async function getPaymentFailureLogs(
     console.error('Failed to get payment failure logs:', error);
     return [];
   }
-} 
+}

@@ -61,10 +61,7 @@ export class AIContextService {
 
   private static async getUserSeeds(userId: string): Promise<Seed[]> {
     try {
-      const { data, error } = await supabase
-        .from('seeds')
-        .select('*')
-        .eq('user_id', userId);
+      const { data, error } = await supabase.from('seeds').select('*').eq('user_id', userId);
 
       if (error) throw error;
       return data as Seed[];
@@ -151,10 +148,12 @@ export class AIContextService {
     }
 
     // Get user and seed data if authenticated
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (user) {
       const seeds = await this.getUserSeeds(user.id);
-      
+
       const environments = {
         indoor: seeds.filter(s => s.environment === 'indoor').length,
         outdoor: seeds.filter(s => s.environment === 'outdoor').length,
@@ -190,13 +189,15 @@ export class AIContextService {
 
     // Add location and weather context
     if (context.location?.city && context.location?.country) {
-      parts.push(`You are assisting a user in ${context.location.city}, ${context.location.country}.`);
-      
+      parts.push(
+        `You are assisting a user in ${context.location.city}, ${context.location.country}.`
+      );
+
       if (context.weather) {
         const conditions = WeatherService.getWeatherDescription(context.weather);
         parts.push(
           `Current conditions are ${conditions} ` +
-          `(${context.weather.temperature}°C, ${context.weather.humidity}% humidity).`
+            `(${context.weather.temperature}°C, ${context.weather.humidity}% humidity).`
         );
       }
     } else {
@@ -209,15 +210,15 @@ export class AIContextService {
         const seed = context.seeds.currentSeed;
         parts.push(
           `They are currently growing ${seed.name} (${seed.species}) in an ${seed.environment} environment, ` +
-          `planted on ${new Date(seed.plantedAt).toLocaleDateString()}.`
+            `planted on ${new Date(seed.plantedAt).toLocaleDateString()}.`
         );
       }
 
       if (context.seeds.total > 0) {
         parts.push(
           `They have ${context.seeds.total} plants in total: ` +
-          `${context.seeds.environments.indoor} indoor and ` +
-          `${context.seeds.environments.outdoor} outdoor.`
+            `${context.seeds.environments.indoor} indoor and ` +
+            `${context.seeds.environments.outdoor} outdoor.`
         );
       }
     }
@@ -277,27 +278,38 @@ export class AIContextService {
 
     if (context.weather) {
       // Get weather-specific advice
-      advice = WeatherService.getPlantCareAdvice(context.weather, environment as 'indoor' | 'outdoor');
-      
+      advice = WeatherService.getPlantCareAdvice(
+        context.weather,
+        environment as 'indoor' | 'outdoor'
+      );
+
       if (environment === 'indoor') {
-        return `Since you're growing this plant indoors in ${city}, ${country}, where it's ` +
+        return (
+          `Since you're growing this plant indoors in ${city}, ${country}, where it's ` +
           `currently ${context.weather.temperature}°C with ${context.weather.humidity}% humidity, ` +
-          advice;
+          advice
+        );
       } else {
-        return `For outdoor growing in ${city}, ${country}, with current conditions of ` +
+        return (
+          `For outdoor growing in ${city}, ${country}, with current conditions of ` +
           `${context.weather.temperature}°C and ${context.weather.humidity}% humidity, ` +
-          advice;
+          advice
+        );
       }
     } else {
       // Fallback to basic location-based advice
       if (environment === 'indoor') {
-        return `Since you're growing this plant indoors in ${city}, ${country}, ` +
+        return (
+          `Since you're growing this plant indoors in ${city}, ${country}, ` +
           `ensure proper ventilation and monitor indoor humidity levels. ` +
-          `Consider using a humidity tray if the air is dry.`;
+          `Consider using a humidity tray if the air is dry.`
+        );
       } else {
-        return `For outdoor growing in ${city}, ${country}, ` +
+        return (
+          `For outdoor growing in ${city}, ${country}, ` +
           `protect your plant from extreme temperatures and direct sunlight during peak hours. ` +
-          `Adjust watering based on local weather conditions.`;
+          `Adjust watering based on local weather conditions.`
+        );
       }
     }
   }
@@ -306,11 +318,15 @@ export class AIContextService {
     if (!seed) return '';
 
     if (seed.environment === 'indoor') {
-      return 'For indoor growing, ensure proper ventilation, consistent temperature, ' +
-        'and appropriate light exposure based on your plant\'s needs.';
+      return (
+        'For indoor growing, ensure proper ventilation, consistent temperature, ' +
+        "and appropriate light exposure based on your plant's needs."
+      );
     } else {
-      return 'For outdoor growing, monitor weather conditions and protect your plant ' +
-        'from extreme temperatures and direct sunlight during peak hours.';
+      return (
+        'For outdoor growing, monitor weather conditions and protect your plant ' +
+        'from extreme temperatures and direct sunlight during peak hours.'
+      );
     }
   }
-} 
+}

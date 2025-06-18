@@ -110,10 +110,7 @@ export class RetryController {
   /**
    * Executes an async operation with retry logic
    */
-  async execute<T>(
-    operation: () => Promise<T>,
-    customConfig?: Partial<RetryConfig>
-  ): Promise<T> {
+  async execute<T>(operation: () => Promise<T>, customConfig?: Partial<RetryConfig>): Promise<T> {
     const config = { ...DEFAULT_CONFIG, ...customConfig };
     let attempt = 1;
 
@@ -128,8 +125,7 @@ export class RetryController {
         }
 
         const shouldRetry =
-          attempt < config.maxAttempts &&
-          (config.shouldRetry?.(error) ?? isRetryableError(error));
+          attempt < config.maxAttempts && (config.shouldRetry?.(error) ?? isRetryableError(error));
 
         if (!shouldRetry) {
           throw error;
@@ -146,7 +142,7 @@ export class RetryController {
 
         // If we're offline, don't start the timer yet
         if (!this.isOffline) {
-          await new Promise<void>((resolve) => {
+          await new Promise<void>(resolve => {
             this.timeoutId = setTimeout(resolve, nextRetryMs);
           });
         }
@@ -185,4 +181,4 @@ export class RetryController {
       this.unsubscribeNetInfo();
     }
   }
-} 
+}

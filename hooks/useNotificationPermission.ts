@@ -44,7 +44,9 @@ export const useNotificationPermission = () => {
           return;
         }
         // Then check the actual system permission status
-        const { status } = (await Notifications?.getPermissionsAsync?.()) || { status: 'undetermined' };
+        const { status } = (await Notifications?.getPermissionsAsync?.()) || {
+          status: 'undetermined',
+        };
         setPermissionStatus(status as PermissionStatus);
         // Update our stored value to match reality
         await AsyncStorage.setItem(PERMISSION_STORAGE_KEY, status as PermissionStatus);
@@ -69,14 +71,16 @@ export const useNotificationPermission = () => {
       }
       // Show a context-aware native alert before the system prompt
       // This improves the chance users will accept the permission
-      const customMessage = featureContext 
+      const customMessage = featureContext
         ? t('notifications.permission.contextPrompt', {
             feature: featureContext,
             defaultValue: `Enable notifications for ${featureContext}?`,
           })
-        : t('notifications.permission.growCyclePrompt', 
-            'Enable grow-cycle reminders to get notified when your plants need attention?');
-      return new Promise((resolve) => {
+        : t(
+            'notifications.permission.growCyclePrompt',
+            'Enable grow-cycle reminders to get notified when your plants need attention?'
+          );
+      return new Promise(resolve => {
         showAlert(
           t('notifications.permission.title', 'Stay Connected to Your Plants'),
           customMessage,
@@ -95,7 +99,9 @@ export const useNotificationPermission = () => {
               text: t('common.enable', 'Enable'),
               onPress: async () => {
                 // Request system permission
-                const { status } = (await Notifications?.requestPermissionsAsync?.()) || { status: 'undetermined' };
+                const { status } = (await Notifications?.requestPermissionsAsync?.()) || {
+                  status: 'undetermined',
+                };
                 setPermissionStatus(status as PermissionStatus);
                 await AsyncStorage.setItem(PERMISSION_STORAGE_KEY, status as PermissionStatus);
                 resolve(status === 'granted');
@@ -122,4 +128,4 @@ export const useNotificationPermission = () => {
     requestPermission,
     markFeatureIntroduced,
   };
-}; 
+};

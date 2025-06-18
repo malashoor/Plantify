@@ -31,7 +31,7 @@ export function useSensorRulesService(): SensorRulesService {
       },
     },
     {
-      id: '2', 
+      id: '2',
       parameter: 'EC',
       condition: '>',
       threshold: 2.5,
@@ -47,12 +47,12 @@ export function useSensorRulesService(): SensorRulesService {
   const loadRules = async () => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       // TODO: Replace with actual API call
       // const response = await sensorRulesApi.getRules();
       // setRules(response.data);
-      
+
       // For now, use mock data
       await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API delay
       setRules(mockRules);
@@ -67,13 +67,13 @@ export function useSensorRulesService(): SensorRulesService {
     try {
       // TODO: Replace with actual API call
       // const response = await sensorRulesApi.createRule(newRule);
-      
+
       // For now, simulate creation
       const rule: SensorRule = {
         ...newRule,
         id: Date.now().toString(),
       };
-      
+
       setRules(prev => [...prev, rule]);
     } catch (err) {
       throw new Error(err instanceof Error ? err.message : 'Failed to create sensor rule');
@@ -84,10 +84,8 @@ export function useSensorRulesService(): SensorRulesService {
     try {
       // TODO: Replace with actual API call
       // await sensorRulesApi.updateRule(id, updates);
-      
-      setRules(prev => prev.map(rule => 
-        rule.id === id ? { ...rule, ...updates } : rule
-      ));
+
+      setRules(prev => prev.map(rule => (rule.id === id ? { ...rule, ...updates } : rule)));
     } catch (err) {
       throw new Error(err instanceof Error ? err.message : 'Failed to update sensor rule');
     }
@@ -97,7 +95,7 @@ export function useSensorRulesService(): SensorRulesService {
     try {
       // TODO: Replace with actual API call
       // await sensorRulesApi.deleteRule(id);
-      
+
       setRules(prev => prev.filter(rule => rule.id !== id));
     } catch (err) {
       throw new Error(err instanceof Error ? err.message : 'Failed to delete sensor rule');
@@ -121,4 +119,4 @@ export function useSensorRulesService(): SensorRulesService {
     deleteRule,
     refreshRules,
   };
-} 
+}

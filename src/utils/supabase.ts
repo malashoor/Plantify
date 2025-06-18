@@ -14,7 +14,9 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 // Helper to check if user has admin role
 export async function checkIsAdmin(): Promise<boolean> {
   try {
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) return false;
 
     const { data, error } = await supabase
@@ -29,4 +31,4 @@ export async function checkIsAdmin(): Promise<boolean> {
     console.error('Error checking admin status:', err);
     return false;
   }
-} 
+}

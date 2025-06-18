@@ -10,11 +10,11 @@ interface ImageProcessorProps {
   maxRetries?: number;
 }
 
-export default function ImageProcessor({ 
-  uri, 
-  onComplete, 
+export default function ImageProcessor({
+  uri,
+  onComplete,
   onError,
-  maxRetries = 3 
+  maxRetries = 3,
 }: ImageProcessorProps) {
   const [loading, setLoading] = useState(true);
   const [retryCount, setRetryCount] = useState(0);
@@ -107,4 +107,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
   },
-}); 
+});

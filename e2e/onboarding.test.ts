@@ -4,7 +4,7 @@ describe('Onboarding Flow', () => {
   beforeAll(async () => {
     await device.launchApp({
       newInstance: true,
-      permissions: { location: 'never' }
+      permissions: { location: 'never' },
     });
   });
 
@@ -90,4 +90,4 @@ describe('Onboarding Flow', () => {
     await expect(element(by.text('مرحباً بك'))).toBeVisible();
     await expect(element(by.text('اختر دورك'))).toBeVisible();
   });
-}); 
+});

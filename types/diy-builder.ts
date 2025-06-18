@@ -64,7 +64,14 @@ export interface Material {
   id: string;
   name: string;
   description: string;
-  category: 'pipe' | 'container' | 'pump' | 'electrical' | 'growing_medium' | 'hardware' | 'lighting';
+  category:
+    | 'pipe'
+    | 'container'
+    | 'pump'
+    | 'electrical'
+    | 'growing_medium'
+    | 'hardware'
+    | 'lighting';
   unit: string; // ft, pieces, gallons, etc.
   estimatedCost: number;
   suppliers: Supplier[];
@@ -313,20 +320,11 @@ export const SYSTEM_TYPES: SystemType[] = [
     estimatedTime: 8,
     estimatedCost: { min: 150, max: 300, currency: 'USD' },
     capacity: { plants: 24, systemSize: '4x2 ft' },
-    advantages: [
-      'Water efficient',
-      'Good oxygenation',
-      'Easy harvest',
-      'Scalable design'
-    ],
-    disadvantages: [
-      'Power dependent',
-      'Pump failure risk',
-      'Root clogging possible'
-    ],
+    advantages: ['Water efficient', 'Good oxygenation', 'Easy harvest', 'Scalable design'],
+    disadvantages: ['Power dependent', 'Pump failure risk', 'Root clogging possible'],
     bestFor: ['lettuce', 'herbs', 'spinach', 'kale'],
     nameAr: 'تقنية الغشاء المغذي',
-    descriptionAr: 'نظام التدفق المستمر حيث يتدفق المحلول المغذي عبر القنوات'
+    descriptionAr: 'نظام التدفق المستمر حيث يتدفق المحلول المغذي عبر القنوات',
   },
   {
     id: 'dwc',
@@ -336,20 +334,11 @@ export const SYSTEM_TYPES: SystemType[] = [
     estimatedTime: 4,
     estimatedCost: { min: 80, max: 150, currency: 'USD' },
     capacity: { plants: 6, systemSize: '2x2 ft' },
-    advantages: [
-      'Simple setup',
-      'Fast growth',
-      'Low maintenance',
-      'Beginner friendly'
-    ],
-    disadvantages: [
-      'Temperature sensitive',
-      'Algae growth risk',
-      'Limited mobility'
-    ],
+    advantages: ['Simple setup', 'Fast growth', 'Low maintenance', 'Beginner friendly'],
+    disadvantages: ['Temperature sensitive', 'Algae growth risk', 'Limited mobility'],
     bestFor: ['lettuce', 'basil', 'mint', 'cilantro'],
     nameAr: 'الزراعة المائية العميقة',
-    descriptionAr: 'الجذور معلقة في محلول مغذي مؤكسج'
+    descriptionAr: 'الجذور معلقة في محلول مغذي مؤكسج',
   },
   {
     id: 'dutch_bucket',
@@ -363,16 +352,16 @@ export const SYSTEM_TYPES: SystemType[] = [
       'Individual plant control',
       'Suitable for large plants',
       'Modular design',
-      'Easy expansion'
+      'Easy expansion',
     ],
     disadvantages: [
       'More complex plumbing',
       'Higher water usage',
-      'Multiple containers to maintain'
+      'Multiple containers to maintain',
     ],
     bestFor: ['tomatoes', 'peppers', 'cucumbers', 'eggplant'],
     nameAr: 'نظام الدلو الهولندي',
-    descriptionAr: 'حاويات فردية مع نظام التصريف أو إعادة التدوير'
+    descriptionAr: 'حاويات فردية مع نظام التصريف أو إعادة التدوير',
   },
   {
     id: 'kratky',
@@ -382,21 +371,11 @@ export const SYSTEM_TYPES: SystemType[] = [
     estimatedTime: 2,
     estimatedCost: { min: 30, max: 80, currency: 'USD' },
     capacity: { plants: 4, systemSize: '1x1 ft' },
-    advantages: [
-      'No electricity needed',
-      'Very simple',
-      'Low cost',
-      'Silent operation'
-    ],
-    disadvantages: [
-      'Limited plant types',
-      'No circulation',
-      'Slower growth',
-      'Manual monitoring'
-    ],
+    advantages: ['No electricity needed', 'Very simple', 'Low cost', 'Silent operation'],
+    disadvantages: ['Limited plant types', 'No circulation', 'Slower growth', 'Manual monitoring'],
     bestFor: ['lettuce', 'herbs', 'leafy greens'],
     nameAr: 'طريقة كراتكي',
-    descriptionAr: 'نظام الزراعة المائية السلبي بدون مضخات أو كهرباء'
+    descriptionAr: 'نظام الزراعة المائية السلبي بدون مضخات أو كهرباء',
   },
   {
     id: 'vertical_tower',
@@ -406,22 +385,17 @@ export const SYSTEM_TYPES: SystemType[] = [
     estimatedTime: 12,
     estimatedCost: { min: 300, max: 600, currency: 'USD' },
     capacity: { plants: 36, systemSize: '2x2x6 ft' },
-    advantages: [
-      'Space efficient',
-      'High plant density',
-      'Visual appeal',
-      'Good for small spaces'
-    ],
+    advantages: ['Space efficient', 'High plant density', 'Visual appeal', 'Good for small spaces'],
     disadvantages: [
       'Complex construction',
       'Uneven light distribution',
       'Top-heavy design',
-      'Drainage challenges'
+      'Drainage challenges',
     ],
     bestFor: ['strawberries', 'herbs', 'lettuce', 'spinach'],
     nameAr: 'برج الحديقة العمودي',
-    descriptionAr: 'نظام نمو عمودي موفر للمساحة'
-  }
+    descriptionAr: 'نظام نمو عمودي موفر للمساحة',
+  },
 ];
 
 // Common tools for hydroponic builds
@@ -435,7 +409,7 @@ export const COMMON_TOOLS: Tool[] = [
     estimatedCost: 50,
     alternatives: ['Hand drill', 'Hole saw kit'],
     nameAr: 'مثقاب كهربائي',
-    descriptionAr: 'لحفر الثقوب في الأنابيب والحاويات'
+    descriptionAr: 'لحفر الثقوب في الأنابيب والحاويات',
   },
   {
     id: 'hole_saw',
@@ -445,7 +419,7 @@ export const COMMON_TOOLS: Tool[] = [
     category: 'cutting',
     estimatedCost: 25,
     nameAr: 'مجموعة منشار الثقوب',
-    descriptionAr: 'أحجام مختلفة لثقوب الأواني الشبكية'
+    descriptionAr: 'أحجام مختلفة لثقوب الأواني الشبكية',
   },
   {
     id: 'measuring_tape',
@@ -455,7 +429,7 @@ export const COMMON_TOOLS: Tool[] = [
     category: 'measuring',
     estimatedCost: 15,
     nameAr: 'شريط القياس',
-    descriptionAr: 'للقياسات الدقيقة'
+    descriptionAr: 'للقياسات الدقيقة',
   },
   {
     id: 'level',
@@ -465,7 +439,7 @@ export const COMMON_TOOLS: Tool[] = [
     category: 'measuring',
     estimatedCost: 20,
     nameAr: 'ميزان الماء',
-    descriptionAr: 'لضمان أن النظام مستوٍ للتدفق السليم'
+    descriptionAr: 'لضمان أن النظام مستوٍ للتدفق السليم',
   },
   {
     id: 'pipe_cutter',
@@ -476,8 +450,8 @@ export const COMMON_TOOLS: Tool[] = [
     estimatedCost: 15,
     alternatives: ['Hacksaw', 'Miter saw'],
     nameAr: 'قاطع أنابيب PVC',
-    descriptionAr: 'قطع نظيف لأنابيب PVC'
-  }
+    descriptionAr: 'قطع نظيف لأنابيب PVC',
+  },
 ];
 
 // Common materials with specifications
@@ -488,12 +462,12 @@ export const COMMON_MATERIALS: Material[] = [
     description: 'Main growing channels for NFT systems',
     category: 'pipe',
     unit: 'ft',
-    estimatedCost: 3.50,
+    estimatedCost: 3.5,
     specifications: {
       diameter: '4 inches',
       material: 'PVC',
       pressure_rating: '200 PSI',
-      length_per_piece: '10 ft'
+      length_per_piece: '10 ft',
     },
     suppliers: [
       {
@@ -501,12 +475,12 @@ export const COMMON_MATERIALS: Material[] = [
         name: 'Home Depot',
         website: 'homedepot.com',
         region: 'US',
-        estimatedPrice: 3.50,
-        availability: 'in_stock'
-      }
+        estimatedPrice: 3.5,
+        availability: 'in_stock',
+      },
     ],
     nameAr: 'أنبوب PVC 4 بوصة',
-    descriptionAr: 'قنوات النمو الرئيسية لأنظمة NFT'
+    descriptionAr: 'قنوات النمو الرئيسية لأنظمة NFT',
   },
   {
     id: 'net_pots_3in',
@@ -519,7 +493,7 @@ export const COMMON_MATERIALS: Material[] = [
       diameter: '3 inches',
       height: '2.5 inches',
       material: 'Plastic',
-      drainage: 'Slotted bottom'
+      drainage: 'Slotted bottom',
     },
     suppliers: [
       {
@@ -528,11 +502,11 @@ export const COMMON_MATERIALS: Material[] = [
         website: 'amazon.com',
         region: 'Global',
         estimatedPrice: 0.75,
-        availability: 'in_stock'
-      }
+        availability: 'in_stock',
+      },
     ],
     nameAr: 'أواني شبكية 3 بوصة',
-    descriptionAr: 'تحمل النباتات ووسط النمو'
+    descriptionAr: 'تحمل النباتات ووسط النمو',
   },
   {
     id: 'water_pump_400gph',
@@ -546,7 +520,7 @@ export const COMMON_MATERIALS: Material[] = [
       max_head: '8 ft',
       power: '25 watts',
       inlet_size: '0.75 inch',
-      outlet_size: '0.75 inch'
+      outlet_size: '0.75 inch',
     },
     suppliers: [
       {
@@ -555,12 +529,12 @@ export const COMMON_MATERIALS: Material[] = [
         website: 'vivosun.com',
         region: 'US',
         estimatedPrice: 35,
-        availability: 'in_stock'
-      }
+        availability: 'in_stock',
+      },
     ],
     nameAr: 'مضخة مياه 400 جالون/ساعة',
-    descriptionAr: 'تدوير المحلول المغذي'
-  }
+    descriptionAr: 'تدوير المحلول المغذي',
+  },
 ];
 
 // Calculation formulas for different systems
@@ -569,18 +543,18 @@ export const CALCULATION_FORMULAS = {
     pipeLength: 'systemLength',
     netPotCount: 'Math.ceil(systemLength / plantSpacing)',
     pumpSize: 'Math.max(200, netPotCount * 15)', // GPH
-    reservoirSize: 'netPotCount * 0.5' // gallons
+    reservoirSize: 'netPotCount * 0.5', // gallons
   },
   dwc: {
     containerSize: 'plantCount * 2', // gallons per plant
     airStoneCount: 'Math.ceil(containerSize / 5)',
     pumpSize: 'containerSize * 2', // GPH for circulation
-    netPotCount: 'plantCount'
+    netPotCount: 'plantCount',
   },
   dutch_bucket: {
     bucketCount: 'plantCount',
     pipeLength: 'plantCount * 2', // 2 ft spacing
     pumpSize: 'plantCount * 10', // GPH
-    reservoirSize: 'plantCount * 1' // gallons
-  }
-}; 
+    reservoirSize: 'plantCount * 1', // gallons
+  },
+};

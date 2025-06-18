@@ -31,14 +31,12 @@ export function RoleSelector({ value, onChange, disabled }: RoleSelectorProps) {
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.label, isDark && styles.labelDark]}>
-        {t('onboarding.roles.title')}
-      </Text>
+      <Text style={[styles.label, isDark && styles.labelDark]}>{t('onboarding.roles.title')}</Text>
       <Text style={[styles.subtitle, isDark && styles.subtitleDark]}>
         {t('onboarding.roles.subtitle')}
       </Text>
       <View style={styles.roles}>
-        {roles.map((role) => (
+        {roles.map(role => (
           <TouchableOpacity
             key={role.value}
             style={[
@@ -55,12 +53,14 @@ export function RoleSelector({ value, onChange, disabled }: RoleSelectorProps) {
             accessibilityLabel={role.label}
             accessibilityHint={role.description}
           >
-            <View style={[
-              styles.iconContainer,
-              value === role.value && styles.iconContainerSelected,
-              isDark && styles.iconContainerDark,
-              value === role.value && isDark && styles.iconContainerSelectedDark,
-            ]}>
+            <View
+              style={[
+                styles.iconContainer,
+                value === role.value && styles.iconContainerSelected,
+                isDark && styles.iconContainerDark,
+                value === role.value && isDark && styles.iconContainerSelectedDark,
+              ]}
+            >
               <Ionicons
                 name={role.icon as any}
                 size={32}
@@ -70,8 +70,8 @@ export function RoleSelector({ value, onChange, disabled }: RoleSelectorProps) {
                       ? '#22C55E'
                       : '#16A34A'
                     : isDark
-                    ? '#9CA3AF'
-                    : '#6B7280'
+                      ? '#9CA3AF'
+                      : '#6B7280'
                 }
               />
             </View>
@@ -87,10 +87,7 @@ export function RoleSelector({ value, onChange, disabled }: RoleSelectorProps) {
                 {role.label}
               </Text>
               <Text
-                style={[
-                  styles.roleDescription,
-                  isDark && styles.roleDescriptionDark,
-                ]}
+                style={[styles.roleDescription, isDark && styles.roleDescriptionDark]}
                 numberOfLines={2}
               >
                 {role.description}
@@ -197,4 +194,4 @@ const styles = StyleSheet.create({
   roleDescriptionDark: {
     color: '#9CA3AF',
   },
-}); 
+});

@@ -43,9 +43,7 @@ export const WeatherDisplay: React.FC<WeatherDisplayProps> = ({ weather, compact
     return (
       <View style={[styles.compactContainer, { borderColor: colors.border }]}>
         <MaterialCommunityIcons name={iconName} size={iconSize} color={colors.text} />
-        <Text style={[styles.compactText, { color: colors.text }]}>
-          {weather.temperature}°C
-        </Text>
+        <Text style={[styles.compactText, { color: colors.text }]}>{weather.temperature}°C</Text>
       </View>
     );
   }
@@ -54,54 +52,34 @@ export const WeatherDisplay: React.FC<WeatherDisplayProps> = ({ weather, compact
     <View style={[styles.container, { borderColor: colors.border }]}>
       <View style={styles.header}>
         <MaterialCommunityIcons name={iconName} size={iconSize} color={colors.text} />
-        <Text style={[styles.title, { color: colors.text }]}>
-          {t('weather.currentConditions')}
-        </Text>
+        <Text style={[styles.title, { color: colors.text }]}>{t('weather.currentConditions')}</Text>
       </View>
 
       <View style={styles.detailsContainer}>
         <View style={styles.row}>
-          <Text style={[styles.label, { color: colors.text }]}>
-            {t('weather.temperature')}:
-          </Text>
-          <Text style={[styles.value, { color: colors.text }]}>
-            {weather.temperature}°C
-          </Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t('weather.temperature')}:</Text>
+          <Text style={[styles.value, { color: colors.text }]}>{weather.temperature}°C</Text>
         </View>
 
         <View style={styles.row}>
-          <Text style={[styles.label, { color: colors.text }]}>
-            {t('weather.feelsLike')}:
-          </Text>
-          <Text style={[styles.value, { color: colors.text }]}>
-            {weather.feelsLike}°C
-          </Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t('weather.feelsLike')}:</Text>
+          <Text style={[styles.value, { color: colors.text }]}>{weather.feelsLike}°C</Text>
         </View>
 
         <View style={styles.row}>
-          <Text style={[styles.label, { color: colors.text }]}>
-            {t('weather.humidity')}:
-          </Text>
-          <Text style={[styles.value, { color: colors.text }]}>
-            {weather.humidity}%
-          </Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t('weather.humidity')}:</Text>
+          <Text style={[styles.value, { color: colors.text }]}>{weather.humidity}%</Text>
         </View>
 
         {weather.windSpeed > 0 && (
           <View style={styles.row}>
-            <Text style={[styles.label, { color: colors.text }]}>
-              {t('weather.windSpeed')}:
-            </Text>
-            <Text style={[styles.value, { color: colors.text }]}>
-              {weather.windSpeed} m/s
-            </Text>
+            <Text style={[styles.label, { color: colors.text }]}>{t('weather.windSpeed')}:</Text>
+            <Text style={[styles.value, { color: colors.text }]}>{weather.windSpeed} m/s</Text>
           </View>
         )}
       </View>
 
-      <Text style={[styles.description, { color: colors.text }]}>
-        {weather.description}
-      </Text>
+      <Text style={[styles.description, { color: colors.text }]}>{weather.description}</Text>
 
       <Text style={[styles.timestamp, { color: colors.text }]}>
         {t('weather.lastUpdated')}: {new Date(weather.timestamp).toLocaleTimeString()}
@@ -164,4 +142,4 @@ const styles = StyleSheet.create({
     fontSize: 12,
     opacity: 0.6,
   },
-}); 
+});

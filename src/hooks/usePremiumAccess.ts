@@ -17,4 +17,4 @@ export function usePremiumAccess() {
   }, [products]);
 
   return { isPremium };
-} 
+}

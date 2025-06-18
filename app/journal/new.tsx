@@ -10,7 +10,7 @@ import type { JournalEntry } from 'types/journal';
 const createTheme = (colorScheme: 'light' | 'dark' | null) => ({
   colors: {
     background: colorScheme === 'dark' ? '#1E1E1E' : '#FFFFFF',
-  }
+  },
 });
 
 export default function NewJournalScreen() {
@@ -31,14 +31,14 @@ export default function NewJournalScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <Stack.Screen 
+      <Stack.Screen
         options={{
           title: 'New Journal Entry',
           presentation: 'modal',
-        }} 
+        }}
       />
-      
-      <ScrollView 
+
+      <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
@@ -59,4 +59,4 @@ const styles = StyleSheet.create({
   content: {
     padding: 16,
   },
-}); 
+});

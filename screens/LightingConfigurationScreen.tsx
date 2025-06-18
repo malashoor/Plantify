@@ -10,7 +10,7 @@ import {
   StyleSheet,
   Platform,
   I18nManager,
-  Dimensions
+  Dimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
@@ -25,11 +25,11 @@ import Svg, { Rect, Text as SvgText } from 'react-native-svg';
 
 import { useLightingCalculator } from '@/hooks/useLightingCalculator';
 import { useNutrientCalculator } from '@/hooks/useNutrientCalculator';
-import { 
-  LEDSpecification, 
+import {
+  LEDSpecification,
   PhotoperiodSchedule,
   SpectrumRatio,
-  COMMON_CROP_STAGES 
+  COMMON_CROP_STAGES,
 } from '@/types/lighting-calculator';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/spacing';
@@ -43,27 +43,27 @@ interface SpectrumChartProps {
 }
 
 const SpectrumChart: React.FC<SpectrumChartProps> = ({ spectrum, isRTL }) => {
-  const chartWidth = screenWidth - (spacing.md * 4);
+  const chartWidth = screenWidth - spacing.md * 4;
   const chartHeight = 100;
   const barWidth = chartWidth / 6; // 6 spectrum bands
-  
+
   const spectrumData = [
     { name: 'UV', value: spectrum.uv || 0, color: '#8B5CF6' },
     { name: 'Blue', value: spectrum.blue, color: '#3B82F6' },
     { name: 'Green', value: spectrum.green || 0, color: '#10B981' },
     { name: 'White', value: spectrum.white, color: '#F3F4F6' },
     { name: 'Red', value: spectrum.red, color: '#EF4444' },
-    { name: 'Far Red', value: spectrum.farRed || 0, color: '#7C2D12' }
+    { name: 'Far Red', value: spectrum.farRed || 0, color: '#7C2D12' },
   ];
 
   return (
     <View style={styles.spectrumChart}>
       <Svg width={chartWidth} height={chartHeight}>
         {spectrumData.map((band, index) => {
-          const x = isRTL ? chartWidth - ((index + 1) * barWidth) : index * barWidth;
+          const x = isRTL ? chartWidth - (index + 1) * barWidth : index * barWidth;
           const barHeight = (band.value / 100) * (chartHeight - 20);
           const y = chartHeight - barHeight - 10;
-          
+
           return (
             <React.Fragment key={band.name}>
               <Rect
@@ -108,41 +108,51 @@ interface PhotoperiodTimelineProps {
 }
 
 const PhotoperiodTimeline: React.FC<PhotoperiodTimelineProps> = ({ photoperiod, isRTL }) => {
-  const timelineWidth = screenWidth - (spacing.md * 4);
+  const timelineWidth = screenWidth - spacing.md * 4;
   const timelineHeight = 60;
-  
+
   const lightHours = photoperiod.lightHours;
   const darkHours = photoperiod.darkHours;
   const totalHours = lightHours + darkHours;
-  
+
   const lightWidth = (lightHours / totalHours) * timelineWidth;
   const darkWidth = (darkHours / totalHours) * timelineWidth;
-  
+
   return (
     <View style={styles.photoperiodTimeline}>
       <View style={styles.timelineContainer}>
-        <View style={[styles.timelineSegment, { 
-          width: lightWidth, 
-          backgroundColor: colors.warning,
-          borderTopLeftRadius: isRTL ? 0 : 8,
-          borderBottomLeftRadius: isRTL ? 0 : 8,
-          borderTopRightRadius: isRTL ? 8 : 0,
-          borderBottomRightRadius: isRTL ? 8 : 0
-        }]}>
+        <View
+          style={[
+            styles.timelineSegment,
+            {
+              width: lightWidth,
+              backgroundColor: colors.warning,
+              borderTopLeftRadius: isRTL ? 0 : 8,
+              borderBottomLeftRadius: isRTL ? 0 : 8,
+              borderTopRightRadius: isRTL ? 8 : 0,
+              borderBottomRightRadius: isRTL ? 8 : 0,
+            },
+          ]}
+        >
           <Text style={styles.timelineText}>{lightHours}h Light</Text>
         </View>
-        <View style={[styles.timelineSegment, { 
-          width: darkWidth, 
-          backgroundColor: colors.textSecondary,
-          borderTopLeftRadius: isRTL ? 8 : 0,
-          borderBottomLeftRadius: isRTL ? 8 : 0,
-          borderTopRightRadius: isRTL ? 0 : 8,
-          borderBottomRightRadius: isRTL ? 0 : 8
-        }]}>
+        <View
+          style={[
+            styles.timelineSegment,
+            {
+              width: darkWidth,
+              backgroundColor: colors.textSecondary,
+              borderTopLeftRadius: isRTL ? 8 : 0,
+              borderBottomLeftRadius: isRTL ? 8 : 0,
+              borderTopRightRadius: isRTL ? 0 : 8,
+              borderBottomRightRadius: isRTL ? 0 : 8,
+            },
+          ]}
+        >
           <Text style={[styles.timelineText, { color: 'white' }]}>{darkHours}h Dark</Text>
         </View>
       </View>
-      
+
       <View style={styles.timeMarkers}>
         <Text style={styles.timeMarker}>{photoperiod.sunriseTime}</Text>
         <Text style={styles.timeMarker}>{photoperiod.sunsetTime}</Text>
@@ -155,7 +165,7 @@ export default function LightingConfigurationScreen() {
   const { t, i18n } = useTranslation();
   const router = useRouter();
   const isRTL = i18n.language === 'ar';
-  
+
   const {
     selectedCrop,
     selectedStage,
@@ -182,12 +192,12 @@ export default function LightingConfigurationScreen() {
     speakInstructions,
     commonPhotoperiods,
     commonLEDs,
-    reset
+    reset,
   } = useLightingCalculator();
-  
+
   // Get crop data from nutrient calculator for consistency
   const { commonNutrients, commonStages } = useNutrientCalculator();
-  
+
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [setupName, setSetupName] = useState('');
 
@@ -195,7 +205,7 @@ export default function LightingConfigurationScreen() {
   const MOCK_CROPS = [
     { id: 'lettuce', name: 'Lettuce', nameAr: 'خس' },
     { id: 'tomato', name: 'Tomato', nameAr: 'طماطم' },
-    { id: 'basil', name: 'Basil', nameAr: 'ريحان' }
+    { id: 'basil', name: 'Basil', nameAr: 'ريحان' },
   ];
 
   // Accessibility announcements
@@ -205,56 +215,88 @@ export default function LightingConfigurationScreen() {
     }
   }, []);
 
-  const handleCropSelect = useCallback((crop: any) => {
-    selectCrop(crop);
-    Haptics.selectionAsync();
-    announceChange(t('lighting.accessibility.crop_selected', { 
-      crop: isRTL ? crop.nameAr : crop.name 
-    }));
-  }, [selectCrop, announceChange, t, isRTL]);
+  const handleCropSelect = useCallback(
+    (crop: any) => {
+      selectCrop(crop);
+      Haptics.selectionAsync();
+      announceChange(
+        t('lighting.accessibility.crop_selected', {
+          crop: isRTL ? crop.nameAr : crop.name,
+        })
+      );
+    },
+    [selectCrop, announceChange, t, isRTL]
+  );
 
-  const handleStageSelect = useCallback((stage: any) => {
-    selectStage(stage);
-    Haptics.selectionAsync();
-    announceChange(t('lighting.accessibility.stage_selected', { 
-      stage: isRTL ? stage.nameAr : stage.name 
-    }));
-  }, [selectStage, announceChange, t, isRTL]);
+  const handleStageSelect = useCallback(
+    (stage: any) => {
+      selectStage(stage);
+      Haptics.selectionAsync();
+      announceChange(
+        t('lighting.accessibility.stage_selected', {
+          stage: isRTL ? stage.nameAr : stage.name,
+        })
+      );
+    },
+    [selectStage, announceChange, t, isRTL]
+  );
 
-  const handleLEDSelect = useCallback((led: LEDSpecification) => {
-    selectLED(led);
-    Haptics.selectionAsync();
-    announceChange(t('lighting.accessibility.led_selected', { 
-      brand: isRTL ? led.brandAr : led.brand,
-      model: isRTL ? led.modelAr : led.model
-    }));
-  }, [selectLED, announceChange, t, isRTL]);
+  const handleLEDSelect = useCallback(
+    (led: LEDSpecification) => {
+      selectLED(led);
+      Haptics.selectionAsync();
+      announceChange(
+        t('lighting.accessibility.led_selected', {
+          brand: isRTL ? led.brandAr : led.brand,
+          model: isRTL ? led.modelAr : led.model,
+        })
+      );
+    },
+    [selectLED, announceChange, t, isRTL]
+  );
 
-  const handlePhotoperiodSelect = useCallback((schedule: PhotoperiodSchedule) => {
-    setPhotoperiod(schedule);
-    Haptics.selectionAsync();
-    announceChange(t('lighting.accessibility.photoperiod_selected', { 
-      schedule: isRTL ? schedule.nameAr : schedule.name 
-    }));
-  }, [setPhotoperiod, announceChange, t, isRTL]);
+  const handlePhotoperiodSelect = useCallback(
+    (schedule: PhotoperiodSchedule) => {
+      setPhotoperiod(schedule);
+      Haptics.selectionAsync();
+      announceChange(
+        t('lighting.accessibility.photoperiod_selected', {
+          schedule: isRTL ? schedule.nameAr : schedule.name,
+        })
+      );
+    },
+    [setPhotoperiod, announceChange, t, isRTL]
+  );
 
   const handleCalculate = useCallback(async () => {
     if (!selectedLED || !photoperiod || !selectedCrop || !selectedStage) return;
-    
+
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     await calculateLighting(selectedLED, distance, photoperiod, selectedCrop.id, selectedStage.id);
-    
+
     if (calculations) {
-      announceChange(t('lighting.accessibility.calculation_complete', {
-        ppfd: Math.round(calculations.ppfd),
-        dli: calculations.dli.toFixed(1)
-      }));
+      announceChange(
+        t('lighting.accessibility.calculation_complete', {
+          ppfd: Math.round(calculations.ppfd),
+          dli: calculations.dli.toFixed(1),
+        })
+      );
     }
-  }, [selectedLED, photoperiod, selectedCrop, selectedStage, distance, calculateLighting, calculations, announceChange, t]);
+  }, [
+    selectedLED,
+    photoperiod,
+    selectedCrop,
+    selectedStage,
+    distance,
+    calculateLighting,
+    calculations,
+    announceChange,
+    t,
+  ]);
 
   const handleSaveSetup = useCallback(async () => {
     if (!calculations || !photoperiod || !selectedCrop || !selectedStage) return;
-    
+
     try {
       await saveLightingSetup(
         setupName || `${selectedCrop.name} ${selectedStage.name} Setup`,
@@ -263,61 +305,56 @@ export default function LightingConfigurationScreen() {
         selectedCrop.id,
         selectedStage.id
       );
-      
+
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      Alert.alert(
-        t('lighting.save.success_title'),
-        t('lighting.save.success_message'),
-        [{ text: t('common.ok'), style: 'default' }]
-      );
+      Alert.alert(t('lighting.save.success_title'), t('lighting.save.success_message'), [
+        { text: t('common.ok'), style: 'default' },
+      ]);
       setSetupName('');
     } catch (error) {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-      Alert.alert(
-        t('lighting.save.error_title'),
-        t('lighting.save.error_message'),
-        [{ text: t('common.ok'), style: 'default' }]
-      );
+      Alert.alert(t('lighting.save.error_title'), t('lighting.save.error_message'), [
+        { text: t('common.ok'), style: 'default' },
+      ]);
     }
   }, [calculations, photoperiod, selectedCrop, selectedStage, setupName, saveLightingSetup, t]);
 
   const renderCropSelector = () => (
     <View style={styles.sectionContainer}>
-      <Text 
+      <Text
         style={[styles.sectionTitle, isRTL && styles.rtlText]}
         accessibilityRole="header"
         accessibilityLevel={2}
       >
         {t('lighting.select_crop')}
       </Text>
-      
+
       <View style={styles.cropGrid}>
-        {MOCK_CROPS.map((crop) => (
+        {MOCK_CROPS.map(crop => (
           <TouchableOpacity
             key={crop.id}
-            style={[
-              styles.cropCard,
-              selectedCrop?.id === crop.id && styles.selectedCard
-            ]}
+            style={[styles.cropCard, selectedCrop?.id === crop.id && styles.selectedCard]}
             onPress={() => handleCropSelect(crop)}
             accessibilityRole="button"
-            accessibilityLabel={t('lighting.accessibility.select_crop', { 
-              crop: isRTL ? crop.nameAr : crop.name 
+            accessibilityLabel={t('lighting.accessibility.select_crop', {
+              crop: isRTL ? crop.nameAr : crop.name,
             })}
             accessibilityState={{ selected: selectedCrop?.id === crop.id }}
           >
             <View style={styles.cropIconContainer}>
-              <Ionicons 
-                name="leaf-outline" 
-                size={24} 
-                color={selectedCrop?.id === crop.id ? colors.primary : colors.text} 
+              <Ionicons
+                name="leaf-outline"
+                size={24}
+                color={selectedCrop?.id === crop.id ? colors.primary : colors.text}
               />
             </View>
-            <Text style={[
-              styles.cropName,
-              isRTL && styles.rtlText,
-              selectedCrop?.id === crop.id && styles.selectedText
-            ]}>
+            <Text
+              style={[
+                styles.cropName,
+                isRTL && styles.rtlText,
+                selectedCrop?.id === crop.id && styles.selectedText,
+              ]}
+            >
               {isRTL ? crop.nameAr : crop.name}
             </Text>
           </TouchableOpacity>
@@ -328,55 +365,49 @@ export default function LightingConfigurationScreen() {
 
   const renderLEDSelector = () => (
     <View style={styles.sectionContainer}>
-      <Text 
+      <Text
         style={[styles.sectionTitle, isRTL && styles.rtlText]}
         accessibilityRole="header"
         accessibilityLevel={2}
       >
         {t('lighting.select_led')}
       </Text>
-      
-      {commonLEDs.map((led) => (
+
+      {commonLEDs.map(led => (
         <TouchableOpacity
           key={led.id}
-          style={[
-            styles.ledCard,
-            selectedLED?.id === led.id && styles.selectedCard
-          ]}
+          style={[styles.ledCard, selectedLED?.id === led.id && styles.selectedCard]}
           onPress={() => handleLEDSelect(led)}
           accessibilityRole="button"
-          accessibilityLabel={t('lighting.accessibility.select_led', { 
+          accessibilityLabel={t('lighting.accessibility.select_led', {
             brand: isRTL ? led.brandAr : led.brand,
-            model: isRTL ? led.modelAr : led.model
+            model: isRTL ? led.modelAr : led.model,
           })}
           accessibilityState={{ selected: selectedLED?.id === led.id }}
         >
           <View style={[styles.ledHeader, isRTL && styles.rtlRow]}>
             <View style={styles.ledInfo}>
-              <Text style={[
-                styles.ledBrand,
-                isRTL && styles.rtlText,
-                selectedLED?.id === led.id && styles.selectedText
-              ]}>
+              <Text
+                style={[
+                  styles.ledBrand,
+                  isRTL && styles.rtlText,
+                  selectedLED?.id === led.id && styles.selectedText,
+                ]}
+              >
                 {isRTL ? led.brandAr : led.brand}
               </Text>
-              <Text style={[
-                styles.ledModel,
-                isRTL && styles.rtlText
-              ]}>
+              <Text style={[styles.ledModel, isRTL && styles.rtlText]}>
                 {isRTL ? led.modelAr : led.model}
               </Text>
             </View>
-            
+
             <View style={styles.ledSpecs}>
               <Text style={styles.specText}>{led.wattage}W</Text>
               <Text style={styles.specText}>{led.ppfdAt12Inches} PPFD</Text>
-              {led.price && (
-                <Text style={styles.priceText}>${led.price}</Text>
-              )}
+              {led.price && <Text style={styles.priceText}>${led.price}</Text>}
             </View>
           </View>
-          
+
           <View style={styles.ledDetails}>
             <Text style={[styles.ledDescription, isRTL && styles.rtlText]}>
               {t('lighting.coverage')}: {led.coverage.footprint} @ {led.coverage.recommendedHeight}"
@@ -385,10 +416,8 @@ export default function LightingConfigurationScreen() {
               {t('lighting.efficiency')}: {led.efficiency} μmol/J
             </Text>
           </View>
-          
-          {selectedLED?.id === led.id && (
-            <SpectrumChart spectrum={led.spectrum} isRTL={isRTL} />
-          )}
+
+          {selectedLED?.id === led.id && <SpectrumChart spectrum={led.spectrum} isRTL={isRTL} />}
         </TouchableOpacity>
       ))}
     </View>
@@ -396,24 +425,20 @@ export default function LightingConfigurationScreen() {
 
   const renderDistanceControl = () => (
     <View style={styles.sectionContainer}>
-      <Text 
+      <Text
         style={[styles.sectionTitle, isRTL && styles.rtlText]}
         accessibilityRole="header"
         accessibilityLevel={2}
       >
         {t('lighting.distance_from_canopy')}
       </Text>
-      
+
       <View style={styles.distanceContainer}>
         <View style={styles.distanceDisplay}>
-          <Text style={[styles.distanceValue, isRTL && styles.rtlText]}>
-            {distance}
-          </Text>
-          <Text style={[styles.distanceUnit, isRTL && styles.rtlText]}>
-            {units.distance}
-          </Text>
+          <Text style={[styles.distanceValue, isRTL && styles.rtlText]}>{distance}</Text>
+          <Text style={[styles.distanceUnit, isRTL && styles.rtlText]}>{units.distance}</Text>
         </View>
-        
+
         <Slider
           style={styles.distanceSlider}
           minimumValue={6}
@@ -427,17 +452,18 @@ export default function LightingConfigurationScreen() {
           maximumTrackTintColor={colors.border}
           accessibilityLabel={t('lighting.accessibility.distance_slider')}
         />
-        
+
         <View style={[styles.distanceRange, isRTL && styles.rtlRow]}>
           <Text style={styles.rangeText}>6{units.distance}</Text>
           <Text style={styles.rangeText}>36{units.distance}</Text>
         </View>
       </View>
-      
+
       {selectedLED && (
         <View style={styles.ppfdPreview}>
           <Text style={[styles.ppfdText, isRTL && styles.rtlText]}>
-            {t('lighting.estimated_ppfd')}: ~{Math.round(selectedLED.ppfdAt12Inches * Math.pow(12/distance, 2))} μmol/m²/s
+            {t('lighting.estimated_ppfd')}: ~
+            {Math.round(selectedLED.ppfdAt12Inches * Math.pow(12 / distance, 2))} μmol/m²/s
           </Text>
         </View>
       )}
@@ -447,7 +473,7 @@ export default function LightingConfigurationScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
-      
+
       {/* Header */}
       <View style={[styles.header, isRTL && styles.rtlRow]}>
         <TouchableOpacity
@@ -456,17 +482,15 @@ export default function LightingConfigurationScreen() {
           accessibilityRole="button"
           accessibilityLabel={t('common.back')}
         >
-          <Ionicons 
-            name={isRTL ? "chevron-forward" : "chevron-back"} 
-            size={24} 
-            color={colors.text} 
+          <Ionicons
+            name={isRTL ? 'chevron-forward' : 'chevron-back'}
+            size={24}
+            color={colors.text}
           />
         </TouchableOpacity>
-        
+
         <View style={styles.headerTitleContainer}>
-          <Text style={[styles.headerTitle, isRTL && styles.rtlText]}>
-            {t('lighting.title')}
-          </Text>
+          <Text style={[styles.headerTitle, isRTL && styles.rtlText]}>{t('lighting.title')}</Text>
           {isOffline && (
             <View style={styles.offlineIndicator}>
               <Ionicons name="cloud-offline-outline" size={16} color={colors.warning} />
@@ -485,7 +509,7 @@ export default function LightingConfigurationScreen() {
         </TouchableOpacity>
       </View>
 
-      <ScrollView 
+      <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
         accessibilityLabel={t('lighting.accessibility.main_content')}
@@ -496,34 +520,33 @@ export default function LightingConfigurationScreen() {
         {/* Stage Selection */}
         {selectedCrop && (
           <View style={styles.sectionContainer}>
-            <Text 
+            <Text
               style={[styles.sectionTitle, isRTL && styles.rtlText]}
               accessibilityRole="header"
               accessibilityLevel={2}
             >
               {t('lighting.select_stage')}
             </Text>
-            
+
             <View style={styles.stageContainer}>
               {COMMON_CROP_STAGES.map((stage, index) => (
                 <TouchableOpacity
                   key={stage.id}
-                  style={[
-                    styles.stageCard,
-                    selectedStage?.id === stage.id && styles.selectedCard
-                  ]}
+                  style={[styles.stageCard, selectedStage?.id === stage.id && styles.selectedCard]}
                   onPress={() => handleStageSelect(stage)}
                   accessibilityRole="button"
-                  accessibilityLabel={t('lighting.accessibility.select_stage', { 
-                    stage: isRTL ? stage.nameAr : stage.name 
+                  accessibilityLabel={t('lighting.accessibility.select_stage', {
+                    stage: isRTL ? stage.nameAr : stage.name,
                   })}
                   accessibilityState={{ selected: selectedStage?.id === stage.id }}
                 >
-                  <Text style={[
-                    styles.stageName,
-                    isRTL && styles.rtlText,
-                    selectedStage?.id === stage.id && styles.selectedText
-                  ]}>
+                  <Text
+                    style={[
+                      styles.stageName,
+                      isRTL && styles.rtlText,
+                      selectedStage?.id === stage.id && styles.selectedText,
+                    ]}
+                  >
                     {isRTL ? stage.nameAr : stage.name}
                   </Text>
                 </TouchableOpacity>
@@ -541,41 +564,43 @@ export default function LightingConfigurationScreen() {
         {/* Photoperiod Selection */}
         {selectedLED && (
           <View style={styles.sectionContainer}>
-            <Text 
+            <Text
               style={[styles.sectionTitle, isRTL && styles.rtlText]}
               accessibilityRole="header"
               accessibilityLevel={2}
             >
               {t('lighting.select_photoperiod')}
             </Text>
-            
-            {commonPhotoperiods.map((schedule) => (
+
+            {commonPhotoperiods.map(schedule => (
               <TouchableOpacity
                 key={schedule.id}
                 style={[
                   styles.photoperiodCard,
-                  photoperiod?.id === schedule.id && styles.selectedCard
+                  photoperiod?.id === schedule.id && styles.selectedCard,
                 ]}
                 onPress={() => handlePhotoperiodSelect(schedule)}
                 accessibilityRole="button"
-                accessibilityLabel={t('lighting.accessibility.select_photoperiod', { 
-                  schedule: isRTL ? schedule.nameAr : schedule.name 
+                accessibilityLabel={t('lighting.accessibility.select_photoperiod', {
+                  schedule: isRTL ? schedule.nameAr : schedule.name,
                 })}
                 accessibilityState={{ selected: photoperiod?.id === schedule.id }}
               >
                 <View style={[styles.photoperiodHeader, isRTL && styles.rtlRow]}>
-                  <Text style={[
-                    styles.photoperiodName,
-                    isRTL && styles.rtlText,
-                    photoperiod?.id === schedule.id && styles.selectedText
-                  ]}>
+                  <Text
+                    style={[
+                      styles.photoperiodName,
+                      isRTL && styles.rtlText,
+                      photoperiod?.id === schedule.id && styles.selectedText,
+                    ]}
+                  >
                     {isRTL ? schedule.nameAr : schedule.name}
                   </Text>
                   <Text style={styles.photoperiodHours}>
                     {schedule.lightHours}/{schedule.darkHours}
                   </Text>
                 </View>
-                
+
                 {photoperiod?.id === schedule.id && (
                   <PhotoperiodTimeline photoperiod={schedule} isRTL={isRTL} />
                 )}
@@ -588,10 +613,7 @@ export default function LightingConfigurationScreen() {
         {selectedLED && photoperiod && selectedCrop && selectedStage && (
           <View style={styles.sectionContainer}>
             <TouchableOpacity
-              style={[
-                styles.calculateButton,
-                isLoading && styles.disabledButton
-              ]}
+              style={[styles.calculateButton, isLoading && styles.disabledButton]}
               onPress={handleCalculate}
               disabled={isLoading}
               accessibilityRole="button"
@@ -915,4 +937,4 @@ const styles = StyleSheet.create({
   bottomSpacing: {
     height: spacing.xl,
   },
-}); 
+});

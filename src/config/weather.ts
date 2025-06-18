@@ -13,4 +13,4 @@ if (!OPENWEATHER_CONFIG.API_KEY) {
   console.warn(
     'OpenWeather API key not found. Please set EXPO_PUBLIC_OPENWEATHER_API_KEY in your environment.'
   );
-} 
+}

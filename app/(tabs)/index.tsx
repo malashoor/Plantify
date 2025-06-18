@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, RefreshControl } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Alert,
+  RefreshControl,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -59,7 +67,7 @@ export default function Home() {
   const { seeds } = useSeeds();
 
   const { getUpcomingReminders } = useReminders();
-  
+
   useEffect(() => {
     if (authUser) {
       loadDashboardData();
@@ -78,7 +86,7 @@ export default function Home() {
       setLoading(true);
       let plantsData: Plant[] = [];
       let journalData: JournalEntry[] = [];
-      
+
       // Try to load real data from Supabase
       if (authUser) {
         try {
@@ -152,16 +160,16 @@ export default function Home() {
       }
 
       setPlants(plantsData);
-      
+
       // Calculate stats
       const totalPlants = plantsData.length;
       const healthyPlants = plantsData.filter(p => p.health_status === 'healthy').length;
       const plantsNeedingAttention = plantsData.filter(p => p.health_status !== 'healthy').length;
-      
+
       // Get upcoming reminders from hook
       const upcomingReminders = getUpcomingReminders(7);
       const upcomingTasksCount = upcomingReminders.length;
-      
+
       setStats({
         totalPlants,
         healthyPlants,
@@ -193,17 +201,31 @@ export default function Home() {
 
   const getHealthIcon = (status: string) => {
     switch (status) {
-      case 'healthy': return { name: 'eco', color: '#4CAF50' };
-      case 'needs_attention': return { name: 'warning', color: '#FF9800' };
-      case 'critical': return { name: 'error', color: '#F44336' };
-      default: return { name: 'help', color: '#666' };
+      case 'healthy':
+        return { name: 'eco', color: '#4CAF50' };
+      case 'needs_attention':
+        return { name: 'warning', color: '#FF9800' };
+      case 'critical':
+        return { name: 'error', color: '#F44336' };
+      default:
+        return { name: 'help', color: '#666' };
     }
   };
 
   const quickActions = [
     { id: 'add-plant', title: 'Add Plant', icon: 'add', onPress: () => router.push('/plants/new') },
-    { id: 'identify', title: 'Identify Plant', icon: 'camera-alt', onPress: () => router.push('/identify') },
-    { id: 'care-tips', title: 'Care Tips', icon: 'lightbulb', onPress: () => Alert.alert('Feature', 'Care tips coming soon!') },
+    {
+      id: 'identify',
+      title: 'Identify Plant',
+      icon: 'camera-alt',
+      onPress: () => router.push('/identify'),
+    },
+    {
+      id: 'care-tips',
+      title: 'Care Tips',
+      icon: 'lightbulb',
+      onPress: () => Alert.alert('Feature', 'Care tips coming soon!'),
+    },
     { id: 'journal', title: 'Journal', icon: 'book', onPress: () => router.push('/journal') },
   ];
 
@@ -219,27 +241,22 @@ export default function Home() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView 
-        style={styles.scrollView} 
+      <ScrollView
+        style={styles.scrollView}
         showsVerticalScrollIndicator={false}
         refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={handleRefresh}
-            tintColor="#4CAF50"
-          />
+          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} tintColor="#4CAF50" />
         }
       >
         {/* Header */}
         <View style={styles.header}>
           <View>
             <Text style={styles.greeting}>Good morning! 🌱</Text>
-            <Text style={styles.userName}>{authUser?.user_metadata?.full_name || 'Garden Enthusiast'}</Text>
+            <Text style={styles.userName}>
+              {authUser?.user_metadata?.full_name || 'Garden Enthusiast'}
+            </Text>
           </View>
-          <TouchableOpacity 
-            style={styles.profileButton}
-            onPress={() => router.push('/settings')}
-          >
+          <TouchableOpacity style={styles.profileButton} onPress={() => router.push('/settings')}>
             <MaterialIcons name="person" size={24} color="#666" />
           </TouchableOpacity>
         </View>
@@ -262,7 +279,9 @@ export default function Home() {
             <Text style={styles.statLabel}>Healthy</Text>
           </View>
           <View style={styles.statCard}>
-            <Text style={[styles.statNumber, { color: '#FF9800' }]}>{stats.plantsNeedingAttention}</Text>
+            <Text style={[styles.statNumber, { color: '#FF9800' }]}>
+              {stats.plantsNeedingAttention}
+            </Text>
             <Text style={styles.statLabel}>Need Care</Text>
           </View>
           <View style={styles.statCard}>
@@ -275,12 +294,8 @@ export default function Home() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Quick Actions</Text>
           <View style={styles.actionsGrid}>
-            {quickActions.map((action) => (
-              <TouchableOpacity
-                key={action.id}
-                style={styles.actionCard}
-                onPress={action.onPress}
-              >
+            {quickActions.map(action => (
+              <TouchableOpacity key={action.id} style={styles.actionCard} onPress={action.onPress}>
                 <MaterialIcons name={action.icon as any} size={32} color="#4CAF50" />
                 <Text style={styles.actionTitle}>{action.title}</Text>
               </TouchableOpacity>
@@ -296,7 +311,7 @@ export default function Home() {
               <Text style={styles.seeAllButton}>See All</Text>
             </TouchableOpacity>
           </View>
-          
+
           {plants.length === 0 ? (
             <View style={styles.emptyState}>
               <MaterialIcons name="local-florist" size={48} color="#ccc" />
@@ -304,7 +319,7 @@ export default function Home() {
               <Text style={styles.emptyStateDescription}>
                 Add your first plant to start your growing journey! 🌱
               </Text>
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.emptyStateButton}
                 onPress={() => router.push('/plants/new')}
               >
@@ -312,7 +327,7 @@ export default function Home() {
               </TouchableOpacity>
             </View>
           ) : (
-            plants.map((plant) => {
+            plants.map(plant => {
               const healthIcon = getHealthIcon(plant.health_status);
               return (
                 <TouchableOpacity
@@ -331,8 +346,8 @@ export default function Home() {
                   <MaterialIcons name={healthIcon.name as any} size={24} color={healthIcon.color} />
                 </TouchableOpacity>
               );
-                         })
-           )}
+            })
+          )}
         </View>
 
         {/* Recent Journal Entries */}
@@ -343,7 +358,7 @@ export default function Home() {
               <Text style={styles.seeAllButton}>See All</Text>
             </TouchableOpacity>
           </View>
-          
+
           {journalEntries.length === 0 ? (
             <View style={styles.emptyState}>
               <MaterialIcons name="book" size={48} color="#ccc" />
@@ -351,7 +366,7 @@ export default function Home() {
               <Text style={styles.emptyStateDescription}>
                 Start documenting your growing journey! 📓
               </Text>
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.emptyStateButton}
                 onPress={() => router.push('/journal/new')}
               >
@@ -359,7 +374,7 @@ export default function Home() {
               </TouchableOpacity>
             </View>
           ) : (
-            journalEntries.slice(0, 3).map((entry) => (
+            journalEntries.slice(0, 3).map(entry => (
               <TouchableOpacity
                 key={entry.id}
                 style={styles.journalCard}

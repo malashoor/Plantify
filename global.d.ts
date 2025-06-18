@@ -79,7 +79,11 @@ declare module 'react-native' {
   export const KeyboardAvoidingView: React.ComponentType<KeyboardAvoidingViewProps>;
   export const StyleSheet: StyleSheetStatic;
   export const Alert: {
-    alert: (title: string, message?: string, buttons?: Array<{ text: string, onPress?: () => void }>) => void;
+    alert: (
+      title: string,
+      message?: string,
+      buttons?: Array<{ text: string; onPress?: () => void }>
+    ) => void;
   };
   export const AccessibilityInfo: {
     isScreenReaderEnabled: () => Promise<boolean>;
@@ -97,4 +101,4 @@ declare module 'react-native' {
   // Fallback for undeclared modules
   const content: any;
   export default content;
-} 
+}

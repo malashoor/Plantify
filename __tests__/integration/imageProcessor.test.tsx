@@ -11,26 +11,21 @@ jest.mock('expo-file-system');
 describe('ImageProcessor Integration Tests', () => {
   const mockUri = 'file://test/image.jpg';
   const mockCompressedUri = 'file://test/compressed.jpg';
-  
+
   beforeEach(() => {
     jest.clearAllMocks();
     (ImageManipulator.manipulateAsync as jest.Mock).mockResolvedValue({
-      uri: mockCompressedUri
+      uri: mockCompressedUri,
     });
     (FileSystem.deleteAsync as jest.Mock).mockResolvedValue(undefined);
     (FileSystem.getInfoAsync as jest.Mock).mockResolvedValue({
-      exists: true
+      exists: true,
     });
   });
 
   it('should compress image and call onComplete', async () => {
     const onComplete = jest.fn();
-    const { getByText } = render(
-      <ImageProcessor 
-        uri={mockUri} 
-        onComplete={onComplete}
-      />
-    );
+    const { getByText } = render(<ImageProcessor uri={mockUri} onComplete={onComplete} />);
 
     await waitFor(() => {
       expect(ImageManipulator.manipulateAsync).toHaveBeenCalledWith(
@@ -50,12 +45,7 @@ describe('ImageProcessor Integration Tests', () => {
       .mockResolvedValueOnce({ uri: mockCompressedUri });
 
     const { getByText } = render(
-      <ImageProcessor 
-        uri={mockUri} 
-        onComplete={jest.fn()} 
-        onError={onError}
-        maxRetries={3}
-      />
+      <ImageProcessor uri={mockUri} onComplete={jest.fn()} onError={onError} maxRetries={3} />
     );
 
     await waitFor(() => {
@@ -71,21 +61,13 @@ describe('ImageProcessor Integration Tests', () => {
   });
 
   it('should cleanup temporary files on unmount', async () => {
-    const { unmount } = render(
-      <ImageProcessor 
-        uri={mockUri} 
-        onComplete={jest.fn()}
-      />
-    );
+    const { unmount } = render(<ImageProcessor uri={mockUri} onComplete={jest.fn()} />);
 
     unmount();
 
     await waitFor(() => {
       expect(FileSystem.getInfoAsync).toHaveBeenCalledWith(mockUri);
-      expect(FileSystem.deleteAsync).toHaveBeenCalledWith(
-        mockUri,
-        { idempotent: true }
-      );
+      expect(FileSystem.deleteAsync).toHaveBeenCalledWith(mockUri, { idempotent: true });
     });
   });
 
@@ -95,11 +77,7 @@ describe('ImageProcessor Integration Tests', () => {
     (ImageManipulator.manipulateAsync as jest.Mock).mockRejectedValue(error);
 
     const { getByText, queryByText } = render(
-      <ImageProcessor 
-        uri={mockUri} 
-        onComplete={jest.fn()} 
-        maxRetries={maxRetries}
-      />
+      <ImageProcessor uri={mockUri} onComplete={jest.fn()} maxRetries={maxRetries} />
     );
 
     // Initial attempt + 2 retries = 3 total attempts
@@ -115,4 +93,4 @@ describe('ImageProcessor Integration Tests', () => {
       expect(queryByText(/Retry/)).toBeNull();
     });
   });
-}); 
+});

@@ -8,7 +8,7 @@ export async function testSupabaseConnection(): Promise<boolean> {
   try {
     // Using a simple system query that doesn't require table permissions
     const { data, error } = await supabase.rpc('get_server_time');
-    
+
     if (error) {
       console.error('[Supabase Connection Test Error]:', error.message);
       return false;
@@ -20,4 +20,4 @@ export async function testSupabaseConnection(): Promise<boolean> {
     console.error('[Supabase Connection Test Error]:', err);
     return false;
   }
-} 
+}

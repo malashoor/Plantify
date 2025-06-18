@@ -35,4 +35,4 @@ jobs:
           if [ "$STATUS" != "200" ]; then
             echo "::error ::Web did not return 200 OK"
             exit 1
-          fi 
+          fi

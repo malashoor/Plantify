@@ -117,17 +117,14 @@ export const SortControl: React.FC<SortControlProps> = ({
     }
   };
 
-  const renderSortItem = (
-    criteria: SortCriteria,
-    isPrimary: boolean = true
-  ) => {
+  const renderSortItem = (criteria: SortCriteria, isPrimary: boolean = true) => {
     const isSelected = isPrimary
       ? currentSort.primary.criteria === criteria
       : currentSort.secondary?.criteria === criteria;
     const isDisabled = !isPrimary && currentSort.primary.criteria === criteria;
     const direction = isPrimary
       ? currentSort.primary.direction
-      : currentSort.secondary?.direction ?? 'asc';
+      : (currentSort.secondary?.direction ?? 'asc');
 
     return (
       <View style={styles.menuItemContainer}>
@@ -140,9 +137,7 @@ export const SortControl: React.FC<SortControlProps> = ({
             />
           )}
           onPress={() =>
-            isPrimary
-              ? handlePrimarySortChange(criteria)
-              : handleSecondarySortChange(criteria)
+            isPrimary ? handlePrimarySortChange(criteria) : handleSecondarySortChange(criteria)
           }
           title={t(`sorting.criteria.${criteria}`)}
           disabled={isDisabled}
@@ -213,7 +208,7 @@ export const SortControl: React.FC<SortControlProps> = ({
           <Text variant="labelSmall" style={styles.menuLabel}>
             {t('sorting.primaryLabel')}
           </Text>
-          {['nextWatering', 'moisture', 'name'].map((criteria) =>
+          {['nextWatering', 'moisture', 'name'].map(criteria =>
             renderSortItem(criteria as SortCriteria, true)
           )}
         </View>
@@ -224,7 +219,7 @@ export const SortControl: React.FC<SortControlProps> = ({
           <Text variant="labelSmall" style={styles.menuLabel}>
             {t('sorting.secondaryLabel')}
           </Text>
-          {['nextWatering', 'moisture', 'name'].map((criteria) =>
+          {['nextWatering', 'moisture', 'name'].map(criteria =>
             renderSortItem(criteria as SortCriteria, false)
           )}
         </View>
@@ -256,4 +251,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-}); 
+});

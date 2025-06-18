@@ -25,14 +25,11 @@ export const useReducedMotion = () => {
     checkReducedMotion();
 
     // Listen for changes
-    const subscription = AccessibilityInfo.addEventListener(
-      'reduceMotionChanged',
-      (isReduced) => {
-        if (mounted) {
-          setPrefersReducedMotion(isReduced);
-        }
+    const subscription = AccessibilityInfo.addEventListener('reduceMotionChanged', isReduced => {
+      if (mounted) {
+        setPrefersReducedMotion(isReduced);
       }
-    );
+    });
 
     return () => {
       mounted = false;
@@ -41,4 +38,4 @@ export const useReducedMotion = () => {
   }, []);
 
   return prefersReducedMotion;
-}; 
+};

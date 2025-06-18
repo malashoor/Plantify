@@ -9,9 +9,7 @@ interface WateringRecommendationProps {
   adjustment: WateringAdjustment;
 }
 
-export const WateringRecommendation: React.FC<WateringRecommendationProps> = ({
-  adjustment,
-}) => {
+export const WateringRecommendation: React.FC<WateringRecommendationProps> = ({ adjustment }) => {
   const theme = useTheme();
   const { t } = useTranslation();
 
@@ -33,11 +31,7 @@ export const WateringRecommendation: React.FC<WateringRecommendationProps> = ({
     <Card style={styles.container}>
       <Card.Content style={styles.content}>
         <View style={styles.iconContainer}>
-          <MaterialCommunityIcons
-            name={getIcon()}
-            size={24}
-            color={getColor()}
-          />
+          <MaterialCommunityIcons name={getIcon()} size={24} color={getColor()} />
         </View>
         <View style={styles.textContainer}>
           <Text style={[styles.recommendation, { color: getColor() }]}>
@@ -86,4 +80,4 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     opacity: 0.6,
   },
-}); 
+});

@@ -10,19 +10,23 @@ export default function Favorites() {
 
   if (!favPlants.length) {
     return (
-      <View style={{ 
-        flex: 1, 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        padding: 20,
-        backgroundColor: '#fff'
-      }}>
-        <Text style={{ 
-          fontSize: 18, 
-          color: '#666', 
-          textAlign: 'center',
-          lineHeight: 24 
-        }}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: 20,
+          backgroundColor: '#fff',
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 18,
+            color: '#666',
+            textAlign: 'center',
+            lineHeight: 24,
+          }}
+        >
           No favorites yet—tap the heart on a plant to bookmark it!
         </Text>
       </View>
@@ -39,4 +43,4 @@ export default function Favorites() {
       />
     </View>
   );
-} 
+}

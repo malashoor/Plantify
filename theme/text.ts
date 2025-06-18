@@ -33,4 +33,4 @@ export const TextStyles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 16,
   },
-}); 
+});

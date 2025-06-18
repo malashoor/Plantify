@@ -26,7 +26,7 @@ export function useSensorData() {
     phosphorus: 45,
     potassium: 210,
   });
-  
+
   const [sensorMeasurements, setSensorMeasurements] = useState<SensorMeasurement[]>([
     { id: '1', type: 'ph', value: 6.5, unit: 'pH', timestamp: new Date() },
     { id: '2', type: 'ec', value: 1.2, unit: 'mS/cm', timestamp: new Date() },
@@ -40,4 +40,4 @@ export function useSensorData() {
     isLoading,
     isLoadingSensors: isLoading,
   };
-} 
+}

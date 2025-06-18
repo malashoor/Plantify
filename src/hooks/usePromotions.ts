@@ -11,7 +11,9 @@ export function useApplyPromotion() {
     setError(null);
 
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) {
         return { success: false, error: 'NOT_FOUND' };
       }
@@ -45,12 +47,10 @@ export function useApplyPromotion() {
       }
 
       // 4. Apply the promotion
-      const { error: applyError } = await supabase
-        .from('user_promotions')
-        .insert({
-          promotion_id: promotion.id,
-          user_id: user.id,
-        });
+      const { error: applyError } = await supabase.from('user_promotions').insert({
+        promotion_id: promotion.id,
+        user_id: user.id,
+      });
 
       if (applyError) {
         throw applyError;
@@ -75,7 +75,9 @@ export function useUserPromotions() {
 
   const fetchPromotions = useCallback(async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) {
         setError('User not authenticated');
         return;
@@ -83,10 +85,12 @@ export function useUserPromotions() {
 
       const { data, error: fetchError } = await supabase
         .from('user_promotions')
-        .select(`
+        .select(
+          `
           *,
           promotion:promotions(*)
-        `)
+        `
+        )
         .eq('user_id', user.id);
 
       if (fetchError) throw fetchError;
@@ -104,7 +108,7 @@ export function useUserPromotions() {
     return promotions.some(up => {
       const promotion = up.promotion;
       if (!promotion) return false;
-      
+
       return (
         promotion.type === 'premium_access' &&
         (!promotion.expires_at || new Date(promotion.expires_at) > new Date())
@@ -119,4 +123,4 @@ export function useUserPromotions() {
     fetchPromotions,
     hasActivePremium,
   };
-} 
+}

@@ -1,15 +1,13 @@
 module.exports = {
   preset: 'jest-expo',
-  setupFiles: [
-    './jest.setup.js'
-  ],
+  setupFiles: ['./jest.setup.js'],
   testEnvironment: 'jsdom',
   modulePathIgnorePatterns: [
     '<rootDir>/node_modules/html2canvas/dist/types/.+__mocks__',
     '<rootDir>/node_modules 2/',
   ],
   transformIgnorePatterns: [
-    'node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg)'
+    'node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg)',
   ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
@@ -32,10 +30,7 @@ module.exports = {
     '^@mocks/(.*)$': '<rootDir>/src/mocks/$1',
     '\\.svg$': '<rootDir>/src/mocks/svgMock.js',
   },
-  testMatch: [
-    '**/__tests__/**/*.test.[jt]s?(x)',
-    '**/?(*.)+(spec|test).[jt]s?(x)'
-  ],
+  testMatch: ['**/__tests__/**/*.test.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
   globals: {
     'ts-jest': {
       babelConfig: true,
@@ -43,9 +38,7 @@ module.exports = {
     },
   },
   testTimeout: 10000,
-  setupFilesAfterEnv: [
-    '@testing-library/jest-native/extend-expect'
-  ],
+  setupFilesAfterEnv: ['@testing-library/jest-native/extend-expect'],
   collectCoverage: true,
   collectCoverageFrom: [
     'src/**/*.{js,jsx,ts,tsx}',
@@ -53,6 +46,6 @@ module.exports = {
     '!**/coverage/**',
     '!**/node_modules/**',
     '!**/babel.config.js',
-    '!**/jest.setup.js'
+    '!**/jest.setup.js',
   ],
-}; 
+};

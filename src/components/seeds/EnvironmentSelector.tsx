@@ -31,11 +31,9 @@ export function EnvironmentSelector({ value, onChange, disabled }: EnvironmentSe
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.label, isDark && styles.labelDark]}>
-        {t('seeds.environment.label')}
-      </Text>
+      <Text style={[styles.label, isDark && styles.labelDark]}>{t('seeds.environment.label')}</Text>
       <View style={styles.options}>
-        {options.map((option) => (
+        {options.map(option => (
           <TouchableOpacity
             key={option.value}
             style={[
@@ -60,8 +58,8 @@ export function EnvironmentSelector({ value, onChange, disabled }: EnvironmentSe
                     ? '#22C55E'
                     : '#16A34A'
                   : isDark
-                  ? '#9CA3AF'
-                  : '#6B7280'
+                    ? '#9CA3AF'
+                    : '#6B7280'
               }
             />
             <Text
@@ -139,4 +137,4 @@ const styles = StyleSheet.create({
   optionTextSelectedDark: {
     color: '#22C55E',
   },
-}); 
+});

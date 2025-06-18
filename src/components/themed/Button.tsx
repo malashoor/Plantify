@@ -13,18 +13,11 @@ export function Button({ children, style, disabled = false, ...props }: ButtonPr
 
   return (
     <TouchableOpacity
-      style={[
-        styles.button,
-        { backgroundColor },
-        disabled && styles.disabled,
-        style
-      ]}
+      style={[styles.button, { backgroundColor }, disabled && styles.disabled, style]}
       disabled={disabled}
       {...props}
     >
-      <Text style={[styles.text, { color: textColor }]}>
-        {children}
-      </Text>
+      <Text style={[styles.text, { color: textColor }]}>{children}</Text>
     </TouchableOpacity>
   );
 }
@@ -44,4 +37,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
-}); 
+});

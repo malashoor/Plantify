@@ -12,7 +12,7 @@ export default function PlantDetail() {
   const router = useRouter();
   const params = useLocalSearchParams<{ id: string }>();
   const plant = PLANTS.find(p => p.id === params.id);
-  
+
   if (!plant) return <Text>Plant not found.</Text>;
 
   const handlePlantCare = () => {
@@ -32,16 +32,12 @@ export default function PlantDetail() {
         <Image source={plant.image || placeholderPlantImage} style={styles.image} />
         <Text style={styles.name}>{plant.name}</Text>
         <Text style={styles.description}>{plant.description}</Text>
-        
+
         <Text style={styles.sectionTitle}>Care Instructions</Text>
         <Text style={styles.care}>{plant.care}</Text>
-        
+
         {/* Plant Care Button */}
-        <TouchableOpacity
-          style={styles.careButton}
-          onPress={handlePlantCare}
-          activeOpacity={0.8}
-        >
+        <TouchableOpacity style={styles.careButton} onPress={handlePlantCare} activeOpacity={0.8}>
           <Ionicons name="leaf" size={20} color="white" />
           <Text style={styles.careButtonText}>View Plant Care Guide</Text>
         </TouchableOpacity>
@@ -73,4 +69,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
-}); 
+});

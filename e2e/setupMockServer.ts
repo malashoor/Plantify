@@ -16,7 +16,7 @@ export async function setupMockServer(): Promise<void> {
       temperature: 22,
       humidity: 65,
       condition: 'sunny',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
 
     mockServerState.updateState('weather', 'forecast', {
@@ -24,15 +24,15 @@ export async function setupMockServer(): Promise<void> {
         {
           date: new Date(Date.now() + 86400000).toISOString(),
           temperature: { min: 18, max: 25 },
-          condition: 'partly_cloudy'
+          condition: 'partly_cloudy',
         },
         {
           date: new Date(Date.now() + 172800000).toISOString(),
           temperature: { min: 17, max: 23 },
-          condition: 'rain'
-        }
+          condition: 'rain',
+        },
       ],
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
 
     console.log('Mock server setup complete');
@@ -50,4 +50,4 @@ export async function teardownMockServer(): Promise<void> {
 // If running this file directly
 if (require.main === module) {
   setupMockServer().catch(console.error);
-} 
+}

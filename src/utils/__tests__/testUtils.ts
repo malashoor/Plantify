@@ -85,7 +85,7 @@ export class QueueEventTracker {
     this.events.push({
       type,
       data,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
   }
 
@@ -115,10 +115,10 @@ export class TestRetryQueue extends RetryQueue {
   }
 
   private setupEventTracking() {
-    this.subscribe((state) => {
+    this.subscribe(state => {
       QueueEventTracker.trackEvent('enqueue', {
         size: state.queuedOperations.length,
-        operations: state.queuedOperations
+        operations: state.queuedOperations,
       });
     });
   }
@@ -155,7 +155,7 @@ export const renderWithQueue = (ui: React.ReactElement) => {
 
   return {
     queue,
-    ...render(ui)
+    ...render(ui),
   };
 };
 
@@ -180,4 +180,4 @@ export const waitForQueueEvent = (
     };
     checkEvent();
   });
-}; 
+};

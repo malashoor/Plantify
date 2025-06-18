@@ -39,17 +39,14 @@ export function withAccessibility<P extends object>(
 
     useEffect(() => {
       // Check if screen reader is enabled
-      AccessibilityInfo.isScreenReaderEnabled().then((enabled) => {
+      AccessibilityInfo.isScreenReaderEnabled().then(enabled => {
         isScreenReaderEnabled.current = enabled;
       });
 
       // Subscribe to screen reader changes
-      const subscription = AccessibilityInfo.addEventListener(
-        'screenReaderChanged',
-        (enabled) => {
-          isScreenReaderEnabled.current = enabled;
-        }
-      );
+      const subscription = AccessibilityInfo.addEventListener('screenReaderChanged', enabled => {
+        isScreenReaderEnabled.current = enabled;
+      });
 
       return () => {
         subscription.remove();
@@ -92,12 +89,6 @@ export function withAccessibility<P extends object>(
     }
 
     // On Android, we don't need the extra View wrapper
-    return (
-      <WrappedComponent
-        ref={elementRef}
-        {...mergedAccessibilityProps}
-        {...(props as P)}
-      />
-    );
+    return <WrappedComponent ref={elementRef} {...mergedAccessibilityProps} {...(props as P)} />;
   };
-} 
+}

@@ -42,15 +42,17 @@ export class MemoryService {
     try {
       const { data, error } = await supabase
         .from('memories')
-        .insert([{
-          user_id: memory.userId,
-          type: memory.type,
-          content: memory.content,
-          context: memory.context,
-          importance: memory.importance,
-          timestamp: memory.timestamp,
-          tags: memory.tags,
-        }])
+        .insert([
+          {
+            user_id: memory.userId,
+            type: memory.type,
+            content: memory.content,
+            context: memory.context,
+            importance: memory.importance,
+            timestamp: memory.timestamp,
+            tags: memory.tags,
+          },
+        ])
         .select('id')
         .single();
 
@@ -274,14 +276,7 @@ export class MemoryService {
     });
 
     // Extract emotion-related tags
-    const emotionTags = [
-      'happy',
-      'worried',
-      'frustrated',
-      'curious',
-      'satisfied',
-      'concerned',
-    ];
+    const emotionTags = ['happy', 'worried', 'frustrated', 'curious', 'satisfied', 'concerned'];
 
     emotionTags.forEach(tag => {
       if (content.toLowerCase().includes(tag)) {
@@ -298,20 +293,26 @@ export class MemoryService {
     const parts: string[] = [];
 
     // Group memories by type
-    const grouped = memories.reduce((acc, memory) => {
-      acc[memory.type] = acc[memory.type] || [];
-      acc[memory.type].push(memory);
-      return acc;
-    }, {} as Record<Memory['type'], Memory[]>);
+    const grouped = memories.reduce(
+      (acc, memory) => {
+        acc[memory.type] = acc[memory.type] || [];
+        acc[memory.type].push(memory);
+        return acc;
+      },
+      {} as Record<Memory['type'], Memory[]>
+    );
 
     // Summarize insights
     if (grouped.insight?.length) {
       const insights = grouped.insight as InsightMemory[];
-      const categories = insights.reduce((acc, insight) => {
-        acc[insight.category] = acc[insight.category] || 0;
-        acc[insight.category]++;
-        return acc;
-      }, {} as Record<string, number>);
+      const categories = insights.reduce(
+        (acc, insight) => {
+          acc[insight.category] = acc[insight.category] || 0;
+          acc[insight.category]++;
+          return acc;
+        },
+        {} as Record<string, number>
+      );
 
       const categoryList = Object.entries(categories)
         .map(([category, count]) => `${count} ${category}`)
@@ -327,9 +328,7 @@ export class MemoryService {
       const pending = actions.filter(a => a.status === 'pending').length;
 
       if (completed || pending) {
-        parts.push(
-          `Actions: ${completed} completed, ${pending} pending`
-        );
+        parts.push(`Actions: ${completed} completed, ${pending} pending`);
       }
     }
 
@@ -347,17 +346,13 @@ export class MemoryService {
     // Add conversation summary if available
     if (grouped.conversation?.length) {
       const conversations = grouped.conversation as ConversationMemory[];
-      const topics = new Set(
-        conversations.flatMap(c => c.tags)
-      );
+      const topics = new Set(conversations.flatMap(c => c.tags));
 
       if (topics.size) {
-        parts.push(
-          `Recent topics discussed: ${Array.from(topics).join(', ')}`
-        );
+        parts.push(`Recent topics discussed: ${Array.from(topics).join(', ')}`);
       }
     }
 
     return parts.join('\n');
   }
-} 
+}

@@ -42,12 +42,9 @@ export const FilterTabs: React.FC<FilterTabsProps> = ({
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={[
-          styles.scrollContent,
-          isRTL && styles.scrollContentRTL,
-        ]}
+        contentContainerStyle={[styles.scrollContent, isRTL && styles.scrollContentRTL]}
       >
-        {filters.map((filter) => (
+        {filters.map(filter => (
           <Chip
             key={filter}
             selected={currentFilter === filter}
@@ -59,11 +56,7 @@ export const FilterTabs: React.FC<FilterTabsProps> = ({
               },
             ]}
             icon={({ size, color }) => (
-              <MaterialCommunityIcons
-                name={getFilterIcon(filter)}
-                size={size}
-                color={color}
-              />
+              <MaterialCommunityIcons name={getFilterIcon(filter)} size={size} color={color} />
             )}
             accessibilityRole="tab"
             accessibilityState={{ selected: currentFilter === filter }}
@@ -95,4 +88,4 @@ const styles = StyleSheet.create({
   chip: {
     height: 36,
   },
-}); 
+});

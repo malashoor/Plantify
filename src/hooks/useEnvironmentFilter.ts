@@ -47,15 +47,9 @@ export const useEnvironmentFilter = (plants: Plant[]) => {
   }, [plants, currentFilter]);
 
   const counts = useMemo(() => {
-    const hydroponicCount = plants.filter(
-      plant => plant.growingMethodType === 'hydroponic'
-    ).length;
-    const indoorCount = plants.filter(
-      plant => plant.environment === 'indoor'
-    ).length;
-    const outdoorCount = plants.filter(
-      plant => plant.environment === 'outdoor'
-    ).length;
+    const hydroponicCount = plants.filter(plant => plant.growingMethodType === 'hydroponic').length;
+    const indoorCount = plants.filter(plant => plant.environment === 'indoor').length;
+    const outdoorCount = plants.filter(plant => plant.environment === 'outdoor').length;
 
     return {
       all: plants.length,
@@ -65,22 +59,25 @@ export const useEnvironmentFilter = (plants: Plant[]) => {
     };
   }, [plants]);
 
-  const handleFilterChange = useCallback(async (filter: FilterType) => {
-    setCurrentFilter(filter);
-    
-    // Persist filter change
-    try {
-      await storageService.setDashboardFilter(filter);
-      // Announce filter change for accessibility
-      AccessibilityInfo.announceForAccessibility(
-        t('filters.accessibility.changed', {
-          filter: t(`filters.${filter}`),
-        })
-      );
-    } catch (error) {
-      console.error('Failed to save filter:', error);
-    }
-  }, [t]);
+  const handleFilterChange = useCallback(
+    async (filter: FilterType) => {
+      setCurrentFilter(filter);
+
+      // Persist filter change
+      try {
+        await storageService.setDashboardFilter(filter);
+        // Announce filter change for accessibility
+        AccessibilityInfo.announceForAccessibility(
+          t('filters.accessibility.changed', {
+            filter: t(`filters.${filter}`),
+          })
+        );
+      } catch (error) {
+        console.error('Failed to save filter:', error);
+      }
+    },
+    [t]
+  );
 
   return {
     currentFilter,
@@ -89,4 +86,4 @@ export const useEnvironmentFilter = (plants: Plant[]) => {
     onFilterChange: handleFilterChange,
     isInitialized,
   };
-}; 
+};

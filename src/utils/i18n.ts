@@ -78,23 +78,21 @@ const resources = {
 };
 
 // Initialize i18next
-i18n
-  .use(initReactI18next)
-  .init({
-    compatibilityJSON: 'v3',
-    resources,
-    lng: Localization.locale,
-    fallbackLng: 'en',
-    interpolation: {
-      escapeValue: false,
-    },
-    react: {
-      useSuspense: false,
-    },
-  });
+i18n.use(initReactI18next).init({
+  compatibilityJSON: 'v3',
+  resources,
+  lng: Localization.locale,
+  fallbackLng: 'en',
+  interpolation: {
+    escapeValue: false,
+  },
+  react: {
+    useSuspense: false,
+  },
+});
 
 // Load saved language on startup
-AsyncStorage.getItem('user-language').then((language) => {
+AsyncStorage.getItem('user-language').then(language => {
   if (language && Object.keys(LANGUAGES).includes(language)) {
     i18n.changeLanguage(language);
     I18nManager.forceRTL(LANGUAGES[language as LanguageCode].direction === 'rtl');
@@ -107,7 +105,7 @@ export const changeLanguage = async (lng: LanguageCode) => {
     await i18n.changeLanguage(lng);
     await AsyncStorage.setItem('user-language', lng);
     const isRTL = LANGUAGES[lng].direction === 'rtl';
-    
+
     // Only reload if RTL setting changed
     if (I18nManager.isRTL !== isRTL) {
       I18nManager.forceRTL(isRTL);
@@ -119,4 +117,4 @@ export const changeLanguage = async (lng: LanguageCode) => {
 };
 
 export { i18n };
-export default i18n; 
+export default i18n;

@@ -26,7 +26,7 @@ mockAccessibilityInfo();
 mockAccessibilityHooks();
 
 describe('AIConsultation Accessibility', () => {
-  const mockT = jest.fn((key) => key);
+  const mockT = jest.fn(key => key);
   const mockI18n = { language: 'en' };
   const mockMessages = [
     {
@@ -57,34 +57,24 @@ describe('AIConsultation Accessibility', () => {
   });
 
   // Run common accessibility tests
-  commonAccessibilityTests.testBasicAccessibility(
-    () => render(<AIConsultation />),
-    mockT,
-    {
-      labels: [
-        'ai.accessibility.chat_container',
-        'ai.accessibility.message_input',
-        'ai.accessibility.send_button',
-        'ai.accessibility.empty_state',
-      ],
-      roles: {
-        'ai.accessibility.message_input': 'textbox',
-        'ai.accessibility.send_button': 'button',
-      },
-      announcements: [
-        'ai.accessibility.screen_loaded',
-        'ai.accessibility.ready_for_input',
-      ],
-      focusOrder: [
-        'ai.accessibility.message_input',
-        'ai.accessibility.send_button',
-      ],
-    }
-  );
+  commonAccessibilityTests.testBasicAccessibility(() => render(<AIConsultation />), mockT, {
+    labels: [
+      'ai.accessibility.chat_container',
+      'ai.accessibility.message_input',
+      'ai.accessibility.send_button',
+      'ai.accessibility.empty_state',
+    ],
+    roles: {
+      'ai.accessibility.message_input': 'textbox',
+      'ai.accessibility.send_button': 'button',
+    },
+    announcements: ['ai.accessibility.screen_loaded', 'ai.accessibility.ready_for_input'],
+    focusOrder: ['ai.accessibility.message_input', 'ai.accessibility.send_button'],
+  });
 
   it('announces new messages via screen reader', async () => {
     const { getByA11yLabel, getByPlaceholderText } = render(<AIConsultation />);
-    
+
     const input = getByPlaceholderText('ai.askPlaceholder');
     const sendButton = getByA11yLabel('ai.accessibility.send_button');
 
@@ -100,10 +90,10 @@ describe('AIConsultation Accessibility', () => {
 
   it('provides accessible message history navigation', async () => {
     const { getAllByA11yRole } = render(<AIConsultation />);
-    
+
     const messages = getAllByA11yRole('article');
     expect(messages).toHaveLength(mockMessages.length);
-    
+
     messages.forEach((message, index) => {
       const isUser = mockMessages[index].isUser;
       expect(message.props.accessibilityLabel).toContain(
@@ -114,7 +104,7 @@ describe('AIConsultation Accessibility', () => {
 
   it('announces AI typing state', async () => {
     const { getByA11yLabel, getByPlaceholderText } = render(<AIConsultation />);
-    
+
     const input = getByPlaceholderText('ai.askPlaceholder');
     const sendButton = getByA11yLabel('ai.accessibility.send_button');
 
@@ -135,7 +125,7 @@ describe('AIConsultation Accessibility', () => {
     });
 
     const { getByA11yLabel } = render(<AIConsultation />);
-    
+
     await waitFor(() => {
       expect(AccessibilityInfo.announceForAccessibility).toHaveBeenCalledWith(
         expect.stringContaining('ai.accessibility.error_occurred')
@@ -145,9 +135,9 @@ describe('AIConsultation Accessibility', () => {
 
   it('supports keyboard shortcuts', async () => {
     const { getByPlaceholderText } = render(<AIConsultation />);
-    
+
     const input = getByPlaceholderText('ai.askPlaceholder');
-    
+
     await act(async () => {
       // Simulate Enter key press
       fireEvent.keyPress(input, { key: 'Enter', code: 13, modifiers: ['cmd'] });
@@ -160,10 +150,10 @@ describe('AIConsultation Accessibility', () => {
 
   it('announces emotional context of AI responses', async () => {
     const { getByA11yLabel, getAllByA11yRole } = render(<AIConsultation />);
-    
+
     const messages = getAllByA11yRole('article');
-    const aiMessage = messages.find(
-      msg => msg.props.accessibilityLabel?.includes('ai.accessibility.assistant_message')
+    const aiMessage = messages.find(msg =>
+      msg.props.accessibilityLabel?.includes('ai.accessibility.assistant_message')
     );
 
     expect(aiMessage?.props.accessibilityHint).toContain('ai.accessibility.supportive_tone');
@@ -171,10 +161,10 @@ describe('AIConsultation Accessibility', () => {
 
   it('provides accessible empty state with example questions', () => {
     const { getByA11yLabel, getAllByA11yRole } = render(<AIConsultation />);
-    
+
     const emptyState = getByA11yLabel('ai.accessibility.empty_state');
-    const exampleButtons = getAllByA11yRole('button').filter(
-      button => button.props.accessibilityHint?.includes('ai.accessibility.example_question')
+    const exampleButtons = getAllByA11yRole('button').filter(button =>
+      button.props.accessibilityHint?.includes('ai.accessibility.example_question')
     );
 
     expect(emptyState).toBeTruthy();
@@ -183,7 +173,7 @@ describe('AIConsultation Accessibility', () => {
 
   it('announces message character count for long messages', async () => {
     const { getByPlaceholderText } = render(<AIConsultation />);
-    
+
     const input = getByPlaceholderText('ai.askPlaceholder');
     const longText = 'a'.repeat(400);
 
@@ -198,12 +188,10 @@ describe('AIConsultation Accessibility', () => {
 
   it('provides accessible timestamp information', () => {
     const { getAllByA11yRole } = render(<AIConsultation />);
-    
+
     const messages = getAllByA11yRole('article');
     messages.forEach(message => {
-      expect(message.props.accessibilityHint).toMatch(
-        /ai\.accessibility\.(sent|received)_at/
-      );
+      expect(message.props.accessibilityHint).toMatch(/ai\.accessibility\.(sent|received)_at/);
     });
   });
-}); 
+});

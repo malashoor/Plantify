@@ -46,9 +46,7 @@ export function useSensorRulesService() {
   };
 
   const updateRule = async (id: string, updates: Partial<SensorRule>) => {
-    setRules(prev => prev.map(rule => 
-      rule.id === id ? { ...rule, ...updates } : rule
-    ));
+    setRules(prev => prev.map(rule => (rule.id === id ? { ...rule, ...updates } : rule)));
   };
 
   const deleteRule = async (id: string) => {
@@ -67,4 +65,4 @@ export function useSensorRulesService() {
     deleteRule,
     loadRules,
   };
-} 
+}

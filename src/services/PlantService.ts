@@ -21,7 +21,7 @@ const withTimeout = async <T>(
   timeoutMs: number = TIMEOUT_DURATION
 ): Promise<T> => {
   let timeoutId: NodeJS.Timeout | undefined;
-  
+
   const timeoutPromise = new Promise<never>((_, reject) => {
     timeoutId = setTimeout(() => {
       reject(new TimeoutError('Request timed out'));
@@ -54,14 +54,12 @@ const withTimeout = async <T>(
 export const PlantService = {
   async getPlants(): Promise<Plant[]> {
     try {
-      const response = await withTimeout(
-        fetch('https://api.plantai.com/plants')
-      );
-      
+      const response = await withTimeout(fetch('https://api.plantai.com/plants'));
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const plants = await response.json();
       return plants;
     } catch (error) {
@@ -77,14 +75,12 @@ export const PlantService = {
 
   async getCategories(): Promise<string[]> {
     try {
-      const response = await withTimeout(
-        fetch('https://api.plantai.com/categories')
-      );
-      
+      const response = await withTimeout(fetch('https://api.plantai.com/categories'));
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const categories = await response.json();
       return categories;
     } catch (error) {
@@ -100,14 +96,12 @@ export const PlantService = {
 
   async getById(id: string): Promise<Plant> {
     try {
-      const response = await withTimeout(
-        fetch(`https://api.plantai.com/plants/${id}`)
-      );
-      
+      const response = await withTimeout(fetch(`https://api.plantai.com/plants/${id}`));
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const plant = await response.json();
       return plant;
     } catch (error) {
@@ -120,4 +114,4 @@ export const PlantService = {
       throw new Error(`Failed to fetch plant with id: ${id}`);
     }
   },
-}; 
+};

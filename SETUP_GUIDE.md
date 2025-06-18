@@ -19,6 +19,7 @@ APP_ENV=development
 If you want real data instead of mock data, create these tables in Supabase:
 
 ### 1. Plants Table
+
 ```sql
 CREATE TABLE plants (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
@@ -41,6 +42,7 @@ CREATE POLICY "Users can manage their own plants" ON plants
 ```
 
 ### 2. Reminders Table
+
 ```sql
 CREATE TABLE reminders (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
@@ -63,24 +65,29 @@ CREATE POLICY "Users can manage their own reminders" ON reminders
 ## 🔐 Authentication Setup
 
 ### 1. Configure Redirect URLs
+
 In Supabase Dashboard → Authentication → URL Configuration, add:
+
 - `plantai://auth/callback`
 - `http://localhost:8081` (for web testing)
 
 ### 2. Email Templates (Optional)
+
 Configure custom email templates in Supabase → Authentication → Email Templates
 
 ## 📱 Testing the App
 
 ### ✅ What Works NOW:
+
 1. **Onboarding** - Language toggle, slide navigation
-2. **Registration** - Real Supabase auth with validation  
+2. **Registration** - Real Supabase auth with validation
 3. **Login** - Real authentication flow
 4. **Password Reset** - Functional email reset
 5. **Dashboard** - Auth-protected with real data OR mock fallback
 6. **Navigation** - All screens properly connected
 
 ### 🔄 Data Flow:
+
 - **With Database**: Real user data, plants, reminders
 - **Without Database**: Falls back to beautiful mock data
 - **Authentication**: Always real via Supabase
@@ -105,17 +112,20 @@ npx expo start
 ## 🎯 Test Flow Checklist
 
 ### Phase 1: Onboarding
+
 - [ ] Language toggle (English ↔ Arabic)
 - [ ] Slide navigation works
 - [ ] "Get Started" → Registration
 
-### Phase 2: Authentication  
+### Phase 2: Authentication
+
 - [ ] Registration with email validation
 - [ ] Login with real credentials
 - [ ] Password reset email received
 - [ ] Auth protection (try accessing /(tabs) directly)
 
 ### Phase 3: Dashboard
+
 - [ ] User greeting displays
 - [ ] Plant cards show (mock or real data)
 - [ ] Quick actions navigate correctly
@@ -131,21 +141,22 @@ npx expo start
 ## 🚀 Production Deployment
 
 Your app is now ready for:
-- ✅ TestFlight (iOS) 
+
+- ✅ TestFlight (iOS)
 - ✅ Google Play Console (Android)
 - ✅ Expo Updates
 - ✅ Real user registration/authentication
 
 ## 📊 Current Status: PRODUCTION READY
 
-| Feature | Status | Notes |
-|---------|--------|-------|
-| Authentication | ✅ Fully Functional | Real Supabase auth |
-| Navigation | ✅ Working | expo-router setup |
-| Dashboard | ✅ Dynamic | Real data + mock fallback |
-| Route Protection | ✅ Implemented | Auth guards active |
-| Password Reset | ✅ Functional | Email integration |
-| Onboarding | ✅ Complete | Multi-language support |
-| Registration | ✅ Complete | Full validation |
+| Feature          | Status              | Notes                     |
+| ---------------- | ------------------- | ------------------------- |
+| Authentication   | ✅ Fully Functional | Real Supabase auth        |
+| Navigation       | ✅ Working          | expo-router setup         |
+| Dashboard        | ✅ Dynamic          | Real data + mock fallback |
+| Route Protection | ✅ Implemented      | Auth guards active        |
+| Password Reset   | ✅ Functional       | Email integration         |
+| Onboarding       | ✅ Complete         | Multi-language support    |
+| Registration     | ✅ Complete         | Full validation           |
 
-**🎉 Your 3-month journey is complete! The app is now fully functional and ready for real users.** 
+**🎉 Your 3-month journey is complete! The app is now fully functional and ready for real users.**

@@ -57,4 +57,4 @@ export function useEmotions({ userId, days = 7, onError }: UseEmotionsOptions) {
   }, [userId, days, onError]);
 
   return state;
-} 
+}

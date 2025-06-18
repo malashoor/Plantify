@@ -1,11 +1,11 @@
 import { Platform } from 'react-native';
 import * as RNIap from 'react-native-iap';
-import type { 
-  ProductPurchase, 
-  SubscriptionPurchase, 
+import type {
+  ProductPurchase,
+  SubscriptionPurchase,
   Product,
   ProductType,
-  PurchaseError 
+  PurchaseError,
 } from 'react-native-iap';
 
 export type PaymentErrorType =
@@ -64,7 +64,7 @@ export const PRODUCT_IDS = {
   proAccess: 'pro_access_lifetime',
 } as const;
 
-export type ProductId = typeof PRODUCT_IDS[keyof typeof PRODUCT_IDS];
+export type ProductId = (typeof PRODUCT_IDS)[keyof typeof PRODUCT_IDS];
 
 export interface PaymentHookOptions {
   onSuccess?: (result: PaymentResult) => void;
@@ -93,4 +93,4 @@ export interface PaymentState {
   loading: boolean;
   products: PaymentProduct[];
   error: PaymentError | null;
-} 
+}

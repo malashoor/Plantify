@@ -24,7 +24,7 @@ export function useTreatmentGuides(plantId?: string) {
       severity: 'medium',
       treatmentType: 'environmental',
       estimatedTime: '1-2 weeks',
-      preventionTips: ['Check soil moisture before watering', 'Ensure pot has drainage holes']
+      preventionTips: ['Check soil moisture before watering', 'Ensure pot has drainage holes'],
     },
     {
       plantId: 'plant-2',
@@ -33,7 +33,7 @@ export function useTreatmentGuides(plantId?: string) {
       severity: 'high',
       treatmentType: 'pest',
       estimatedTime: '2-3 weeks',
-      preventionTips: ['Maintain higher humidity', 'Regular inspection of leaf undersides']
+      preventionTips: ['Maintain higher humidity', 'Regular inspection of leaf undersides'],
     },
     {
       plantId: 'plant-3',
@@ -42,7 +42,7 @@ export function useTreatmentGuides(plantId?: string) {
       severity: 'low',
       treatmentType: 'environmental',
       estimatedTime: '1 week',
-      preventionTips: ['Use filtered or distilled water', 'Group plants together for humidity']
+      preventionTips: ['Use filtered or distilled water', 'Group plants together for humidity'],
     },
     {
       plantId: 'plant-1',
@@ -51,8 +51,8 @@ export function useTreatmentGuides(plantId?: string) {
       severity: 'medium',
       treatmentType: 'pest',
       estimatedTime: '1-2 weeks',
-      preventionTips: ['Regular leaf cleaning', 'Inspect new plants before bringing indoors']
-    }
+      preventionTips: ['Regular leaf cleaning', 'Inspect new plants before bringing indoors'],
+    },
   ];
 
   const fetchTreatmentGuides = async () => {
@@ -83,7 +83,10 @@ export function useTreatmentGuides(plantId?: string) {
     }
   };
 
-  const addTreatmentRecord = async (treatment: Omit<TreatmentGuide, 'plantId'>, plantId: string) => {
+  const addTreatmentRecord = async (
+    treatment: Omit<TreatmentGuide, 'plantId'>,
+    plantId: string
+  ) => {
     setIsLoading(true);
     setError(null);
 
@@ -95,7 +98,7 @@ export function useTreatmentGuides(plantId?: string) {
 
       const newTreatment: TreatmentGuide = {
         ...treatment,
-        plantId
+        plantId,
       };
 
       setGuides(prev => [newTreatment, ...prev]);
@@ -119,9 +122,9 @@ export function useTreatmentGuides(plantId?: string) {
       //   .eq('plant_id', plantId)
       //   .eq('issue', issue);
 
-      setGuides(prev => prev.filter(guide => 
-        !(guide.plantId === plantId && guide.issue === issue)
-      ));
+      setGuides(prev =>
+        prev.filter(guide => !(guide.plantId === plantId && guide.issue === issue))
+      );
       setIsLoading(false);
     } catch (err) {
       setError('Failed to mark treatment as completed');
@@ -140,6 +143,6 @@ export function useTreatmentGuides(plantId?: string) {
     error,
     refetch: fetchTreatmentGuides,
     addTreatmentRecord,
-    markTreatmentCompleted
+    markTreatmentCompleted,
   };
-} 
+}

@@ -157,4 +157,4 @@ const styles = StyleSheet.create<Styles>({
   particles: {
     ...StyleSheet.absoluteFillObject,
   },
-}); 
+});

@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, useColorScheme, View, Text, TouchableOpacity, Alert } from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  useColorScheme,
+  View,
+  Text,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Stack, useRouter } from 'expo-router';
 import { useAuth } from '../hooks/useAuth';
@@ -17,7 +25,7 @@ const createTheme = (colorScheme: 'light' | 'dark' | null) => ({
     success: '#4CAF50',
     warning: '#FF9800',
     error: '#F44336',
-  }
+  },
 });
 
 export default function AccountScreen() {
@@ -28,69 +36,78 @@ export default function AccountScreen() {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogout = () => {
-    Alert.alert(
-      'Sign Out',
-      'Are you sure you want to sign out?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Sign Out',
-          style: 'destructive',
-          onPress: async () => {
-            setIsLoading(true);
-            try {
-              const { error } = await signOut();
-              if (error) {
-                Alert.alert('Error', error);
-              } else {
-                router.replace('/landing');
-              }
-            } catch (error) {
-              Alert.alert('Error', 'Failed to sign out');
-            } finally {
-              setIsLoading(false);
+    Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Sign Out',
+        style: 'destructive',
+        onPress: async () => {
+          setIsLoading(true);
+          try {
+            const { error } = await signOut();
+            if (error) {
+              Alert.alert('Error', error);
+            } else {
+              router.replace('/landing');
             }
+          } catch (error) {
+            Alert.alert('Error', 'Failed to sign out');
+          } finally {
+            setIsLoading(false);
           }
-        }
-      ]
-    );
+        },
+      },
+    ]);
   };
 
   const formatDate = (dateString: string) => {
     return new Intl.DateTimeFormat('en-US', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     }).format(new Date(dateString));
   };
 
   const getRoleIcon = (role: string) => {
     switch (role) {
-      case 'admin': return 'shield-checkmark';
-      case 'grower': return 'leaf';
-      case 'child': return 'happy';
-      default: return 'person';
+      case 'admin':
+        return 'shield-checkmark';
+      case 'grower':
+        return 'leaf';
+      case 'child':
+        return 'happy';
+      default:
+        return 'person';
     }
   };
 
   const getRoleColor = (role: string) => {
     switch (role) {
-      case 'admin': return theme.colors.error;
-      case 'grower': return theme.colors.success;
-      case 'child': return theme.colors.warning;
-      default: return theme.colors.textSecondary;
+      case 'admin':
+        return theme.colors.error;
+      case 'grower':
+        return theme.colors.success;
+      case 'child':
+        return theme.colors.warning;
+      default:
+        return theme.colors.textSecondary;
     }
   };
-  
+
   return (
-    <ScrollView 
+    <ScrollView
       style={[styles.container, { backgroundColor: theme.colors.background }]}
       contentContainerStyle={styles.contentContainer}
     >
       <Stack.Screen options={{ title: 'My Account' }} />
-      
+
       {/* Profile Section */}
-      <View style={[styles.profileCard, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
+      <View
+        style={[
+          styles.profileCard,
+          { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+        ]}
+      >
         <View style={styles.profileHeader}>
           <View style={[styles.avatarContainer, { backgroundColor: theme.colors.primary }]}>
             <Ionicons name="person" size={32} color="white" />
@@ -103,18 +120,14 @@ export default function AccountScreen() {
               {user?.email}
             </Text>
             <View style={styles.roleContainer}>
-              <Ionicons 
-                name={getRoleIcon(userRole)} 
-                size={16} 
-                color={getRoleColor(userRole)} 
-              />
+              <Ionicons name={getRoleIcon(userRole)} size={16} color={getRoleColor(userRole)} />
               <Text style={[styles.userRole, { color: getRoleColor(userRole) }]}>
                 {userRole.charAt(0).toUpperCase() + userRole.slice(1)}
               </Text>
             </View>
           </View>
         </View>
-        
+
         {user?.created_at && (
           <View style={styles.memberSince}>
             <Ionicons name="calendar" size={16} color={theme.colors.textSecondary} />
@@ -126,10 +139,15 @@ export default function AccountScreen() {
       </View>
 
       {/* Account Actions */}
-      <View style={[styles.actionsCard, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
+      <View
+        style={[
+          styles.actionsCard,
+          { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+        ]}
+      >
         <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>Account Settings</Text>
-        
-        <TouchableOpacity 
+
+        <TouchableOpacity
           style={[styles.actionItem, { borderBottomColor: theme.colors.border }]}
           onPress={() => {
             try {
@@ -137,7 +155,10 @@ export default function AccountScreen() {
               router.push('/edit-profile');
             } catch (error) {
               console.error('Navigation error:', error);
-              Alert.alert('Navigation Error', 'Could not open Edit Profile screen. Please try again.');
+              Alert.alert(
+                'Navigation Error',
+                'Could not open Edit Profile screen. Please try again.'
+              );
             }
           }}
         >
@@ -146,7 +167,7 @@ export default function AccountScreen() {
           <Ionicons name="chevron-forward" size={20} color={theme.colors.textSecondary} />
         </TouchableOpacity>
 
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[styles.actionItem, { borderBottomColor: theme.colors.border }]}
           onPress={() => {
             try {
@@ -154,7 +175,10 @@ export default function AccountScreen() {
               router.push('/notifications');
             } catch (error) {
               console.error('Navigation error:', error);
-              Alert.alert('Navigation Error', 'Could not open Notifications screen. Please try again.');
+              Alert.alert(
+                'Navigation Error',
+                'Could not open Notifications screen. Please try again.'
+              );
             }
           }}
         >
@@ -163,7 +187,7 @@ export default function AccountScreen() {
           <Ionicons name="chevron-forward" size={20} color={theme.colors.textSecondary} />
         </TouchableOpacity>
 
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[styles.actionItem, { borderBottomColor: theme.colors.border }]}
           onPress={() => {
             try {
@@ -180,9 +204,14 @@ export default function AccountScreen() {
           <Ionicons name="chevron-forward" size={20} color={theme.colors.textSecondary} />
         </TouchableOpacity>
 
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[styles.actionItem, { borderBottomColor: theme.colors.border }]}
-          onPress={() => Alert.alert('Export Data', 'Data export functionality coming soon! This will allow you to download all your plant data, photos, and care history in a portable format.')}
+          onPress={() =>
+            Alert.alert(
+              'Export Data',
+              'Data export functionality coming soon! This will allow you to download all your plant data, photos, and care history in a portable format.'
+            )
+          }
         >
           <Ionicons name="download" size={20} color={theme.colors.textSecondary} />
           <Text style={[styles.actionText, { color: theme.colors.text }]}>Export Data</Text>
@@ -191,10 +220,15 @@ export default function AccountScreen() {
       </View>
 
       {/* Support Section */}
-      <View style={[styles.actionsCard, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
+      <View
+        style={[
+          styles.actionsCard,
+          { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+        ]}
+      >
         <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>Support</Text>
-        
-        <TouchableOpacity 
+
+        <TouchableOpacity
           style={[styles.actionItem, { borderBottomColor: theme.colors.border }]}
           onPress={() => Alert.alert('Help Center', 'Visit our help center at help.greensai.com')}
         >
@@ -203,7 +237,7 @@ export default function AccountScreen() {
           <Ionicons name="chevron-forward" size={20} color={theme.colors.textSecondary} />
         </TouchableOpacity>
 
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[styles.actionItem, { borderBottomColor: theme.colors.border }]}
           onPress={() => Alert.alert('Contact Us', 'Email us at support@greensai.com')}
         >
@@ -212,9 +246,11 @@ export default function AccountScreen() {
           <Ionicons name="chevron-forward" size={20} color={theme.colors.textSecondary} />
         </TouchableOpacity>
 
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[styles.actionItem, { borderBottomColor: 'transparent' }]}
-          onPress={() => Alert.alert('About', 'GreensAI v1.0.0\nYour AI-powered plant care companion')}
+          onPress={() =>
+            Alert.alert('About', 'GreensAI v1.0.0\nYour AI-powered plant care companion')
+          }
         >
           <Ionicons name="information-circle" size={20} color={theme.colors.textSecondary} />
           <Text style={[styles.actionText, { color: theme.colors.text }]}>About GreensAI</Text>
@@ -223,7 +259,7 @@ export default function AccountScreen() {
       </View>
 
       {/* Logout Button */}
-      <TouchableOpacity 
+      <TouchableOpacity
         style={[styles.logoutButton, { backgroundColor: theme.colors.error }]}
         onPress={handleLogout}
         disabled={isLoading}
@@ -348,4 +384,4 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: 'center',
   },
-}); 
+});

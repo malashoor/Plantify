@@ -9,7 +9,7 @@ import {
   AccessibilityInfo,
   StyleSheet,
   Platform,
-  I18nManager
+  I18nManager,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
@@ -22,13 +22,13 @@ import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
 
 import { useNutrientCalculator } from '@/hooks/useNutrientCalculator';
-import { 
-  Crop, 
-  CropStage, 
-  NutrientRecipe, 
+import {
+  Crop,
+  CropStage,
+  NutrientRecipe,
   UnitSystem,
   COMMON_NUTRIENTS,
-  COMMON_CROP_STAGES 
+  COMMON_CROP_STAGES,
 } from '@/types/nutrient-calculator';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/spacing';
@@ -44,7 +44,7 @@ const MOCK_CROPS: Crop[] = [
     stages: COMMON_CROP_STAGES,
     nameAr: 'خس',
     categoryAr: 'خضروات ورقية',
-    descriptionAr: 'خضروات ورقية سريعة النمو'
+    descriptionAr: 'خضروات ورقية سريعة النمو',
   },
   {
     id: 'tomato',
@@ -54,7 +54,7 @@ const MOCK_CROPS: Crop[] = [
     stages: COMMON_CROP_STAGES,
     nameAr: 'طماطم',
     categoryAr: 'خضروات ثمرية',
-    descriptionAr: 'خضروات ثمرية شائعة'
+    descriptionAr: 'خضروات ثمرية شائعة',
   },
   {
     id: 'basil',
@@ -64,52 +64,56 @@ const MOCK_CROPS: Crop[] = [
     stages: COMMON_CROP_STAGES,
     nameAr: 'ريحان',
     categoryAr: 'أعشاب',
-    descriptionAr: 'عشب طبخ عطري'
-  }
+    descriptionAr: 'عشب طبخ عطري',
+  },
 ];
 
 const MOCK_RECIPES: { [key: string]: NutrientRecipe[] } = {
-  'lettuce_seedling': [{
-    id: 'lettuce_seedling_basic',
-    name: 'Basic Lettuce Seedling',
-    cropId: 'lettuce',
-    stageId: 'seedling',
-    description: 'Gentle nutrient mix for young lettuce plants',
-    nutrients: COMMON_NUTRIENTS.slice(0, 6), // First 6 nutrients
-    ph: { min: 5.5, max: 6.5, optimal: 6.0 },
-    ec: { min: 0.8, max: 1.2, optimal: 1.0 },
-    waterVolume: 10,
-    isOfficial: true,
-    createdBy: 'system',
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    nameAr: 'خس شتلة أساسي',
-    descriptionAr: 'خليط غذائي لطيف لنباتات الخس الصغيرة'
-  }],
-  'tomato_vegetative': [{
-    id: 'tomato_veg_complete',
-    name: 'Complete Tomato Vegetative',
-    cropId: 'tomato',
-    stageId: 'vegetative',
-    description: 'Full spectrum nutrients for vegetative growth',
-    nutrients: COMMON_NUTRIENTS,
-    ph: { min: 5.8, max: 6.8, optimal: 6.3 },
-    ec: { min: 1.2, max: 1.8, optimal: 1.5 },
-    waterVolume: 10,
-    isOfficial: true,
-    createdBy: 'system',
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    nameAr: 'طماطم خضري كامل',
-    descriptionAr: 'عناصر غذائية شاملة للنمو الخضري'
-  }]
+  lettuce_seedling: [
+    {
+      id: 'lettuce_seedling_basic',
+      name: 'Basic Lettuce Seedling',
+      cropId: 'lettuce',
+      stageId: 'seedling',
+      description: 'Gentle nutrient mix for young lettuce plants',
+      nutrients: COMMON_NUTRIENTS.slice(0, 6), // First 6 nutrients
+      ph: { min: 5.5, max: 6.5, optimal: 6.0 },
+      ec: { min: 0.8, max: 1.2, optimal: 1.0 },
+      waterVolume: 10,
+      isOfficial: true,
+      createdBy: 'system',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      nameAr: 'خس شتلة أساسي',
+      descriptionAr: 'خليط غذائي لطيف لنباتات الخس الصغيرة',
+    },
+  ],
+  tomato_vegetative: [
+    {
+      id: 'tomato_veg_complete',
+      name: 'Complete Tomato Vegetative',
+      cropId: 'tomato',
+      stageId: 'vegetative',
+      description: 'Full spectrum nutrients for vegetative growth',
+      nutrients: COMMON_NUTRIENTS,
+      ph: { min: 5.8, max: 6.8, optimal: 6.3 },
+      ec: { min: 1.2, max: 1.8, optimal: 1.5 },
+      waterVolume: 10,
+      isOfficial: true,
+      createdBy: 'system',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      nameAr: 'طماطم خضري كامل',
+      descriptionAr: 'عناصر غذائية شاملة للنمو الخضري',
+    },
+  ],
 };
 
 export default function NutrientCalculatorScreen() {
   const { t, i18n } = useTranslation();
   const router = useRouter();
   const isRTL = i18n.language === 'ar';
-  
+
   const {
     selectedCrop,
     selectedStage,
@@ -132,7 +136,7 @@ export default function NutrientCalculatorScreen() {
     calculateRecipe,
     saveRecipe,
     speakInstructions,
-    reset
+    reset,
   } = useNutrientCalculator();
 
   const [availableRecipes, setAvailableRecipes] = useState<NutrientRecipe[]>([]);
@@ -155,70 +159,84 @@ export default function NutrientCalculatorScreen() {
     }
   }, []);
 
-  const handleCropSelect = useCallback((crop: Crop) => {
-    selectCrop(crop);
-    Haptics.selectionAsync();
-    announceChange(t('nutrient.accessibility.crop_selected', { 
-      crop: isRTL ? crop.nameAr : crop.name 
-    }));
-  }, [selectCrop, announceChange, t, isRTL]);
+  const handleCropSelect = useCallback(
+    (crop: Crop) => {
+      selectCrop(crop);
+      Haptics.selectionAsync();
+      announceChange(
+        t('nutrient.accessibility.crop_selected', {
+          crop: isRTL ? crop.nameAr : crop.name,
+        })
+      );
+    },
+    [selectCrop, announceChange, t, isRTL]
+  );
 
-  const handleStageSelect = useCallback((stage: CropStage) => {
-    selectStage(stage);
-    Haptics.selectionAsync();
-    announceChange(t('nutrient.accessibility.stage_selected', { 
-      stage: isRTL ? stage.nameAr : stage.name 
-    }));
-  }, [selectStage, announceChange, t, isRTL]);
+  const handleStageSelect = useCallback(
+    (stage: CropStage) => {
+      selectStage(stage);
+      Haptics.selectionAsync();
+      announceChange(
+        t('nutrient.accessibility.stage_selected', {
+          stage: isRTL ? stage.nameAr : stage.name,
+        })
+      );
+    },
+    [selectStage, announceChange, t, isRTL]
+  );
 
-  const handleRecipeSelect = useCallback((recipe: NutrientRecipe) => {
-    selectRecipe(recipe);
-    Haptics.selectionAsync();
-    announceChange(t('nutrient.accessibility.recipe_selected', { 
-      recipe: isRTL ? recipe.nameAr : recipe.name 
-    }));
-  }, [selectRecipe, announceChange, t, isRTL]);
+  const handleRecipeSelect = useCallback(
+    (recipe: NutrientRecipe) => {
+      selectRecipe(recipe);
+      Haptics.selectionAsync();
+      announceChange(
+        t('nutrient.accessibility.recipe_selected', {
+          recipe: isRTL ? recipe.nameAr : recipe.name,
+        })
+      );
+    },
+    [selectRecipe, announceChange, t, isRTL]
+  );
 
   const handleCalculate = useCallback(async () => {
     if (!selectedRecipe) return;
-    
+
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     await calculateRecipe(selectedRecipe);
-    
+
     if (calculations) {
-      announceChange(t('nutrient.accessibility.calculation_complete', {
-        count: calculations.calculations.length
-      }));
+      announceChange(
+        t('nutrient.accessibility.calculation_complete', {
+          count: calculations.calculations.length,
+        })
+      );
     }
   }, [selectedRecipe, calculateRecipe, calculations, announceChange, t]);
 
   const handleSaveRecipe = useCallback(async () => {
     if (!selectedRecipe) return;
-    
+
     try {
       await saveRecipe(selectedRecipe);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      Alert.alert(
-        t('nutrient.save.success_title'),
-        t('nutrient.save.success_message'),
-        [{ text: t('common.ok'), style: 'default' }]
-      );
+      Alert.alert(t('nutrient.save.success_title'), t('nutrient.save.success_message'), [
+        { text: t('common.ok'), style: 'default' },
+      ]);
     } catch (error) {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-      Alert.alert(
-        t('nutrient.save.error_title'),
-        t('nutrient.save.error_message'),
-        [{ text: t('common.ok'), style: 'default' }]
-      );
+      Alert.alert(t('nutrient.save.error_title'), t('nutrient.save.error_message'), [
+        { text: t('common.ok'), style: 'default' },
+      ]);
     }
   }, [selectedRecipe, saveRecipe, t]);
 
   const handleVoiceInstructions = useCallback(async () => {
     if (!calculations) return;
-    
-    const instruction = calculations.calculations[0]?.voiceInstructions || 
-                       calculations.calculations[0]?.voiceInstructionsAr;
-    
+
+    const instruction =
+      calculations.calculations[0]?.voiceInstructions ||
+      calculations.calculations[0]?.voiceInstructionsAr;
+
     if (instruction) {
       await speakInstructions(instruction);
     }
@@ -226,48 +244,44 @@ export default function NutrientCalculatorScreen() {
 
   const renderCropSelector = () => (
     <View style={styles.sectionContainer}>
-      <Text 
+      <Text
         style={[styles.sectionTitle, isRTL && styles.rtlText]}
         accessibilityRole="header"
         accessibilityLevel={2}
       >
         {t('nutrient.select_crop')}
       </Text>
-      
+
       <View style={styles.cropGrid}>
-        {MOCK_CROPS.map((crop) => (
+        {MOCK_CROPS.map(crop => (
           <TouchableOpacity
             key={crop.id}
-            style={[
-              styles.cropCard,
-              selectedCrop?.id === crop.id && styles.selectedCard
-            ]}
+            style={[styles.cropCard, selectedCrop?.id === crop.id && styles.selectedCard]}
             onPress={() => handleCropSelect(crop)}
             accessibilityRole="button"
-            accessibilityLabel={t('nutrient.accessibility.select_crop', { 
-              crop: isRTL ? crop.nameAr : crop.name 
+            accessibilityLabel={t('nutrient.accessibility.select_crop', {
+              crop: isRTL ? crop.nameAr : crop.name,
             })}
             accessibilityHint={t('nutrient.accessibility.crop_hint')}
             accessibilityState={{ selected: selectedCrop?.id === crop.id }}
           >
             <View style={styles.cropIconContainer}>
-              <Ionicons 
-                name="leaf-outline" 
-                size={24} 
-                color={selectedCrop?.id === crop.id ? colors.primary : colors.text} 
+              <Ionicons
+                name="leaf-outline"
+                size={24}
+                color={selectedCrop?.id === crop.id ? colors.primary : colors.text}
               />
             </View>
-            <Text style={[
-              styles.cropName,
-              isRTL && styles.rtlText,
-              selectedCrop?.id === crop.id && styles.selectedText
-            ]}>
+            <Text
+              style={[
+                styles.cropName,
+                isRTL && styles.rtlText,
+                selectedCrop?.id === crop.id && styles.selectedText,
+              ]}
+            >
               {isRTL ? crop.nameAr : crop.name}
             </Text>
-            <Text style={[
-              styles.cropCategory,
-              isRTL && styles.rtlText
-            ]}>
+            <Text style={[styles.cropCategory, isRTL && styles.rtlText]}>
               {isRTL ? crop.categoryAr : crop.category}
             </Text>
           </TouchableOpacity>
@@ -279,7 +293,7 @@ export default function NutrientCalculatorScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
-      
+
       {/* Header */}
       <View style={[styles.header, isRTL && styles.rtlRow]}>
         <TouchableOpacity
@@ -289,17 +303,15 @@ export default function NutrientCalculatorScreen() {
           accessibilityLabel={t('common.back')}
           accessibilityHint={t('nutrient.accessibility.back_hint')}
         >
-          <Ionicons 
-            name={isRTL ? "chevron-forward" : "chevron-back"} 
-            size={24} 
-            color={colors.text} 
+          <Ionicons
+            name={isRTL ? 'chevron-forward' : 'chevron-back'}
+            size={24}
+            color={colors.text}
           />
         </TouchableOpacity>
-        
+
         <View style={styles.headerTitleContainer}>
-          <Text style={[styles.headerTitle, isRTL && styles.rtlText]}>
-            {t('nutrient.title')}
-          </Text>
+          <Text style={[styles.headerTitle, isRTL && styles.rtlText]}>{t('nutrient.title')}</Text>
           {isOffline && (
             <View style={styles.offlineIndicator}>
               <Ionicons name="cloud-offline-outline" size={16} color={colors.warning} />
@@ -318,7 +330,7 @@ export default function NutrientCalculatorScreen() {
         </TouchableOpacity>
       </View>
 
-      <ScrollView 
+      <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
         accessibilityLabel={t('nutrient.accessibility.main_content')}
@@ -329,14 +341,14 @@ export default function NutrientCalculatorScreen() {
         {/* Stage Selection */}
         {selectedCrop && (
           <View style={styles.sectionContainer}>
-            <Text 
+            <Text
               style={[styles.sectionTitle, isRTL && styles.rtlText]}
               accessibilityRole="header"
               accessibilityLevel={2}
             >
               {t('nutrient.select_stage')}
             </Text>
-            
+
             <View style={styles.stageContainer}>
               {selectedCrop.stages.map((stage, index) => (
                 <TouchableOpacity
@@ -344,34 +356,35 @@ export default function NutrientCalculatorScreen() {
                   style={[
                     styles.stageCard,
                     selectedStage?.id === stage.id && styles.selectedCard,
-                    isRTL && styles.rtlCard
+                    isRTL && styles.rtlCard,
                   ]}
                   onPress={() => handleStageSelect(stage)}
                   accessibilityRole="button"
-                  accessibilityLabel={t('nutrient.accessibility.select_stage', { 
-                    stage: isRTL ? stage.nameAr : stage.name 
+                  accessibilityLabel={t('nutrient.accessibility.select_stage', {
+                    stage: isRTL ? stage.nameAr : stage.name,
                   })}
                   accessibilityState={{ selected: selectedStage?.id === stage.id }}
                 >
                   <View style={styles.stageHeader}>
-                    <Text style={[
-                      styles.stageNumber,
-                      selectedStage?.id === stage.id && styles.selectedText
-                    ]}>
+                    <Text
+                      style={[
+                        styles.stageNumber,
+                        selectedStage?.id === stage.id && styles.selectedText,
+                      ]}
+                    >
                       {index + 1}
                     </Text>
-                    <Text style={[
-                      styles.stageName,
-                      isRTL && styles.rtlText,
-                      selectedStage?.id === stage.id && styles.selectedText
-                    ]}>
+                    <Text
+                      style={[
+                        styles.stageName,
+                        isRTL && styles.rtlText,
+                        selectedStage?.id === stage.id && styles.selectedText,
+                      ]}
+                    >
                       {isRTL ? stage.nameAr : stage.name}
                     </Text>
                   </View>
-                  <Text style={[
-                    styles.stageDescription,
-                    isRTL && styles.rtlText
-                  ]}>
+                  <Text style={[styles.stageDescription, isRTL && styles.rtlText]}>
                     {isRTL ? stage.descriptionAr : stage.description}
                   </Text>
                   <Text style={styles.stageDuration}>
@@ -386,34 +399,33 @@ export default function NutrientCalculatorScreen() {
         {/* Recipe Selection */}
         {selectedStage && availableRecipes.length > 0 && (
           <View style={styles.sectionContainer}>
-            <Text 
+            <Text
               style={[styles.sectionTitle, isRTL && styles.rtlText]}
               accessibilityRole="header"
               accessibilityLevel={2}
             >
               {t('nutrient.select_recipe')}
             </Text>
-            
-            {availableRecipes.map((recipe) => (
+
+            {availableRecipes.map(recipe => (
               <TouchableOpacity
                 key={recipe.id}
-                style={[
-                  styles.recipeCard,
-                  selectedRecipe?.id === recipe.id && styles.selectedCard
-                ]}
+                style={[styles.recipeCard, selectedRecipe?.id === recipe.id && styles.selectedCard]}
                 onPress={() => handleRecipeSelect(recipe)}
                 accessibilityRole="button"
-                accessibilityLabel={t('nutrient.accessibility.select_recipe', { 
-                  recipe: isRTL ? recipe.nameAr : recipe.name 
+                accessibilityLabel={t('nutrient.accessibility.select_recipe', {
+                  recipe: isRTL ? recipe.nameAr : recipe.name,
                 })}
                 accessibilityState={{ selected: selectedRecipe?.id === recipe.id }}
               >
                 <View style={[styles.recipeHeader, isRTL && styles.rtlRow]}>
-                  <Text style={[
-                    styles.recipeName,
-                    isRTL && styles.rtlText,
-                    selectedRecipe?.id === recipe.id && styles.selectedText
-                  ]}>
+                  <Text
+                    style={[
+                      styles.recipeName,
+                      isRTL && styles.rtlText,
+                      selectedRecipe?.id === recipe.id && styles.selectedText,
+                    ]}
+                  >
                     {isRTL ? recipe.nameAr : recipe.name}
                   </Text>
                   {recipe.isOfficial && (
@@ -423,14 +435,11 @@ export default function NutrientCalculatorScreen() {
                     </View>
                   )}
                 </View>
-                
-                <Text style={[
-                  styles.recipeDescription,
-                  isRTL && styles.rtlText
-                ]}>
+
+                <Text style={[styles.recipeDescription, isRTL && styles.rtlText]}>
                   {isRTL ? recipe.descriptionAr : recipe.description}
                 </Text>
-                
+
                 <View style={[styles.recipeMetrics, isRTL && styles.rtlRow]}>
                   <Text style={styles.metricText}>
                     pH: {recipe.ph.optimal} ({recipe.ph.min}-{recipe.ph.max})
@@ -450,19 +459,19 @@ export default function NutrientCalculatorScreen() {
         {/* Water Volume Input */}
         {selectedRecipe && (
           <View style={styles.sectionContainer}>
-            <Text 
+            <Text
               style={[styles.sectionTitle, isRTL && styles.rtlText]}
               accessibilityRole="header"
               accessibilityLevel={2}
             >
               {t('nutrient.water_volume')}
             </Text>
-            
+
             <View style={styles.volumeContainer}>
               <TextInput
                 style={[styles.volumeInput, isRTL && styles.rtlText]}
                 value={waterVolume.toString()}
-                onChangeText={(text) => {
+                onChangeText={text => {
                   const volume = parseFloat(text) || 0;
                   setWaterVolume(volume);
                 }}
@@ -470,11 +479,9 @@ export default function NutrientCalculatorScreen() {
                 accessibilityLabel={t('nutrient.accessibility.water_volume')}
                 accessibilityHint={t('nutrient.accessibility.volume_hint')}
               />
-              <Text style={[styles.volumeUnit, isRTL && styles.rtlText]}>
-                {unitSystem.volume}
-              </Text>
+              <Text style={[styles.volumeUnit, isRTL && styles.rtlText]}>{unitSystem.volume}</Text>
             </View>
-            
+
             <Slider
               style={styles.volumeSlider}
               minimumValue={1}
@@ -494,10 +501,7 @@ export default function NutrientCalculatorScreen() {
         {selectedRecipe && (
           <View style={styles.sectionContainer}>
             <TouchableOpacity
-              style={[
-                styles.calculateButton,
-                isLoading && styles.disabledButton
-              ]}
+              style={[styles.calculateButton, isLoading && styles.disabledButton]}
               onPress={handleCalculate}
               disabled={isLoading}
               accessibilityRole="button"
@@ -527,14 +531,14 @@ export default function NutrientCalculatorScreen() {
         {/* Results Section */}
         {calculations && (
           <View style={styles.sectionContainer}>
-            <Text 
+            <Text
               style={[styles.sectionTitle, isRTL && styles.rtlText]}
               accessibilityRole="header"
               accessibilityLevel={2}
             >
               {t('nutrient.results')}
             </Text>
-            
+
             {/* Recipe Summary */}
             <View style={styles.summaryCard}>
               <View style={[styles.summaryHeader, isRTL && styles.rtlRow]}>
@@ -547,11 +551,11 @@ export default function NutrientCalculatorScreen() {
                   </Text>
                 </View>
               </View>
-              
+
               <Text style={[styles.summaryDescription, isRTL && styles.rtlText]}>
                 {isRTL ? calculations.recipe.descriptionAr : calculations.recipe.description}
               </Text>
-              
+
               <View style={[styles.summaryMetrics, isRTL && styles.rtlRow]}>
                 <Text style={styles.metricText}>
                   {t('nutrient.water_volume')}: {calculations.waterVolume} {calculations.unit}
@@ -579,24 +583,26 @@ export default function NutrientCalculatorScreen() {
                       <Text style={[styles.amount, isRTL && styles.rtlText]}>
                         {calc.actualAmount.toFixed(2)}
                       </Text>
-                      <Text style={[styles.unit, isRTL && styles.rtlText]}>
-                        {calc.unit}
-                      </Text>
+                      <Text style={[styles.unit, isRTL && styles.rtlText]}>{calc.unit}</Text>
                     </View>
                   </View>
-                  
-                  <Text 
+
+                  <Text
                     style={[styles.instructions, isRTL && styles.rtlText]}
                     accessibilityLabel={isRTL ? calc.instructionsAr : calc.instructions}
                   >
                     {isRTL ? calc.instructionsAr : calc.instructions}
                   </Text>
-                  
+
                   <TouchableOpacity
                     style={styles.voiceButton}
-                    onPress={() => speakInstructions(
-                      isRTL ? calc.voiceInstructionsAr || calc.voiceInstructions : calc.voiceInstructions
-                    )}
+                    onPress={() =>
+                      speakInstructions(
+                        isRTL
+                          ? calc.voiceInstructionsAr || calc.voiceInstructions
+                          : calc.voiceInstructions
+                      )
+                    }
                     accessibilityRole="button"
                     accessibilityLabel={t('nutrient.accessibility.speak_instruction')}
                   >
@@ -653,7 +659,7 @@ export default function NutrientCalculatorScreen() {
                   {t('nutrient.save')}
                 </Text>
               </TouchableOpacity>
-              
+
               <TouchableOpacity
                 style={styles.voiceAllButton}
                 onPress={handleVoiceInstructions}
@@ -673,23 +679,21 @@ export default function NutrientCalculatorScreen() {
         {error && (
           <View style={styles.errorContainer}>
             <Ionicons name="alert-circle-outline" size={24} color={colors.error} />
-            <Text style={[styles.errorText, isRTL && styles.rtlText]}>
-              {error}
-            </Text>
+            <Text style={[styles.errorText, isRTL && styles.rtlText]}>{error}</Text>
           </View>
         )}
 
         {/* Advanced Settings */}
         {showAdvanced && (
           <View style={styles.sectionContainer}>
-            <Text 
+            <Text
               style={[styles.sectionTitle, isRTL && styles.rtlText]}
               accessibilityRole="header"
               accessibilityLevel={2}
             >
               {t('nutrient.advanced_settings')}
             </Text>
-            
+
             {/* Unit System */}
             <View style={styles.settingContainer}>
               <Text style={[styles.settingLabel, isRTL && styles.rtlText]}>
@@ -699,45 +703,53 @@ export default function NutrientCalculatorScreen() {
                 <TouchableOpacity
                   style={[
                     styles.unitButton,
-                    unitSystem.type === 'metric' && styles.selectedUnitButton
+                    unitSystem.type === 'metric' && styles.selectedUnitButton,
                   ]}
-                  onPress={() => setUnitSystem({
-                    type: 'metric',
-                    volume: 'L',
-                    weight: 'g',
-                    concentration: 'ppm'
-                  })}
+                  onPress={() =>
+                    setUnitSystem({
+                      type: 'metric',
+                      volume: 'L',
+                      weight: 'g',
+                      concentration: 'ppm',
+                    })
+                  }
                   accessibilityRole="button"
                   accessibilityLabel={t('nutrient.metric')}
                   accessibilityState={{ selected: unitSystem.type === 'metric' }}
                 >
-                  <Text style={[
-                    styles.unitButtonText,
-                    unitSystem.type === 'metric' && styles.selectedUnitText
-                  ]}>
+                  <Text
+                    style={[
+                      styles.unitButtonText,
+                      unitSystem.type === 'metric' && styles.selectedUnitText,
+                    ]}
+                  >
                     {t('nutrient.metric')}
                   </Text>
                 </TouchableOpacity>
-                
+
                 <TouchableOpacity
                   style={[
                     styles.unitButton,
-                    unitSystem.type === 'imperial' && styles.selectedUnitButton
+                    unitSystem.type === 'imperial' && styles.selectedUnitButton,
                   ]}
-                  onPress={() => setUnitSystem({
-                    type: 'imperial',
-                    volume: 'gal',
-                    weight: 'oz',
-                    concentration: 'oz/gal'
-                  })}
+                  onPress={() =>
+                    setUnitSystem({
+                      type: 'imperial',
+                      volume: 'gal',
+                      weight: 'oz',
+                      concentration: 'oz/gal',
+                    })
+                  }
                   accessibilityRole="button"
                   accessibilityLabel={t('nutrient.imperial')}
                   accessibilityState={{ selected: unitSystem.type === 'imperial' }}
                 >
-                  <Text style={[
-                    styles.unitButtonText,
-                    unitSystem.type === 'imperial' && styles.selectedUnitText
-                  ]}>
+                  <Text
+                    style={[
+                      styles.unitButtonText,
+                      unitSystem.type === 'imperial' && styles.selectedUnitText,
+                    ]}
+                  >
                     {t('nutrient.imperial')}
                   </Text>
                 </TouchableOpacity>
@@ -756,10 +768,10 @@ export default function NutrientCalculatorScreen() {
                 accessibilityLabel={t('nutrient.voice_feedback')}
                 accessibilityState={{ checked: voiceEnabled }}
               >
-                <Ionicons 
-                  name={voiceEnabled ? "checkmark-circle" : "ellipse-outline"} 
-                  size={24} 
-                  color={voiceEnabled ? colors.success : colors.border} 
+                <Ionicons
+                  name={voiceEnabled ? 'checkmark-circle' : 'ellipse-outline'}
+                  size={24}
+                  color={voiceEnabled ? colors.success : colors.border}
                 />
                 <Text style={[styles.toggleText, isRTL && styles.rtlText]}>
                   {voiceEnabled ? t('common.enabled') : t('common.disabled')}
@@ -1279,4 +1291,4 @@ const styles = StyleSheet.create({
   bottomSpacing: {
     height: spacing.xl,
   },
-}); 
+});

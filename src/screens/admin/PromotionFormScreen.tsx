@@ -41,7 +41,9 @@ function PromotionFormScreen() {
         return;
       }
 
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) {
         Alert.alert('Error', 'Authentication required');
         return;
@@ -60,21 +62,17 @@ function PromotionFormScreen() {
 
         if (error) throw error;
       } else {
-        const { error } = await supabase
-          .from('promotions')
-          .insert({
-            ...formData,
-            created_by: user.id,
-          });
+        const { error } = await supabase.from('promotions').insert({
+          ...formData,
+          created_by: user.id,
+        });
 
         if (error) throw error;
       }
 
-      Alert.alert(
-        'Success',
-        `Promotion ${isEditing ? 'updated' : 'created'} successfully`,
-        [{ text: 'OK', onPress: () => navigation.goBack() }]
-      );
+      Alert.alert('Success', `Promotion ${isEditing ? 'updated' : 'created'} successfully`, [
+        { text: 'OK', onPress: () => navigation.goBack() },
+      ]);
     } catch (err) {
       console.error('Error saving promotion:', err);
       Alert.alert('Error', 'Failed to save promotion');
@@ -103,7 +101,7 @@ function PromotionFormScreen() {
           <TextInput
             style={styles.input}
             value={formData.code}
-            onChangeText={(code) => setFormData(prev => ({ ...prev, code }))}
+            onChangeText={code => setFormData(prev => ({ ...prev, code }))}
             placeholder="Enter promotion code"
             autoCapitalize="characters"
           />
@@ -112,21 +110,13 @@ function PromotionFormScreen() {
         <View style={styles.field}>
           <Text variant="subtitle">Type</Text>
           <View style={styles.typeContainer}>
-            {PROMOTION_TYPES.map((type) => (
+            {PROMOTION_TYPES.map(type => (
               <TouchableOpacity
                 key={type}
-                style={[
-                  styles.typeButton,
-                  formData.type === type && styles.typeButtonActive,
-                ]}
+                style={[styles.typeButton, formData.type === type && styles.typeButtonActive]}
                 onPress={() => setFormData(prev => ({ ...prev, type }))}
               >
-                <Text
-                  style={[
-                    styles.typeText,
-                    formData.type === type && styles.typeTextActive,
-                  ]}
-                >
+                <Text style={[styles.typeText, formData.type === type && styles.typeTextActive]}>
                   {type.replace('_', ' ')}
                 </Text>
               </TouchableOpacity>
@@ -139,17 +129,14 @@ function PromotionFormScreen() {
           <TextInput
             style={styles.input}
             value={formData.value}
-            onChangeText={(value) => setFormData(prev => ({ ...prev, value }))}
+            onChangeText={value => setFormData(prev => ({ ...prev, value }))}
             placeholder="e.g., 10%, 30d, unlimited"
           />
         </View>
 
         <View style={styles.field}>
           <Text variant="subtitle">Expiration (Optional)</Text>
-          <TouchableOpacity
-            style={styles.dateButton}
-            onPress={() => setShowDatePicker(true)}
-          >
+          <TouchableOpacity style={styles.dateButton} onPress={() => setShowDatePicker(true)}>
             <Text>
               {formData.expires_at
                 ? new Date(formData.expires_at).toLocaleDateString()
@@ -245,4 +232,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withAdminGuard(PromotionFormScreen); 
+export default withAdminGuard(PromotionFormScreen);

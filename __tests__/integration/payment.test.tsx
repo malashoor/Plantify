@@ -16,7 +16,7 @@ describe('Payment Integration Tests', () => {
       price: '9.99',
       currency: 'USD',
       localizedPrice: '$9.99',
-      type: 'inapp'
+      type: 'inapp',
     },
     {
       productId: 'test_subscription',
@@ -25,8 +25,8 @@ describe('Payment Integration Tests', () => {
       price: '4.99',
       currency: 'USD',
       localizedPrice: '$4.99',
-      type: 'subscription'
-    }
+      type: 'subscription',
+    },
   ];
 
   beforeEach(() => {
@@ -37,7 +37,7 @@ describe('Payment Integration Tests', () => {
       productId: 'test_product',
       transactionId: 'test_transaction',
       transactionDate: new Date().toISOString(),
-      receipt: 'test_receipt'
+      receipt: 'test_receipt',
     });
   });
 
@@ -63,16 +63,14 @@ describe('Payment Integration Tests', () => {
 
     await waitFor(() => {
       expect(RNIap.requestPurchase).toHaveBeenCalledWith({
-        sku: 'test_product'
+        sku: 'test_product',
       });
       expect(getByText('Purchase successful!')).toBeTruthy();
     });
   });
 
   it('should handle purchase failure', async () => {
-    (RNIap.requestPurchase as jest.Mock).mockRejectedValue(
-      new Error('Purchase failed')
-    );
+    (RNIap.requestPurchase as jest.Mock).mockRejectedValue(new Error('Purchase failed'));
 
     const { getByText } = render(<PaymentScreen />);
 
@@ -122,4 +120,4 @@ describe('Payment Integration Tests', () => {
       expect(getByText('Purchase validation failed')).toBeTruthy();
     });
   });
-}); 
+});

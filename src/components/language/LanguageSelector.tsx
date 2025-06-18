@@ -36,12 +36,12 @@ export default function LanguageSelector({
       }
       await changeLanguage(lng);
       onLanguageChange?.(lng);
-      
+
       // Announce language change to screen readers
       const selectedLang = LANGUAGES[lng];
       const message = t('accessibility.language_changed', {
         language: selectedLang.name,
-        nativeName: selectedLang.nativeName
+        nativeName: selectedLang.nativeName,
       });
       if (Platform.OS === 'ios') {
         AccessibilityInfo.announceForAccessibility(message);
@@ -59,7 +59,7 @@ export default function LanguageSelector({
         accessibilityRole="button"
         accessibilityLabel={t('accessibility.switch_language', {
           from: LANGUAGES[currentLanguage].name,
-          to: LANGUAGES[currentLanguage === 'en' ? 'ar' : 'en'].name
+          to: LANGUAGES[currentLanguage === 'en' ? 'ar' : 'en'].name,
         })}
         accessibilityHint={t('accessibility.language_switch_hint')}
       >
@@ -72,17 +72,17 @@ export default function LanguageSelector({
 
   if (variant === 'buttons') {
     return (
-      <View 
+      <View
         style={styles.buttonContainer}
         accessible={true}
         accessibilityRole="radiogroup"
         accessibilityLabel={t('accessibility.language_selector')}
       >
         {showIcon && (
-          <Ionicons 
-            name="language" 
-            size={24} 
-            color={isDark ? '#A3E635' : '#2E7D32'} 
+          <Ionicons
+            name="language"
+            size={24}
+            color={isDark ? '#A3E635' : '#2E7D32'}
             style={styles.icon}
           />
         )}
@@ -100,7 +100,7 @@ export default function LanguageSelector({
               accessibilityLabel={lang.name}
               accessibilityState={{ checked: currentLanguage === code }}
               accessibilityHint={t('accessibility.language_button_hint', {
-                language: lang.name
+                language: lang.name,
               })}
             >
               <Text
@@ -121,7 +121,7 @@ export default function LanguageSelector({
 
   // Default: Pills variant
   return (
-    <View 
+    <View
       style={styles.container}
       accessible={true}
       accessibilityRole="radiogroup"
@@ -129,11 +129,7 @@ export default function LanguageSelector({
     >
       {showIcon && (
         <View style={styles.labelContainer}>
-          <Ionicons 
-            name="language" 
-            size={24} 
-            color={isDark ? '#A3E635' : '#2E7D32'} 
-          />
+          <Ionicons name="language" size={24} color={isDark ? '#A3E635' : '#2E7D32'} />
           <Text style={[styles.label, isDark && styles.textDark]}>
             {t('profile.settings.language')}
           </Text>
@@ -153,7 +149,7 @@ export default function LanguageSelector({
             accessibilityLabel={lang.name}
             accessibilityState={{ checked: currentLanguage === code }}
             accessibilityHint={t('accessibility.language_pill_hint', {
-              language: lang.name
+              language: lang.name,
             })}
           >
             <Text
@@ -261,4 +257,4 @@ const styles = StyleSheet.create({
   textDark: {
     color: '#FFFFFF',
   },
-}); 
+});

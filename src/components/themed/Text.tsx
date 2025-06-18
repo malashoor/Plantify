@@ -10,4 +10,4 @@ export function Text({ style, ...props }: TextProps) {
   const color = useThemeColor({}, 'text');
 
   return <RNText style={[{ color }, style]} {...props} />;
-} 
+}

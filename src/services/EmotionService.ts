@@ -60,15 +60,15 @@ export class EmotionService {
 
   static async saveEmotion(userId: string, emotion: Emotion): Promise<void> {
     try {
-      const { error } = await supabase
-        .from('user_emotions')
-        .insert([{
+      const { error } = await supabase.from('user_emotions').insert([
+        {
           user_id: userId,
           emotion_type: emotion.type,
           intensity: emotion.intensity,
           timestamp: emotion.timestamp,
           context: emotion.context,
-        }]);
+        },
+      ]);
 
       if (error) throw error;
     } catch (error) {
@@ -157,9 +157,7 @@ export class EmotionService {
       .slice(0, 3)
       .filter(e => positiveEmotions.includes(e.type)).length;
 
-    const olderPositive = emotions
-      .slice(-3)
-      .filter(e => positiveEmotions.includes(e.type)).length;
+    const olderPositive = emotions.slice(-3).filter(e => positiveEmotions.includes(e.type)).length;
 
     if (recentPositive > olderPositive) return 'improving';
     if (recentPositive < olderPositive) return 'declining';
@@ -173,7 +171,7 @@ export class EmotionService {
     if (state.currentEmotion.type !== 'neutral') {
       parts.push(
         `The user is currently showing signs of ${state.currentEmotion.type} ` +
-        `(intensity: ${Math.round(state.currentEmotion.intensity * 100)}%).`
+          `(intensity: ${Math.round(state.currentEmotion.intensity * 100)}%).`
       );
     }
 
@@ -181,7 +179,7 @@ export class EmotionService {
     if (state.dominantEmotion && state.dominantEmotion.type !== 'neutral') {
       parts.push(
         `Their dominant emotion has been ${state.dominantEmotion.type} ` +
-        `(${Math.round(state.dominantEmotion.frequency * 100)}% of recent interactions).`
+          `(${Math.round(state.dominantEmotion.frequency * 100)}% of recent interactions).`
       );
     }
 
@@ -212,4 +210,4 @@ export class EmotionService {
         return 'Maintain a supportive and informative tone.';
     }
   }
-} 
+}

@@ -38,4 +38,4 @@ export const Colors = {
   },
 };
 
-export default Colors; 
+export default Colors;

@@ -17,9 +17,7 @@ export function AnalysisResultCard({ result }: AnalysisResultCardProps) {
   return (
     <View style={styles.container}>
       <Text style={styles.plantName}>{result.plantName}</Text>
-      <Text style={styles.confidence}>
-        {Math.round(result.confidence * 100)}% confident
-      </Text>
+      <Text style={styles.confidence}>{Math.round(result.confidence * 100)}% confident</Text>
       <Text style={styles.description}>{result.description}</Text>
     </View>
   );
@@ -49,4 +47,4 @@ const styles = StyleSheet.create({
     color: '#666',
     lineHeight: 22,
   },
-}); 
+});

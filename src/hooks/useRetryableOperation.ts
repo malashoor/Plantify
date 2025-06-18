@@ -1,6 +1,11 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { RetryQueue } from '../utils/RetryQueue';
-import { RetryOperationKey, RetryOperationKeys, generateOperationId, createOperationData } from '../services/RetryOperations';
+import {
+  RetryOperationKey,
+  RetryOperationKeys,
+  generateOperationId,
+  createOperationData,
+} from '../services/RetryOperations';
 import { useToast } from './useToast';
 import { useVoiceAnnouncement } from '../components/utils/VoiceAnnouncement';
 import { haptics } from '../utils/haptics';
@@ -37,7 +42,7 @@ export function useRetryableOperation(
     dependencies,
     onSuccess,
     onError,
-    onRetry
+    onRetry,
   } = options;
 
   const [state, setState] = useState<RetryState>({
@@ -45,7 +50,7 @@ export function useRetryableOperation(
     isProcessing: false,
     attempt: 0,
     error: null,
-    nextRetry: null
+    nextRetry: null,
   });
 
   const retryQueue = RetryQueue.getInstance();
@@ -63,117 +68,126 @@ export function useRetryableOperation(
     };
   }, []);
 
-  const handleSuccess = useCallback((result: any) => {
-    setState(prev => ({
-      ...prev,
-      isQueued: false,
-      isProcessing: false,
-      error: null,
-      nextRetry: null
-    }));
+  const handleSuccess = useCallback(
+    (result: any) => {
+      setState(prev => ({
+        ...prev,
+        isQueued: false,
+        isProcessing: false,
+        error: null,
+        nextRetry: null,
+      }));
 
-    if (showFeedback) {
-      toast.success('Operation completed successfully');
-      haptics.success();
-    }
+      if (showFeedback) {
+        toast.success('Operation completed successfully');
+        haptics.success();
+      }
 
-    onSuccess?.(result);
-  }, [showFeedback, onSuccess]);
+      onSuccess?.(result);
+    },
+    [showFeedback, onSuccess]
+  );
 
-  const handleError = useCallback((error: Error) => {
-    setState(prev => ({
-      ...prev,
-      isProcessing: false,
-      error,
-      nextRetry: null
-    }));
+  const handleError = useCallback(
+    (error: Error) => {
+      setState(prev => ({
+        ...prev,
+        isProcessing: false,
+        error,
+        nextRetry: null,
+      }));
 
-    if (showFeedback) {
-      toast.error('Operation failed');
-      haptics.error();
-      announceQueue([
-        'Operation failed.',
-        'Please check your connection and try again.'
-      ]);
-    }
+      if (showFeedback) {
+        toast.error('Operation failed');
+        haptics.error();
+        announceQueue(['Operation failed.', 'Please check your connection and try again.']);
+      }
 
-    onError?.(error);
-  }, [showFeedback, onError]);
+      onError?.(error);
+    },
+    [showFeedback, onError]
+  );
 
-  const handleRetry = useCallback((attempt: number) => {
-    const delay = 1000 * Math.pow(2, attempt - 1);
-    
-    setState(prev => ({
-      ...prev,
-      isProcessing: true,
-      attempt,
-      nextRetry: Date.now() + delay
-    }));
+  const handleRetry = useCallback(
+    (attempt: number) => {
+      const delay = 1000 * Math.pow(2, attempt - 1);
 
-    if (showFeedback) {
-      toast.info(`Retrying... (${attempt}/${maxRetries})`);
-      haptics.warning();
-      announceQueue([`Retrying operation. Attempt ${attempt} of ${maxRetries}`]);
-    }
+      setState(prev => ({
+        ...prev,
+        isProcessing: true,
+        attempt,
+        nextRetry: Date.now() + delay,
+      }));
 
-    retryTimeout.current = setTimeout(() => {
-      setState(prev => ({ ...prev, nextRetry: null }));
-    }, delay);
+      if (showFeedback) {
+        toast.info(`Retrying... (${attempt}/${maxRetries})`);
+        haptics.warning();
+        announceQueue([`Retrying operation. Attempt ${attempt} of ${maxRetries}`]);
+      }
 
-    onRetry?.(attempt);
-  }, [maxRetries, showFeedback, onRetry]);
+      retryTimeout.current = setTimeout(() => {
+        setState(prev => ({ ...prev, nextRetry: null }));
+      }, delay);
 
-  const execute = useCallback(async (...args: any[]) => {
-    if (operationId.current) {
-      // Operation already in progress
-      return;
-    }
+      onRetry?.(attempt);
+    },
+    [maxRetries, showFeedback, onRetry]
+  );
 
-    const id = generateOperationId(operationKey, uniqueId);
-    operationId.current = id;
+  const execute = useCallback(
+    async (...args: any[]) => {
+      if (operationId.current) {
+        // Operation already in progress
+        return;
+      }
 
-    setState({
-      isQueued: true,
-      isProcessing: true,
-      attempt: 0,
-      error: null,
-      nextRetry: null
-    });
+      const id = generateOperationId(operationKey, uniqueId);
+      operationId.current = id;
 
-    if (showFeedback) {
-      toast.info('Operation queued');
-      haptics.light();
-    }
+      setState({
+        isQueued: true,
+        isProcessing: true,
+        attempt: 0,
+        error: null,
+        nextRetry: null,
+      });
 
-    retryQueue.enqueue({
-      id,
+      if (showFeedback) {
+        toast.info('Operation queued');
+        haptics.light();
+      }
+
+      retryQueue.enqueue({
+        id,
+        operationKey,
+        operationData: createOperationData(args),
+        priority,
+        maxRetries,
+        isVolatile,
+        dependencies,
+        onSuccess: result => {
+          operationId.current = null;
+          handleSuccess(result);
+        },
+        onError: error => {
+          operationId.current = null;
+          handleError(error);
+        },
+        onRetry: handleRetry,
+      });
+    },
+    [
       operationKey,
-      operationData: createOperationData(args),
+      uniqueId,
       priority,
       maxRetries,
       isVolatile,
       dependencies,
-      onSuccess: (result) => {
-        operationId.current = null;
-        handleSuccess(result);
-      },
-      onError: (error) => {
-        operationId.current = null;
-        handleError(error);
-      },
-      onRetry: handleRetry
-    });
-  }, [
-    operationKey,
-    uniqueId,
-    priority,
-    maxRetries,
-    isVolatile,
-    dependencies,
-    handleSuccess,
-    handleError,
-    handleRetry
-  ]);
+      handleSuccess,
+      handleError,
+      handleRetry,
+    ]
+  );
 
   const cancel = useCallback(() => {
     if (operationId.current) {
@@ -185,7 +199,7 @@ export function useRetryableOperation(
         isProcessing: false,
         attempt: 0,
         error: null,
-        nextRetry: null
+        nextRetry: null,
       });
 
       if (showFeedback) {
@@ -199,6 +213,6 @@ export function useRetryableOperation(
     execute,
     cancel,
     ...state,
-    remainingRetries: maxRetries - state.attempt
+    remainingRetries: maxRetries - state.attempt,
   };
-} 
+}

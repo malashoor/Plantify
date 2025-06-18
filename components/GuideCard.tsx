@@ -31,24 +31,32 @@ const createTheme = (colorScheme: 'light' | 'dark' | null) => ({
     success: '#4CAF50',
     warning: '#FF9800',
     error: '#F44336',
-  }
+  },
 });
 
 const getSeverityColor = (severity: string | undefined, theme: any) => {
   switch (severity) {
-    case 'high': return theme.colors.error;
-    case 'medium': return theme.colors.warning;
-    case 'low': return theme.colors.success;
-    default: return theme.colors.textSecondary;
+    case 'high':
+      return theme.colors.error;
+    case 'medium':
+      return theme.colors.warning;
+    case 'low':
+      return theme.colors.success;
+    default:
+      return theme.colors.textSecondary;
   }
 };
 
 const getSeverityIcon = (severity: string | undefined): keyof typeof Ionicons.glyphMap => {
   switch (severity) {
-    case 'high': return 'warning';
-    case 'medium': return 'alert-circle';
-    case 'low': return 'checkmark-circle';
-    default: return 'information-circle';
+    case 'high':
+      return 'warning';
+    case 'medium':
+      return 'alert-circle';
+    case 'low':
+      return 'checkmark-circle';
+    default:
+      return 'information-circle';
   }
 };
 
@@ -57,25 +65,27 @@ export const GuideCard: React.FC<GuideCardProps> = ({ guide, onPress }) => {
   const theme = createTheme(colorScheme);
 
   const displayTitle = guide.issue || guide.plantName || guide.title || 'Plant Care Guide';
-  const displayContent = guide.solution || guide.schedule || guide.frequency || guide.notes || 'No details available';
+  const displayContent =
+    guide.solution || guide.schedule || guide.frequency || guide.notes || 'No details available';
 
   return (
-    <TouchableOpacity 
-      style={[styles.container, { 
-        backgroundColor: theme.colors.surface,
-        borderColor: theme.colors.border 
-      }]}
+    <TouchableOpacity
+      style={[
+        styles.container,
+        {
+          backgroundColor: theme.colors.surface,
+          borderColor: theme.colors.border,
+        },
+      ]}
       onPress={onPress}
       disabled={!onPress}
     >
       <View style={styles.header}>
         <View style={styles.titleContainer}>
-          <Text style={[styles.title, { color: theme.colors.text }]}>
-            {displayTitle}
-          </Text>
+          <Text style={[styles.title, { color: theme.colors.text }]}>{displayTitle}</Text>
           {guide.severity && (
             <View style={styles.severityContainer}>
-              <Ionicons 
+              <Ionicons
                 name={getSeverityIcon(guide.severity)}
                 size={16}
                 color={getSeverityColor(guide.severity, theme)}
@@ -88,9 +98,7 @@ export const GuideCard: React.FC<GuideCardProps> = ({ guide, onPress }) => {
         </View>
       </View>
 
-      <Text style={[styles.content, { color: theme.colors.textSecondary }]}>
-        {displayContent}
-      </Text>
+      <Text style={[styles.content, { color: theme.colors.textSecondary }]}>{displayContent}</Text>
 
       {guide.fertilizerType && (
         <Text style={[styles.detail, { color: theme.colors.textSecondary }]}>
@@ -157,4 +165,4 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 4,
   },
-}); 
+});

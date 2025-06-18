@@ -9,7 +9,7 @@ import {
   Dimensions,
   Platform,
   KeyboardAvoidingView,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
@@ -30,22 +30,24 @@ const mockTheme = {
   success: '#4CAF50',
   warning: '#FF9800',
   error: '#F44336',
-  info: '#2196F3'
+  info: '#2196F3',
 };
 
 const mockPlantProfiles = [
   { id: 'lettuce', name: 'Lettuce' },
   { id: 'tomato', name: 'Tomato' },
-  { id: 'basil', name: 'Basil' }
+  { id: 'basil', name: 'Basil' },
 ];
 
 export default function CropAdvisorScreen() {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === 'ar';
-  
+
   const [selectedPlantId, setSelectedPlantId] = useState<string>('lettuce');
   const [question, setQuestion] = useState('');
-  const [selectedTab, setSelectedTab] = useState<'health' | 'recommendations' | 'conversation'>('health');
+  const [selectedTab, setSelectedTab] = useState<'health' | 'recommendations' | 'conversation'>(
+    'health'
+  );
   const [isLoading, setIsLoading] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
 
@@ -59,37 +61,32 @@ export default function CropAdvisorScreen() {
   // Render plant selector
   const renderPlantSelector = () => (
     <View style={styles.selectorContainer}>
-      <ScrollView 
-        horizontal 
-        showsHorizontalScrollIndicator={false}
-        style={styles.horizontalScroll}
-      >
-        {mockPlantProfiles.map((plant) => (
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll}>
+        {mockPlantProfiles.map(plant => (
           <TouchableOpacity
             key={plant.id}
             style={[
               styles.plantButton,
-              { 
-                backgroundColor: selectedPlantId === plant.id 
-                  ? mockTheme.primary 
-                  : mockTheme.surface,
-                opacity: selectedPlantId === plant.id ? 1 : 0.7
-              }
+              {
+                backgroundColor:
+                  selectedPlantId === plant.id ? mockTheme.primary : mockTheme.surface,
+                opacity: selectedPlantId === plant.id ? 1 : 0.7,
+              },
             ]}
             onPress={() => selectPlant(plant.id)}
             accessibilityRole="button"
             accessibilityLabel={`Select plant ${plant.name}`}
           >
             <View style={styles.plantButtonContent}>
-              <Ionicons 
-                name="leaf-outline" 
-                size={16} 
-                color={selectedPlantId === plant.id ? 'white' : mockTheme.text} 
+              <Ionicons
+                name="leaf-outline"
+                size={16}
+                color={selectedPlantId === plant.id ? 'white' : mockTheme.text}
               />
-              <Text 
+              <Text
                 style={[
                   styles.plantButtonText,
-                  { color: selectedPlantId === plant.id ? 'white' : mockTheme.text }
+                  { color: selectedPlantId === plant.id ? 'white' : mockTheme.text },
                 ]}
               >
                 {plant.name}
@@ -97,7 +94,7 @@ export default function CropAdvisorScreen() {
             </View>
           </TouchableOpacity>
         ))}
-        
+
         <TouchableOpacity
           style={styles.addPlantButton}
           onPress={() => router.push('/add-plant')}
@@ -132,7 +129,7 @@ export default function CropAdvisorScreen() {
             </View>
           </View>
         );
-      
+
       case 'recommendations':
         return (
           <View style={styles.contentContainer}>
@@ -147,7 +144,7 @@ export default function CropAdvisorScreen() {
             </View>
           </View>
         );
-      
+
       case 'conversation':
         return (
           <View style={styles.contentContainer}>
@@ -155,14 +152,17 @@ export default function CropAdvisorScreen() {
               <Text style={[styles.sectionTitle, { color: mockTheme.text }]}>
                 Ask About Your Plants
               </Text>
-              
+
               <View style={styles.questionInputContainer}>
                 <TextInput
-                  style={[styles.questionInput, { 
-                    backgroundColor: mockTheme.surface,
-                    color: mockTheme.text,
-                    borderColor: mockTheme.border
-                  }]}
+                  style={[
+                    styles.questionInput,
+                    {
+                      backgroundColor: mockTheme.surface,
+                      color: mockTheme.text,
+                      borderColor: mockTheme.border,
+                    },
+                  ]}
                   value={question}
                   onChangeText={setQuestion}
                   placeholder="What's wrong with my plant?"
@@ -177,7 +177,7 @@ export default function CropAdvisorScreen() {
                   <Ionicons name="send" size={20} color="white" />
                 </TouchableOpacity>
               </View>
-              
+
               <View style={styles.placeholderContainer}>
                 <MaterialIcons name="chat" size={64} color={mockTheme.textSecondary} />
                 <Text style={[styles.placeholderText, { color: mockTheme.textSecondary }]}>
@@ -187,7 +187,7 @@ export default function CropAdvisorScreen() {
             </View>
           </View>
         );
-      
+
       default:
         return null;
     }
@@ -204,15 +204,10 @@ export default function CropAdvisorScreen() {
         >
           <Ionicons name="arrow-back" size={24} color={mockTheme.text} />
         </TouchableOpacity>
-        
-        <Text style={[styles.headerTitle, { color: mockTheme.text }]}>
-          Crop Advisor
-        </Text>
-        
-        <TouchableOpacity
-          accessibilityRole="button"
-          accessibilityLabel="Settings"
-        >
+
+        <Text style={[styles.headerTitle, { color: mockTheme.text }]}>Crop Advisor</Text>
+
+        <TouchableOpacity accessibilityRole="button" accessibilityLabel="Settings">
           <Ionicons name="settings-outline" size={24} color={mockTheme.text} />
         </TouchableOpacity>
       </View>
@@ -222,19 +217,15 @@ export default function CropAdvisorScreen() {
 
       {/* Tab Navigation */}
       <View style={[styles.tabContainer, { backgroundColor: mockTheme.surface }]}>
-        {(['health', 'recommendations', 'conversation'] as const).map((tab) => (
+        {(['health', 'recommendations', 'conversation'] as const).map(tab => (
           <TouchableOpacity
             key={tab}
-            style={[
-              styles.tab,
-              selectedTab === tab && { backgroundColor: mockTheme.primary }
-            ]}
+            style={[styles.tab, selectedTab === tab && { backgroundColor: mockTheme.primary }]}
             onPress={() => setSelectedTab(tab)}
           >
-            <Text style={[
-              styles.tabText,
-              { color: selectedTab === tab ? 'white' : mockTheme.text }
-            ]}>
+            <Text
+              style={[styles.tabText, { color: selectedTab === tab ? 'white' : mockTheme.text }]}
+            >
               {tab.charAt(0).toUpperCase() + tab.slice(1)}
             </Text>
           </TouchableOpacity>
@@ -242,7 +233,7 @@ export default function CropAdvisorScreen() {
       </View>
 
       {/* Content */}
-      <ScrollView 
+      <ScrollView
         ref={scrollViewRef}
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
@@ -369,4 +360,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'flex-end',
   },
-}); 
+});

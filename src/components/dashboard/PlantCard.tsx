@@ -28,7 +28,7 @@ export const PlantCard: React.FC<PlantCardProps> = ({ plant, onPress }) => {
 
   const getMoistureStatusColor = () => {
     if (plant.moistureData.length === 0) return theme.colors.surfaceVariant;
-    
+
     const latestMoisture = plant.moistureData[plant.moistureData.length - 1].moisture;
     if (latestMoisture < plant.speciesProfile.moisture.moistureThresholds.min) {
       return theme.colors.error;
@@ -53,11 +53,7 @@ export const PlantCard: React.FC<PlantCardProps> = ({ plant, onPress }) => {
           <Text variant="titleMedium" style={styles.title}>
             {plant.name}
           </Text>
-          <MaterialCommunityIcons
-            name="water"
-            size={24}
-            color={getMoistureStatusColor()}
-          />
+          <MaterialCommunityIcons name="water" size={24} color={getMoistureStatusColor()} />
         </View>
 
         <Text variant="bodyMedium" style={styles.species}>
@@ -65,12 +61,7 @@ export const PlantCard: React.FC<PlantCardProps> = ({ plant, onPress }) => {
         </Text>
 
         <View style={styles.footer}>
-          <Chip
-            icon={getEnvironmentIcon()}
-            compact
-            mode="outlined"
-            style={styles.environmentChip}
-          >
+          <Chip icon={getEnvironmentIcon()} compact mode="outlined" style={styles.environmentChip}>
             {getEnvironmentLabel()}
           </Chip>
 
@@ -117,4 +108,4 @@ const styles = StyleSheet.create({
   nextWatering: {
     opacity: 0.7,
   },
-}); 
+});

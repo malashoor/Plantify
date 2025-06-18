@@ -51,7 +51,7 @@ describe('usePlantSort', () => {
   describe('Initial State', () => {
     it('should initialize with default sort config', () => {
       const { result } = renderHook(() => usePlantSort(mockPlants));
-      
+
       expect(result.current.currentSort).toEqual({
         primary: {
           criteria: 'nextWatering',
@@ -85,7 +85,7 @@ describe('usePlantSort', () => {
       (AsyncStorage.getItem as jest.Mock).mockResolvedValue('invalid-json');
 
       const { result } = renderHook(() => usePlantSort(mockPlants));
-      
+
       expect(result.current.currentSort).toEqual({
         primary: {
           criteria: 'nextWatering',
@@ -332,4 +332,4 @@ describe('usePlantSort', () => {
       expect(result.current.currentSort).toEqual(newConfig);
     });
   });
-}); 
+});

@@ -13,12 +13,12 @@ interface NewFeatureCardProps {
   delay?: number;
 }
 
-export default function NewFeatureCard({ 
-  icon, 
-  title, 
-  description, 
+export default function NewFeatureCard({
+  icon,
+  title,
+  description,
   route,
-  delay = 0 
+  delay = 0,
 }: NewFeatureCardProps) {
   const { t } = useTranslation();
   const navigation = useNavigation();
@@ -71,7 +71,7 @@ export default function NewFeatureCard({
         <View style={styles.iconContainer}>
           <Ionicons name={icon} size={24} color="#34D399" />
         </View>
-        
+
         <View style={styles.content}>
           <View style={styles.titleContainer}>
             <Text style={styles.title}>{title}</Text>
@@ -80,16 +80,14 @@ export default function NewFeatureCard({
             </View>
           </View>
           <Text style={styles.description}>{description}</Text>
-          
+
           {route && (
             <View style={styles.learnMore}>
-              <Text style={styles.learnMoreText}>
-                {t('common.learn_more')}
-              </Text>
-              <Ionicons 
-                name="chevron-forward" 
-                size={16} 
-                color="#34D399" 
+              <Text style={styles.learnMoreText}>{t('common.learn_more')}</Text>
+              <Ionicons
+                name="chevron-forward"
+                size={16}
+                color="#34D399"
                 style={styles.learnMoreIcon}
               />
             </View>
@@ -169,4 +167,4 @@ const styles = StyleSheet.create({
   learnMoreIcon: {
     marginLeft: 2,
   },
-}); 
+});

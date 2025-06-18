@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  useColorScheme,
-  View,
-} from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
 import { useWateringGuides } from '../hooks/useWateringGuides';
 import { useTreatmentGuides } from '../hooks/useTreatmentGuides';
 import { useFertilizationGuides } from '../hooks/useFertilizationGuides';
@@ -24,22 +17,22 @@ const createTheme = (colorScheme: 'light' | 'dark' | null) => ({
     surface: colorScheme === 'dark' ? '#2A2A2A' : '#FFFFFF',
     text: colorScheme === 'dark' ? '#FFFFFF' : '#000000',
     textSecondary: colorScheme === 'dark' ? '#BBBBBB' : '#666666',
-  }
+  },
 });
 
 // Custom Button Component
-const Button = ({ 
-  onPress, 
-  children, 
-  style 
-}: { 
-  onPress: () => void; 
+const Button = ({
+  onPress,
+  children,
+  style,
+}: {
+  onPress: () => void;
   children: React.ReactNode;
   style?: any;
 }) => {
   const colorScheme = useColorScheme();
   const theme = createTheme(colorScheme);
-  
+
   return (
     <TouchableOpacity
       style={[styles.button, { backgroundColor: theme.colors.primary }, style]}
@@ -63,7 +56,7 @@ export function PlantCareScreen() {
     try {
       const nextWeek = new Date();
       nextWeek.setDate(nextWeek.getDate() + 7);
-      
+
       await addReminder({
         title: 'Fertilize Plants',
         description: 'Time to fertilize your plants for healthy growth',
@@ -89,19 +82,21 @@ export function PlantCareScreen() {
 
         <Section title="Watering Guides" theme={theme}>
           {watering.isLoading ? (
-            <Text style={[styles.loadingText, { color: theme.colors.text }]}>Loading watering guides...</Text>
+            <Text style={[styles.loadingText, { color: theme.colors.text }]}>
+              Loading watering guides...
+            </Text>
           ) : (
             watering.guides.map((guide, index) => (
-              <GuideCard 
-                key={`watering-${guide.plantId}-${index}`} 
+              <GuideCard
+                key={`watering-${guide.plantId}-${index}`}
                 guide={{
                   id: `watering-${guide.plantId}`,
                   title: guide.plantName || `Plant ${guide.plantId}`,
                   description: `Schedule: ${guide.schedule}`,
                   severity: 'low' as const,
-                  category: 'watering' as const
-                }} 
-                theme={theme} 
+                  category: 'watering' as const,
+                }}
+                theme={theme}
               />
             ))
           )}
@@ -109,34 +104,27 @@ export function PlantCareScreen() {
 
         <Section title="Treatment Plans" theme={theme}>
           {treatment.isLoading ? (
-            <Text style={[styles.loadingText, { color: theme.colors.text }]}>Loading treatment guides...</Text>
+            <Text style={[styles.loadingText, { color: theme.colors.text }]}>
+              Loading treatment guides...
+            </Text>
           ) : (
             treatment.guides.map((guide, index) => (
-              <GuideCard 
-                key={`treatment-${guide.id || index}`} 
-                guide={guide} 
-                theme={theme} 
-              />
+              <GuideCard key={`treatment-${guide.id || index}`} guide={guide} theme={theme} />
             ))
           )}
         </Section>
 
         <Section title="Fertilization & Minerals" theme={theme}>
           {fertilization.isLoading ? (
-            <Text style={[styles.loadingText, { color: theme.colors.text }]}>Loading fertilization guides...</Text>
+            <Text style={[styles.loadingText, { color: theme.colors.text }]}>
+              Loading fertilization guides...
+            </Text>
           ) : (
             <>
               {fertilization.guides.map((guide, index) => (
-                <GuideCard 
-                  key={`fertilization-${guide.id || index}`} 
-                  guide={guide} 
-                  theme={theme} 
-                />
+                <GuideCard key={`fertilization-${guide.id || index}`} guide={guide} theme={theme} />
               ))}
-              <Button
-                onPress={handleScheduleFertilization}
-                style={styles.scheduleButton}
-              >
+              <Button onPress={handleScheduleFertilization} style={styles.scheduleButton}>
                 Remind me to fertilize next week
               </Button>
             </>

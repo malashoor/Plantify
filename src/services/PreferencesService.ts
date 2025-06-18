@@ -30,9 +30,7 @@ export class PreferencesService {
     }
   }
 
-  static async updatePreferences(
-    updates: Partial<UserPreferences>
-  ): Promise<UserPreferences> {
+  static async updatePreferences(updates: Partial<UserPreferences>): Promise<UserPreferences> {
     try {
       // Get current preferences
       const current = await this.getPreferences();
@@ -42,17 +40,20 @@ export class PreferencesService {
       await AsyncStorage.setItem(PREFERENCES_KEY, JSON.stringify(updated));
 
       // Update Supabase if user is authenticated
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (user) {
-        const { error } = await supabase
-          .from('user_profiles')
-          .upsert({
+        const { error } = await supabase.from('user_profiles').upsert(
+          {
             user_id: user.id,
             preferences: updated,
             updated_at: new Date().toISOString(),
-          }, {
+          },
+          {
             onConflict: 'user_id',
-          });
+          }
+        );
 
         if (error) throw error;
       }
@@ -66,7 +67,9 @@ export class PreferencesService {
 
   static async syncWithSupabase(): Promise<void> {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) return;
 
       // Get preferences from Supabase
@@ -96,4 +99,4 @@ export class PreferencesService {
       console.error('Error clearing preferences:', error);
     }
   }
-} 
+}

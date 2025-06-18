@@ -216,4 +216,4 @@ export const speciesProfiles: SpeciesProfile[] = [
       ],
     },
   },
-]; 
+];

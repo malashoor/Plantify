@@ -43,8 +43,7 @@ export default function CareScreen() {
       id: 1,
       plantName: 'Monstera Deliciosa',
       type: 'water',
-      description:
-        'Water thoroughly and allow soil to dry out between waterings',
+      description: 'Water thoroughly and allow soil to dry out between waterings',
       completed: false,
     },
     {
@@ -146,18 +145,13 @@ export default function CareScreen() {
   return (
     <SafeAreaView style={[styles.container, isDark && styles.containerDark]}>
       <View style={styles.header}>
-        <Text style={[styles.title, isDark && styles.textDark]}>
-          {t('care.title')}
-        </Text>
+        <Text style={[styles.title, isDark && styles.textDark]}>{t('care.title')}</Text>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={[styles.calendarContainer, isDark && styles.cardDark]}>
           <View style={styles.monthSelector}>
-            <TouchableOpacity
-              onPress={previousMonth}
-              style={styles.monthButton}
-            >
+            <TouchableOpacity onPress={previousMonth} style={styles.monthButton}>
               <Ionicons name="chevron-back" size={24} color={isDark ? '#FFFFFF' : '#333333'} />
             </TouchableOpacity>
             <Text style={[styles.monthYear, isDark && styles.textDark]}>
@@ -170,10 +164,7 @@ export default function CareScreen() {
 
           <View style={styles.weekDays}>
             {daysOfWeek.map((day, index) => (
-              <Text
-                key={index}
-                style={[styles.weekDay, isDark && styles.textLightDark]}
-              >
+              <Text key={index} style={[styles.weekDay, isDark && styles.textLightDark]}>
                 {t(`care.days.${day.toLowerCase()}`)}
               </Text>
             ))}
@@ -214,37 +205,23 @@ export default function CareScreen() {
           <View style={styles.tasksSectionHeader}>
             <Ionicons name="calendar" size={20} color={isDark ? '#FFFFFF' : '#333333'} />
             <Text style={[styles.tasksSectionTitle, isDark && styles.textDark]}>
-              {selectedDate.getDate()} {monthNames[selectedMonth]}{' '}
-              {t('care.tasks')}
+              {selectedDate.getDate()} {monthNames[selectedMonth]} {t('care.tasks')}
             </Text>
           </View>
 
           {tasks.map((task, index) => (
-            <View
-              key={index}
-              style={[styles.taskCard, isDark && styles.cardDark]}
-            >
-              <View style={styles.taskIconContainer}>
-                {getCareIcon(task.type)}
-              </View>
+            <View key={index} style={[styles.taskCard, isDark && styles.cardDark]}>
+              <View style={styles.taskIconContainer}>{getCareIcon(task.type)}</View>
               <View style={styles.taskDetails}>
                 <Text style={[styles.taskTitle, isDark && styles.textDark]}>
                   {t(`care.taskTypes.${task.type}`)} - {task.plantName}
                 </Text>
-                <Text
-                  style={[
-                    styles.taskDescription,
-                    isDark && styles.textLightDark,
-                  ]}
-                >
+                <Text style={[styles.taskDescription, isDark && styles.textLightDark]}>
                   {task.description}
                 </Text>
               </View>
               <TouchableOpacity
-                style={[
-                  styles.taskCheckbox,
-                  task.completed && styles.taskCompleted,
-                ]}
+                style={[styles.taskCheckbox, task.completed && styles.taskCompleted]}
               >
                 {task.completed && <View style={styles.taskCheckboxInner} />}
               </TouchableOpacity>

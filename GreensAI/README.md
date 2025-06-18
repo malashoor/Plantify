@@ -15,6 +15,7 @@ GreensAI/
 ## 🚀 Backend Services
 
 The backend provides:
+
 - In-App Purchase validation for iOS and Android
 - Secure receipt verification
 - Purchase history tracking
@@ -114,4 +115,4 @@ const validateReceipt = async (receipt: string, platform: 'ios' | 'android') => 
 
 ## 📝 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. 
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

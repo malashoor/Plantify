@@ -48,7 +48,13 @@ export function useSpeciesProfile({
         const data = await SpeciesProfileService.getProfile(scientificName as string);
         setProfile(data);
 
-        if (data && includeEnvironmentData && temperature !== undefined && humidity !== undefined && isIndoor !== undefined) {
+        if (
+          data &&
+          includeEnvironmentData &&
+          temperature !== undefined &&
+          humidity !== undefined &&
+          isIndoor !== undefined
+        ) {
           const interval = SpeciesProfileService.calculateWateringInterval(
             data,
             temperature,
@@ -75,4 +81,4 @@ export function useSpeciesProfile({
     isDroughtTolerant: profile ? SpeciesProfileService.isDroughtTolerant(profile) : false,
     isMoistureLovingPlant: profile ? SpeciesProfileService.isMoistureLovingPlant(profile) : false,
   };
-} 
+}

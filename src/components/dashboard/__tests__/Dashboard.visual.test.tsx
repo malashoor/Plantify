@@ -65,54 +65,45 @@ describe('Dashboard Visual Regression', () => {
     const customTheme = {
       // Define your theme object here
       dark: theme === 'dark',
-      colors: theme === 'dark' ? {
-        primary: '#4CAF50',
-        background: '#121212',
-        surface: '#1E1E1E',
-        text: '#FFFFFF',
-        // ... other dark theme colors
-      } : {
-        primary: '#4CAF50',
-        background: '#FFFFFF',
-        surface: '#F5F5F5',
-        text: '#000000',
-        // ... other light theme colors
-      },
+      colors:
+        theme === 'dark'
+          ? {
+              primary: '#4CAF50',
+              background: '#121212',
+              surface: '#1E1E1E',
+              text: '#FFFFFF',
+              // ... other dark theme colors
+            }
+          : {
+              primary: '#4CAF50',
+              background: '#FFFFFF',
+              surface: '#F5F5F5',
+              text: '#000000',
+              // ... other light theme colors
+            },
     };
 
-    return render(
-      <ThemeProvider theme={customTheme}>
-        {ui}
-      </ThemeProvider>
-    );
+    return render(<ThemeProvider theme={customTheme}>{ui}</ThemeProvider>);
   };
 
   describe('Dashboard States', () => {
     it('renders default state in LTR', () => {
-      const { toJSON } = renderWithTheme(
-        <Dashboard plants={mockPlants} isRTL={false} />
-      );
+      const { toJSON } = renderWithTheme(<Dashboard plants={mockPlants} isRTL={false} />);
       expect(toJSON()).toMatchSnapshot('default-ltr');
     });
 
     it('renders default state in RTL', () => {
-      const { toJSON } = renderWithTheme(
-        <Dashboard plants={mockPlants} isRTL={true} />
-      );
+      const { toJSON } = renderWithTheme(<Dashboard plants={mockPlants} isRTL={true} />);
       expect(toJSON()).toMatchSnapshot('default-rtl');
     });
 
     it('renders empty state', () => {
-      const { toJSON } = renderWithTheme(
-        <Dashboard plants={[]} />
-      );
+      const { toJSON } = renderWithTheme(<Dashboard plants={[]} />);
       expect(toJSON()).toMatchSnapshot('empty-state');
     });
 
     it('renders filtered states', () => {
-      const { toJSON, getByTestId } = renderWithTheme(
-        <Dashboard plants={mockPlants} />
-      );
+      const { toJSON, getByTestId } = renderWithTheme(<Dashboard plants={mockPlants} />);
 
       // Capture indoor filter
       fireEvent.press(getByTestId('filter-tab-indoor'));
@@ -128,9 +119,7 @@ describe('Dashboard Visual Regression', () => {
     });
 
     it('renders sorted states', () => {
-      const { toJSON, getByTestId } = renderWithTheme(
-        <Dashboard plants={mockPlants} />
-      );
+      const { toJSON, getByTestId } = renderWithTheme(<Dashboard plants={mockPlants} />);
 
       // Sort by name ascending
       fireEvent.press(getByTestId('sort-button'));
@@ -150,18 +139,14 @@ describe('Dashboard Visual Regression', () => {
 
   describe('Interactive States', () => {
     it('renders sort menu open state', () => {
-      const { toJSON, getByTestId } = renderWithTheme(
-        <Dashboard plants={mockPlants} />
-      );
+      const { toJSON, getByTestId } = renderWithTheme(<Dashboard plants={mockPlants} />);
 
       fireEvent.press(getByTestId('sort-button'));
       expect(toJSON()).toMatchSnapshot('sort-menu-open');
     });
 
     it('renders filter tab transitions', () => {
-      const { toJSON, getByTestId } = renderWithTheme(
-        <Dashboard plants={mockPlants} />
-      );
+      const { toJSON, getByTestId } = renderWithTheme(<Dashboard plants={mockPlants} />);
 
       // Capture mid-transition state
       fireEvent.press(getByTestId('filter-tab-indoor'));
@@ -170,18 +155,14 @@ describe('Dashboard Visual Regression', () => {
     });
 
     it('renders environment icons and badges', () => {
-      const { toJSON } = renderWithTheme(
-        <Dashboard plants={mockPlants} />
-      );
+      const { toJSON } = renderWithTheme(<Dashboard plants={mockPlants} />);
       expect(toJSON()).toMatchSnapshot('environment-indicators');
     });
   });
 
   describe('Dynamic Transitions', () => {
     it('renders before and after adding plant', async () => {
-      const { toJSON, getByTestId } = renderWithTheme(
-        <Dashboard plants={mockPlants} />
-      );
+      const { toJSON, getByTestId } = renderWithTheme(<Dashboard plants={mockPlants} />);
 
       // Before adding
       expect(toJSON()).toMatchSnapshot('before-add');
@@ -197,7 +178,7 @@ describe('Dashboard Visual Regression', () => {
         healthStatus: 'healthy',
         lastWatered: new Date(),
       };
-      
+
       // After adding
       await act(async () => {
         // Simulate plant addition
@@ -209,9 +190,7 @@ describe('Dashboard Visual Regression', () => {
     });
 
     it('renders moisture forecast timeline', () => {
-      const { toJSON, getByTestId } = renderWithTheme(
-        <Dashboard plants={mockPlants} />
-      );
+      const { toJSON, getByTestId } = renderWithTheme(<Dashboard plants={mockPlants} />);
 
       fireEvent.press(getByTestId('moisture-timeline-toggle'));
       expect(toJSON()).toMatchSnapshot('moisture-timeline-expanded');
@@ -220,16 +199,16 @@ describe('Dashboard Visual Regression', () => {
     it('renders smart watering alerts', () => {
       const plantsWithAlerts = mockPlants.map(plant => ({
         ...plant,
-        alerts: [{
-          type: 'watering_needed',
-          message: 'Plant needs water soon',
-          severity: 'warning',
-        }],
+        alerts: [
+          {
+            type: 'watering_needed',
+            message: 'Plant needs water soon',
+            severity: 'warning',
+          },
+        ],
       }));
 
-      const { toJSON } = renderWithTheme(
-        <Dashboard plants={plantsWithAlerts} />
-      );
+      const { toJSON } = renderWithTheme(<Dashboard plants={plantsWithAlerts} />);
       expect(toJSON()).toMatchSnapshot('watering-alerts');
     });
   });
@@ -262,13 +241,11 @@ describe('Dashboard Visual Regression', () => {
     });
 
     it('renders with reduced motion', async () => {
-      (AccessibilityInfo.isReduceMotionEnabled as jest.Mock).mockImplementation(
-        () => Promise.resolve(true)
+      (AccessibilityInfo.isReduceMotionEnabled as jest.Mock).mockImplementation(() =>
+        Promise.resolve(true)
       );
 
-      const { toJSON, getByTestId } = renderWithTheme(
-        <Dashboard plants={mockPlants} />
-      );
+      const { toJSON, getByTestId } = renderWithTheme(<Dashboard plants={mockPlants} />);
 
       // Trigger an animation
       fireEvent.press(getByTestId('filter-tab-indoor'));
@@ -283,19 +260,14 @@ describe('Dashboard Visual Regression', () => {
         fontScale: 1.5, // Large font scale
       }));
 
-      const { toJSON } = renderWithTheme(
-        <Dashboard plants={mockPlants} />
-      );
+      const { toJSON } = renderWithTheme(<Dashboard plants={mockPlants} />);
       expect(toJSON()).toMatchSnapshot('large-font');
     });
   });
 
   describe('Dark Mode', () => {
     it('renders dark mode states', () => {
-      const { toJSON, getByTestId } = renderWithTheme(
-        <Dashboard plants={mockPlants} />,
-        'dark'
-      );
+      const { toJSON, getByTestId } = renderWithTheme(<Dashboard plants={mockPlants} />, 'dark');
 
       // Default dark mode
       expect(toJSON()).toMatchSnapshot('dark-mode-default');
@@ -309,4 +281,4 @@ describe('Dashboard Visual Regression', () => {
       expect(toJSON()).toMatchSnapshot('dark-mode-filtered');
     });
   });
-}); 
+});

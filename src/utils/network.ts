@@ -37,4 +37,4 @@ class NetworkManagerClass {
   }
 }
 
-export const NetworkManager = new NetworkManagerClass(); 
+export const NetworkManager = new NetworkManagerClass();

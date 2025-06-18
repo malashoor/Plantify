@@ -12,8 +12,11 @@ export const useProtectedRoute = () => {
     // Check initial session
     const checkSession = async () => {
       try {
-        const { data: { session }, error } = await supabase.auth.getSession();
-        
+        const {
+          data: { session },
+          error,
+        } = await supabase.auth.getSession();
+
         if (error) {
           console.error('Error checking session:', error);
           router.replace('/onboarding');
@@ -37,16 +40,16 @@ export const useProtectedRoute = () => {
     checkSession();
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (event === 'SIGNED_OUT' || !session) {
-          setUser(null);
-          router.replace('/onboarding');
-        } else if (event === 'SIGNED_IN' && session) {
-          setUser(session.user);
-        }
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_OUT' || !session) {
+        setUser(null);
+        router.replace('/onboarding');
+      } else if (event === 'SIGNED_IN' && session) {
+        setUser(session.user);
       }
-    );
+    });
 
     return () => subscription.unsubscribe();
   }, [router]);
@@ -61,7 +64,9 @@ export const useUser = () => {
   useEffect(() => {
     // Get initial user
     const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       setUser(user);
       setLoading(false);
     };
@@ -69,15 +74,15 @@ export const useUser = () => {
     getUser();
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setUser(session?.user ?? null);
-        setLoading(false);
-      }
-    );
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
 
     return () => subscription.unsubscribe();
   }, []);
 
   return { user, loading };
-}; 
+};

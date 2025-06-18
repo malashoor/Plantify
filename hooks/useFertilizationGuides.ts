@@ -28,7 +28,7 @@ export function useFertilizationGuides(plantId?: string) {
       lastFertilized: new Date(Date.now() - 9 * 24 * 60 * 60 * 1000).toISOString(),
       season: 'spring',
       dosage: '1/4 strength',
-      notes: 'Reduce to monthly in winter'
+      notes: 'Reduce to monthly in winter',
     },
     {
       plantId: 'plant-2',
@@ -39,7 +39,7 @@ export function useFertilizationGuides(plantId?: string) {
       lastFertilized: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
       season: 'spring',
       dosage: 'Half strength',
-      notes: 'Skip fertilizing in winter months'
+      notes: 'Skip fertilizing in winter months',
     },
     {
       plantId: 'plant-3',
@@ -50,8 +50,8 @@ export function useFertilizationGuides(plantId?: string) {
       lastFertilized: new Date(Date.now() - 13 * 24 * 60 * 60 * 1000).toISOString(),
       season: 'spring',
       dosage: '1/2 strength',
-      notes: 'Very forgiving with fertilizer schedule'
-    }
+      notes: 'Very forgiving with fertilizer schedule',
+    },
   ];
 
   const fetchFertilizationGuides = async () => {
@@ -93,23 +93,27 @@ export function useFertilizationGuides(plantId?: string) {
       //   .update({ last_fertilized: date })
       //   .eq('plant_id', plantId);
 
-      setGuides(prev => prev.map(guide => {
-        if (guide.plantId === plantId) {
-          // Calculate next fertilization based on frequency
-          const frequencyDays = guide.frequency.includes('week') 
-            ? parseInt(guide.frequency) * 7 || 14
-            : parseInt(guide.frequency) * 30 || 30;
-          
-          const nextDate = new Date(Date.now() + frequencyDays * 24 * 60 * 60 * 1000).toISOString();
-          
-          return {
-            ...guide,
-            lastFertilized: date,
-            nextFertilization: nextDate
-          };
-        }
-        return guide;
-      }));
+      setGuides(prev =>
+        prev.map(guide => {
+          if (guide.plantId === plantId) {
+            // Calculate next fertilization based on frequency
+            const frequencyDays = guide.frequency.includes('week')
+              ? parseInt(guide.frequency) * 7 || 14
+              : parseInt(guide.frequency) * 30 || 30;
+
+            const nextDate = new Date(
+              Date.now() + frequencyDays * 24 * 60 * 60 * 1000
+            ).toISOString();
+
+            return {
+              ...guide,
+              lastFertilized: date,
+              nextFertilization: nextDate,
+            };
+          }
+          return guide;
+        })
+      );
       setIsLoading(false);
     } catch (err) {
       setError('Failed to update fertilization record');
@@ -119,7 +123,7 @@ export function useFertilizationGuides(plantId?: string) {
   };
 
   const updateFertilizationSchedule = async (
-    plantId: string, 
+    plantId: string,
     updates: Partial<Pick<FertilizationGuide, 'fertilizerType' | 'frequency' | 'dosage' | 'notes'>>
   ) => {
     setIsLoading(true);
@@ -132,11 +136,9 @@ export function useFertilizationGuides(plantId?: string) {
       //   .update(updates)
       //   .eq('plant_id', plantId);
 
-      setGuides(prev => prev.map(guide => 
-        guide.plantId === plantId 
-          ? { ...guide, ...updates }
-          : guide
-      ));
+      setGuides(prev =>
+        prev.map(guide => (guide.plantId === plantId ? { ...guide, ...updates } : guide))
+      );
       setIsLoading(false);
     } catch (err) {
       setError('Failed to update fertilization schedule');
@@ -155,6 +157,6 @@ export function useFertilizationGuides(plantId?: string) {
     error,
     refetch: fetchFertilizationGuides,
     updateLastFertilized,
-    updateFertilizationSchedule
+    updateFertilizationSchedule,
   };
-} 
+}

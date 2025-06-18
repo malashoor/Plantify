@@ -43,4 +43,4 @@ export function usePlantData(plantId: string | null) {
   }, [plantId]);
 
   return { plant, loading, error };
-} 
+}

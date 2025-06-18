@@ -113,26 +113,21 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
     isRetrying
       ? `. Retrying in ${formatTimeRemaining(timeRemaining || 0)}`
       : onRetry
-      ? '. Tap to retry'
-      : ''
+        ? '. Tap to retry'
+        : ''
   }`;
 
   return (
-    <View 
+    <View
       style={styles.container}
       testID={testID}
       accessibilityRole="alert"
       accessibilityLabel={accessibilityLabel}
     >
-      <MaterialIcons
-        name={icon}
-        size={48}
-        color={colors.error}
-        style={styles.icon}
-      />
+      <MaterialIcons name={icon} size={48} color={colors.error} style={styles.icon} />
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.message}>{message}</Text>
-      
+
       {(onRetry || onCancel) && (
         <View style={styles.buttonContainer}>
           {onRetry && (
@@ -144,15 +139,11 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
               accessibilityLabel={getRetryButtonText()}
               accessibilityState={{ disabled: isRetrying }}
             >
-              <MaterialIcons
-                name="refresh"
-                size={20}
-                color={colors.onPrimary}
-              />
+              <MaterialIcons name="refresh" size={20} color={colors.onPrimary} />
               <Text style={styles.buttonText}>{getRetryButtonText()}</Text>
             </Pressable>
           )}
-          
+
           {onCancel && isRetrying && (
             <Pressable
               onPress={onCancel}
@@ -160,17 +151,13 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
               accessibilityRole="button"
               accessibilityLabel="Cancel retry"
             >
-              <MaterialIcons
-                name="close"
-                size={20}
-                color={colors.text}
-              />
+              <MaterialIcons name="close" size={20} color={colors.text} />
               <Text style={styles.cancelButtonText}>Cancel</Text>
             </Pressable>
           )}
         </View>
       )}
-      
+
       {attempt > 0 && (
         <Text style={styles.attemptText}>
           Attempt {attempt} of {maxAttempts}
@@ -178,4 +165,4 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
       )}
     </View>
   );
-}; 
+};

@@ -26,4 +26,4 @@ export interface JournalFormData {
   imageUrls?: string[];
   tags?: string[];
   mood?: 'happy' | 'neutral' | 'concerned' | 'excited';
-} 
+}

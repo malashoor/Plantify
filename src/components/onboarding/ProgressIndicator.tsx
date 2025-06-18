@@ -101,4 +101,4 @@ const styles = StyleSheet.create({
   progressBarDark: {
     backgroundColor: '#22C55E',
   },
-}); 
+});

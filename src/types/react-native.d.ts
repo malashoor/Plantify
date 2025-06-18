@@ -51,7 +51,7 @@ declare module 'react-native' {
   export const Text: ComponentType<TextProps>;
   export const TouchableOpacity: ComponentType<TouchableOpacityProps>;
   export const ScrollView: ComponentType<ScrollViewProps>;
-  
+
   export const StyleSheet: {
     create<T extends { [key: string]: ViewStyle | TextStyle | ImageStyle }>(styles: T): T;
   };
@@ -64,14 +64,19 @@ declare module 'react-native' {
   export const useColorScheme: () => 'light' | 'dark' | null;
 
   export const Alert: {
-    alert: (title: string, message?: string, buttons?: Array<{
-      text: string;
-      onPress?: () => void;
-      style?: 'default' | 'cancel' | 'destructive';
-    }>, options?: {
-      cancelable?: boolean;
-      onDismiss?: () => void;
-    }) => void;
+    alert: (
+      title: string,
+      message?: string,
+      buttons?: Array<{
+        text: string;
+        onPress?: () => void;
+        style?: 'default' | 'cancel' | 'destructive';
+      }>,
+      options?: {
+        cancelable?: boolean;
+        onDismiss?: () => void;
+      }
+    ) => void;
   };
 
   export const Animated: {
@@ -95,9 +100,6 @@ declare module 'react-native' {
   class AnimatedValue {
     constructor(value: number);
     setValue(value: number): void;
-    interpolate(config: {
-      inputRange: number[];
-      outputRange: number[] | string[];
-    }): AnimatedValue;
+    interpolate(config: { inputRange: number[]; outputRange: number[] | string[] }): AnimatedValue;
   }
-} 
+}

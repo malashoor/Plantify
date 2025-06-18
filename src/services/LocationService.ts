@@ -41,7 +41,8 @@ export class LocationService {
       }
 
       const location = await Location.getCurrentPositionAsync({
-        accuracy: Platform.OS === 'android' ? Location.Accuracy.Balanced : Location.Accuracy.Reduced,
+        accuracy:
+          Platform.OS === 'android' ? Location.Accuracy.Balanced : Location.Accuracy.Reduced,
       });
 
       // Get city and country
@@ -64,7 +65,9 @@ export class LocationService {
       await this.cacheLocation(userLocation);
 
       // Store in Supabase if user is authenticated
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (user) {
         await this.updateSupabaseLocation(user.id, userLocation);
       }
@@ -104,20 +107,24 @@ export class LocationService {
     }
   }
 
-  private static async updateSupabaseLocation(userId: string, location: UserLocation): Promise<void> {
+  private static async updateSupabaseLocation(
+    userId: string,
+    location: UserLocation
+  ): Promise<void> {
     try {
-      const { error } = await supabase
-        .from('user_profiles')
-        .upsert({
+      const { error } = await supabase.from('user_profiles').upsert(
+        {
           user_id: userId,
           latitude: location.coords.latitude,
           longitude: location.coords.longitude,
           city: location.city,
           country: location.country,
           location_updated_at: new Date().toISOString(),
-        }, {
+        },
+        {
           onConflict: 'user_id',
-        });
+        }
+      );
 
       if (error) {
         throw error;
@@ -126,4 +133,4 @@ export class LocationService {
       console.error('Error updating location in Supabase:', error);
     }
   }
-} 
+}

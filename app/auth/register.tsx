@@ -21,34 +21,34 @@ export default function RegisterScreen() {
 
   const validateForm = () => {
     const newErrors: any = {};
-    
+
     if (!formData.fullName.trim()) {
       newErrors.fullName = 'Full name is required';
     }
-    
+
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Please enter a valid email';
     }
-    
+
     if (!formData.password) {
       newErrors.password = 'Password is required';
     } else if (formData.password.length < 6) {
       newErrors.password = 'Password must be at least 6 characters';
     }
-    
+
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleRegister = async () => {
     if (!validateForm()) return;
-    
+
     setLoading(true);
     try {
       const { data, error } = await supabase.auth.signUp({
@@ -59,18 +59,16 @@ export default function RegisterScreen() {
             full_name: formData.fullName,
             phone: formData.phone,
             country: formData.country,
-          }
-        }
+          },
+        },
       });
 
       if (error) {
         Alert.alert('Registration Error', error.message);
       } else {
-        Alert.alert(
-          'Registration Successful!', 
-          'Please check your email to verify your account.',
-          [{ text: 'OK', onPress: () => router.push('/(tabs)') }]
-        );
+        Alert.alert('Registration Successful!', 'Please check your email to verify your account.', [
+          { text: 'OK', onPress: () => router.push('/(tabs)') },
+        ]);
       }
     } catch (error: any) {
       Alert.alert('Error', error.message || 'Registration failed');
@@ -98,7 +96,7 @@ export default function RegisterScreen() {
           <AuthInput
             label="Full Name"
             value={formData.fullName}
-            onChangeText={(text) => updateField('fullName', text)}
+            onChangeText={text => updateField('fullName', text)}
             placeholder="Enter your full name"
             error={errors.fullName}
           />
@@ -106,7 +104,7 @@ export default function RegisterScreen() {
           <AuthInput
             label="Email Address"
             value={formData.email}
-            onChangeText={(text) => updateField('email', text)}
+            onChangeText={text => updateField('email', text)}
             placeholder="Enter your email"
             keyboardType="email-address"
             error={errors.email}
@@ -115,7 +113,7 @@ export default function RegisterScreen() {
           <AuthInput
             label="Phone Number"
             value={formData.phone}
-            onChangeText={(text) => updateField('phone', text)}
+            onChangeText={text => updateField('phone', text)}
             placeholder="Enter your phone number"
             keyboardType="phone-pad"
           />
@@ -123,7 +121,7 @@ export default function RegisterScreen() {
           <AuthInput
             label="Password"
             value={formData.password}
-            onChangeText={(text) => updateField('password', text)}
+            onChangeText={text => updateField('password', text)}
             placeholder="Create a password"
             secureTextEntry
             error={errors.password}
@@ -132,14 +130,14 @@ export default function RegisterScreen() {
           <AuthInput
             label="Confirm Password"
             value={formData.confirmPassword}
-            onChangeText={(text) => updateField('confirmPassword', text)}
+            onChangeText={text => updateField('confirmPassword', text)}
             placeholder="Confirm your password"
             secureTextEntry
             error={errors.confirmPassword}
           />
 
           <Button
-            title={loading ? "Creating Account..." : "Create Account"}
+            title={loading ? 'Creating Account...' : 'Create Account'}
             onPress={handleRegister}
             disabled={loading}
             style={styles.registerButton}
@@ -192,4 +190,4 @@ const styles = StyleSheet.create({
   loginButton: {
     marginBottom: 20,
   },
-}); 
+});

@@ -8,7 +8,7 @@ interface AnalyticsContextValue {
 }
 
 const AnalyticsContext = createContext<AnalyticsContextValue>({
-  initialized: false
+  initialized: false,
 });
 
 interface AnalyticsProviderProps {
@@ -46,11 +46,7 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }
     };
   }, []);
 
-  return (
-    <AnalyticsContext.Provider value={{ initialized }}>
-      {children}
-    </AnalyticsContext.Provider>
-  );
+  return <AnalyticsContext.Provider value={{ initialized }}>{children}</AnalyticsContext.Provider>;
 };
 
-export const useAnalyticsContext = () => useContext(AnalyticsContext); 
+export const useAnalyticsContext = () => useContext(AnalyticsContext);

@@ -15,7 +15,11 @@ interface PlantInterestSelectorProps {
   disabled?: boolean;
 }
 
-export function PlantInterestSelector({ selectedInterests, onInterestsChange, disabled }: PlantInterestSelectorProps) {
+export function PlantInterestSelector({
+  selectedInterests,
+  onInterestsChange,
+  disabled,
+}: PlantInterestSelectorProps) {
   const { t } = useTranslation();
   const isDark = useColorScheme() === 'dark';
   const [customInterest, setCustomInterest] = useState('');
@@ -85,11 +89,11 @@ export function PlantInterestSelector({ selectedInterests, onInterestsChange, di
 
   const toggleInterest = (id: string) => {
     if (disabled) return;
-    
+
     const newInterests = selectedInterests.includes(id)
       ? selectedInterests.filter(i => i !== id)
       : [...selectedInterests, id];
-    
+
     onInterestsChange(newInterests);
   };
 
@@ -101,12 +105,12 @@ export function PlantInterestSelector({ selectedInterests, onInterestsChange, di
       <Text style={[styles.subtitle, isDark && styles.subtitleDark]}>
         {t('onboarding.interests.subtitle')}
       </Text>
-      <ScrollView 
+      <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.interestsGrid}
         showsVerticalScrollIndicator={false}
       >
-        {plantInterests.map((interest) => (
+        {plantInterests.map(interest => (
           <TouchableOpacity
             key={interest.id}
             style={[
@@ -119,18 +123,22 @@ export function PlantInterestSelector({ selectedInterests, onInterestsChange, di
             onPress={() => toggleInterest(interest.id)}
             disabled={disabled}
             accessibilityRole="checkbox"
-            accessibilityState={{ 
+            accessibilityState={{
               checked: selectedInterests.includes(interest.id),
-              disabled 
+              disabled,
             }}
             accessibilityLabel={interest.name}
           >
-            <View style={[
-              styles.iconContainer,
-              selectedInterests.includes(interest.id) && styles.iconContainerSelected,
-              isDark && styles.iconContainerDark,
-              selectedInterests.includes(interest.id) && isDark && styles.iconContainerSelectedDark,
-            ]}>
+            <View
+              style={[
+                styles.iconContainer,
+                selectedInterests.includes(interest.id) && styles.iconContainerSelected,
+                isDark && styles.iconContainerDark,
+                selectedInterests.includes(interest.id) &&
+                  isDark &&
+                  styles.iconContainerSelectedDark,
+              ]}
+            >
               <Ionicons
                 name={interest.icon as any}
                 size={32}
@@ -140,8 +148,8 @@ export function PlantInterestSelector({ selectedInterests, onInterestsChange, di
                       ? '#22C55E'
                       : '#16A34A'
                     : isDark
-                    ? '#9CA3AF'
-                    : '#6B7280'
+                      ? '#9CA3AF'
+                      : '#6B7280'
                 }
               />
             </View>
@@ -150,7 +158,9 @@ export function PlantInterestSelector({ selectedInterests, onInterestsChange, di
                 styles.interestLabel,
                 selectedInterests.includes(interest.id) && styles.interestLabelSelected,
                 isDark && styles.interestLabelDark,
-                selectedInterests.includes(interest.id) && isDark && styles.interestLabelSelectedDark,
+                selectedInterests.includes(interest.id) &&
+                  isDark &&
+                  styles.interestLabelSelectedDark,
               ]}
             >
               {interest.name}
@@ -251,4 +261,4 @@ const styles = StyleSheet.create({
   interestLabelSelectedDark: {
     color: '#22C55E',
   },
-}); 
+});

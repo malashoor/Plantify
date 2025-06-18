@@ -5,10 +5,8 @@ export function useFavorites() {
   const [favorites, setFavorites] = useState<string[]>([]);
 
   const toggleFavorite = (plantId: string) => {
-    setFavorites(prev => 
-      prev.includes(plantId) 
-        ? prev.filter(id => id !== plantId)
-        : [...prev, plantId]
+    setFavorites(prev =>
+      prev.includes(plantId) ? prev.filter(id => id !== plantId) : [...prev, plantId]
     );
   };
 
@@ -19,6 +17,6 @@ export function useFavorites() {
   return {
     favorites,
     toggleFavorite,
-    isFavorite
+    isFavorite,
   };
-} 
+}

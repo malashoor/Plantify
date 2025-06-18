@@ -57,7 +57,7 @@ export class SmartWateringService {
     scheduledDate: Date
   ): Promise<WateringAdjustment> {
     const prefs = await this.getPreferences();
-    
+
     if (!prefs.enabled) {
       return {
         shouldSkip: false,
@@ -133,7 +133,8 @@ export class SmartWateringService {
     // Indoor vs outdoor considerations
     if (seed.environment === 'indoor') {
       adjustment.shouldSkip = false; // Don't skip indoor plants based on rain
-      if (weather.temperature >= 25) { // Indoor temperature threshold
+      if (weather.temperature >= 25) {
+        // Indoor temperature threshold
         adjustment.recommendation = `Check soil moisture for ${seed.name}, indoor temperature is high`;
       }
     }
@@ -171,4 +172,4 @@ export class SmartWateringService {
     result.setDate(result.getDate() + days);
     return result;
   }
-} 
+}

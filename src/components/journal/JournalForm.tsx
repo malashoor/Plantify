@@ -41,7 +41,7 @@ export function JournalForm({ onSubmit, onCancel, initialData }: JournalFormProp
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Journal Entry</Text>
-      
+
       <View style={styles.field}>
         <Text style={styles.label}>Title</Text>
         <TextInput
@@ -82,8 +82,11 @@ export function JournalForm({ onSubmit, onCancel, initialData }: JournalFormProp
         <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
           <Text style={styles.cancelButtonText}>Cancel</Text>
         </TouchableOpacity>
-        <TouchableOpacity 
-          style={[styles.submitButton, (!title.trim() || !content.trim()) && styles.submitButtonDisabled]} 
+        <TouchableOpacity
+          style={[
+            styles.submitButton,
+            (!title.trim() || !content.trim()) && styles.submitButtonDisabled,
+          ]}
           onPress={handleSubmit}
           disabled={!title.trim() || !content.trim()}
         >
@@ -161,4 +164,4 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#fff',
   },
-}); 
+});

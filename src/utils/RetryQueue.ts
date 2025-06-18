@@ -33,7 +33,7 @@ export class RetryQueue {
   private networkManager: NetworkManager;
   private events: EventEmitter = new EventEmitter();
   private initialized: boolean = false;
-  
+
   private constructor() {
     this.networkManager = NetworkManager.getInstance();
     this.initialize();
@@ -55,7 +55,7 @@ export class RetryQueue {
    */
   private async initialize() {
     if (this.initialized) return;
-    
+
     try {
       const entries = await QueueStorage.loadQueue();
       for (const entry of entries) {
@@ -68,7 +68,7 @@ export class RetryQueue {
             const args = entry.operationData ? JSON.parse(entry.operationData) : [];
             return operation(...args);
           },
-          isProcessing: false
+          isProcessing: false,
         };
 
         this.queue.set(entry.id, queuedRetry);
@@ -87,8 +87,9 @@ export class RetryQueue {
    * Add a request to the retry queue
    */
   enqueue<T>(request: RetryRequest<T>): string {
-    const existingRequest = Array.from(this.queue.values())
-      .find(r => r.operation.toString() === request.operation.toString());
+    const existingRequest = Array.from(this.queue.values()).find(
+      r => r.operation.toString() === request.operation.toString()
+    );
 
     if (existingRequest) {
       return existingRequest.id;
@@ -99,14 +100,14 @@ export class RetryQueue {
       attempts: 0,
       lastAttempt: 0,
       isProcessing: false,
-      createdAt: Date.now()
+      createdAt: Date.now(),
     };
 
     this.queue.set(request.id, queuedRetry);
-    this.events.emit('queued', { 
-      id: request.id, 
+    this.events.emit('queued', {
+      id: request.id,
       priority: request.priority,
-      queueSize: this.queue.size 
+      queueSize: this.queue.size,
     });
 
     // Persist if not volatile
@@ -123,16 +124,16 @@ export class RetryQueue {
   dequeue(id: string): boolean {
     const request = this.queue.get(id);
     const removed = this.queue.delete(id);
-    
+
     if (removed) {
       this.events.emit('dequeued', { id, queueSize: this.queue.size });
-      
+
       // Update persistence if not volatile
       if (request && !request.isVolatile) {
         QueueStorage.removeEntries([id]);
       }
     }
-    
+
     return removed;
   }
 
@@ -141,17 +142,17 @@ export class RetryQueue {
    */
   private getNextRequest(): QueuedRetry<any> | null {
     for (const priority of this.priorityOrder) {
-      const requests = Array.from(this.queue.values())
-        .filter(r => r.priority === priority && !r.isProcessing);
+      const requests = Array.from(this.queue.values()).filter(
+        r => r.priority === priority && !r.isProcessing
+      );
 
       for (const request of requests) {
         if (!request.dependencies?.length) {
           return request;
         }
 
-        const dependenciesComplete = request.dependencies.every(depId => 
-          !this.queue.has(depId) || 
-          (this.queue.get(depId)?.attempts ?? 0) > 0
+        const dependenciesComplete = request.dependencies.every(
+          depId => !this.queue.has(depId) || (this.queue.get(depId)?.attempts ?? 0) > 0
         );
 
         if (dependenciesComplete) {
@@ -192,31 +193,30 @@ export class RetryQueue {
         }
 
         request.onRetry?.(request.attempts);
-        this.events.emit('retry', { 
-          id: request.id, 
+        this.events.emit('retry', {
+          id: request.id,
           attempt: request.attempts,
-          queueSize: this.queue.size 
+          queueSize: this.queue.size,
         });
 
         const result = await request.operation();
         request.onSuccess?.(result);
         this.dequeue(request.id);
-
       } catch (error) {
         const maxRetries = request.maxRetries ?? 3;
-        
+
         if (request.attempts >= maxRetries) {
           request.onError?.(error as Error);
           this.dequeue(request.id);
         } else {
           request.isProcessing = false;
           const delay = request.delay ?? 1000 * Math.pow(2, request.attempts - 1);
-          
+
           // Update persistence if not volatile
           if (!request.isVolatile) {
             await this.updatePersistedEntry(request);
           }
-          
+
           await new Promise(resolve => setTimeout(resolve, delay));
         }
       }
@@ -228,7 +228,12 @@ export class RetryQueue {
    */
   subscribe(
     event: 'queued' | 'dequeued' | 'retry',
-    callback: (data: { id: string; priority?: RetryPriority; attempt?: number; queueSize: number }) => void
+    callback: (data: {
+      id: string;
+      priority?: RetryPriority;
+      attempt?: number;
+      queueSize: number;
+    }) => void
   ) {
     this.events.on(event, callback);
     return () => this.events.off(event, callback);
@@ -241,12 +246,13 @@ export class RetryQueue {
     const stats = {
       total: this.queue.size,
       byPriority: {} as Record<RetryPriority, number>,
-      processing: Array.from(this.queue.values()).filter(r => r.isProcessing).length
+      processing: Array.from(this.queue.values()).filter(r => r.isProcessing).length,
     };
 
     this.priorityOrder.forEach(priority => {
-      stats.byPriority[priority] = Array.from(this.queue.values())
-        .filter(r => r.priority === priority).length;
+      stats.byPriority[priority] = Array.from(this.queue.values()).filter(
+        r => r.priority === priority
+      ).length;
     });
 
     return stats;
@@ -275,7 +281,7 @@ export class RetryQueue {
         dependencies: request.dependencies,
         operationKey: request.operationKey!,
         operationData: request.operationData,
-        createdAt: request.createdAt
+        createdAt: request.createdAt,
       }));
 
     await QueueStorage.saveQueue(entries);
@@ -297,9 +303,9 @@ export class RetryQueue {
       dependencies: request.dependencies,
       operationKey: request.operationKey,
       operationData: request.operationData,
-      createdAt: request.createdAt
+      createdAt: request.createdAt,
     };
 
     await QueueStorage.updateEntries([entry]);
   }
-} 
+}

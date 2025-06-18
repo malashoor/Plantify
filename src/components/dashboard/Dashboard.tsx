@@ -38,7 +38,7 @@ export const Dashboard: React.FC = () => {
     onSuccess: () => {
       // Could trigger a success toast or animation here
     },
-    onError: (error) => {
+    onError: error => {
       // Could log the error or show additional UI feedback
       console.error('Failed to load plants:', error);
     },
@@ -62,15 +62,15 @@ export const Dashboard: React.FC = () => {
           icon: 'wifi-off' as const,
         };
       }
-      
+
       if (error.name === 'TimeoutError') {
         return {
           title: 'Request timed out',
-          message: 'The server is taking too long to respond. We\'ll try again automatically.',
+          message: "The server is taking too long to respond. We'll try again automatically.",
           icon: 'timer-off' as const,
         };
       }
-      
+
       return {
         title: 'Failed to load plants',
         message: 'An unexpected error occurred. Please try again.',
@@ -93,9 +93,5 @@ export const Dashboard: React.FC = () => {
     );
   }
 
-  return (
-    <View style={styles.container}>
-      {/* Existing plant list rendering code */}
-    </View>
-  );
-}; 
+  return <View style={styles.container}>{/* Existing plant list rendering code */}</View>;
+};

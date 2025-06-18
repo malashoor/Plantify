@@ -27,7 +27,11 @@ export default function PlantCard({ plant }: PlantCardProps) {
     <View style={styles.card}>
       <Link href={`/plants/${plant.id}`} asChild>
         <Pressable style={styles.cardContent}>
-          <Image source={plant.image || placeholderPlantImage} style={styles.image} resizeMode="cover" />
+          <Image
+            source={plant.image || placeholderPlantImage}
+            style={styles.image}
+            resizeMode="cover"
+          />
           <View style={styles.info}>
             <Text style={styles.name}>{plant.name}</Text>
             <Text style={styles.description}>{plant.description}</Text>
@@ -36,10 +40,7 @@ export default function PlantCard({ plant }: PlantCardProps) {
           </View>
         </Pressable>
       </Link>
-      <Pressable 
-        style={styles.favoriteButton}
-        onPress={() => toggleFavorite(plant.id)}
-      >
+      <Pressable style={styles.favoriteButton} onPress={() => toggleFavorite(plant.id)}>
         <MaterialIcons
           name={isFav ? 'favorite' : 'favorite-border'}
           size={24}
@@ -74,4 +75,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
   },
-}); 
+});

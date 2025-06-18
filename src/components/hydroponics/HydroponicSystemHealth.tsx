@@ -16,19 +16,19 @@ interface HydroponicSystemHealthProps {
 export function HydroponicSystemHealth({ system }: HydroponicSystemHealthProps) {
   const getHealthStatus = () => {
     const issues = [];
-    
+
     if (system.ph < 5.5 || system.ph > 6.5) {
       issues.push('pH out of range');
     }
-    
+
     if (system.nutrients < 800 || system.nutrients > 1500) {
       issues.push('Nutrient levels need adjustment');
     }
-    
+
     if (system.temperature < 18 || system.temperature > 28) {
       issues.push('Temperature not optimal');
     }
-    
+
     return issues.length === 0 ? 'Healthy' : issues.join(', ');
   };
 
@@ -41,29 +41,29 @@ export function HydroponicSystemHealth({ system }: HydroponicSystemHealthProps) 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>System Health</Text>
-      
+
       <View style={styles.metrics}>
         <View style={styles.metric}>
           <Text style={styles.metricLabel}>pH Level</Text>
           <Text style={styles.metricValue}>{system.ph.toFixed(1)}</Text>
         </View>
-        
+
         <View style={styles.metric}>
           <Text style={styles.metricLabel}>Nutrients</Text>
           <Text style={styles.metricValue}>{system.nutrients} ppm</Text>
         </View>
-        
+
         <View style={styles.metric}>
           <Text style={styles.metricLabel}>Temperature</Text>
           <Text style={styles.metricValue}>{system.temperature}°C</Text>
         </View>
-        
+
         <View style={styles.metric}>
           <Text style={styles.metricLabel}>Light Hours</Text>
           <Text style={styles.metricValue}>{system.lightHours}h</Text>
         </View>
       </View>
-      
+
       <View style={[styles.statusContainer, { backgroundColor: getStatusColor() }]}>
         <Text style={styles.statusText}>{getHealthStatus()}</Text>
       </View>
@@ -119,4 +119,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
   },
-}); 
+});

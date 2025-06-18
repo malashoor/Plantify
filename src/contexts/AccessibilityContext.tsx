@@ -51,19 +51,16 @@ export function AccessibilityProvider({ children }: { children: React.ReactNode 
       }
 
       // Load current device settings
-      const [
-        screenReader,
-        reduceMotion,
-        reduceTransparency,
-        boldText,
-        preferredSize,
-      ] = await Promise.all([
-        AccessibilityInfo.isScreenReaderEnabled(),
-        AccessibilityInfo.isReduceMotionEnabled(),
-        Platform.OS === 'ios' ? AccessibilityInfo.isReduceTransparencyEnabled() : Promise.resolve(false),
-        Platform.OS === 'ios' ? AccessibilityInfo.isBoldTextEnabled() : Promise.resolve(false),
-        AccessibilityInfo.getPreferredContentSizeCategory(),
-      ]);
+      const [screenReader, reduceMotion, reduceTransparency, boldText, preferredSize] =
+        await Promise.all([
+          AccessibilityInfo.isScreenReaderEnabled(),
+          AccessibilityInfo.isReduceMotionEnabled(),
+          Platform.OS === 'ios'
+            ? AccessibilityInfo.isReduceTransparencyEnabled()
+            : Promise.resolve(false),
+          Platform.OS === 'ios' ? AccessibilityInfo.isBoldTextEnabled() : Promise.resolve(false),
+          AccessibilityInfo.getPreferredContentSizeCategory(),
+        ]);
 
       setSettings(prev => ({
         ...prev,
@@ -80,14 +77,8 @@ export function AccessibilityProvider({ children }: { children: React.ReactNode 
 
   const setupAccessibilityListeners = () => {
     const subscriptions = [
-      AccessibilityInfo.addEventListener(
-        'screenReaderChanged',
-        handleScreenReaderChange
-      ),
-      AccessibilityInfo.addEventListener(
-        'reduceMotionChanged',
-        handleReduceMotionChange
-      ),
+      AccessibilityInfo.addEventListener('screenReaderChanged', handleScreenReaderChange),
+      AccessibilityInfo.addEventListener('reduceMotionChanged', handleReduceMotionChange),
     ];
 
     if (Platform.OS === 'ios') {
@@ -96,10 +87,7 @@ export function AccessibilityProvider({ children }: { children: React.ReactNode 
           'reduceTransparencyChanged',
           handleReduceTransparencyChange
         ),
-        AccessibilityInfo.addEventListener(
-          'boldTextChanged',
-          handleBoldTextChange
-        ),
+        AccessibilityInfo.addEventListener('boldTextChanged', handleBoldTextChange)
       );
     }
 
@@ -142,10 +130,7 @@ export function AccessibilityProvider({ children }: { children: React.ReactNode 
         ...settings,
         ...newSettings,
       };
-      await AsyncStorage.setItem(
-        '@accessibility_settings',
-        JSON.stringify(updatedSettings)
-      );
+      await AsyncStorage.setItem('@accessibility_settings', JSON.stringify(updatedSettings));
       setSettings(updatedSettings);
     } catch (error) {
       console.error('Error updating accessibility settings:', error);
@@ -172,4 +157,4 @@ export function AccessibilityProvider({ children }: { children: React.ReactNode 
       {children}
     </AccessibilityContext.Provider>
   );
-} 
+}

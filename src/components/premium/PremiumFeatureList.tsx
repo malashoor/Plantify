@@ -39,25 +39,14 @@ export function PremiumFeatureList() {
 
   return (
     <View style={styles.container}>
-      {PREMIUM_FEATURES.map((feature) => (
-        <View 
-          key={feature.id} 
-          style={[styles.featureCard, { borderColor }]}
-        >
+      {PREMIUM_FEATURES.map(feature => (
+        <View key={feature.id} style={[styles.featureCard, { borderColor }]}>
           <View style={styles.iconContainer}>
-            <Ionicons 
-              name={feature.icon as any} 
-              size={24} 
-              color={tintColor} 
-            />
+            <Ionicons name={feature.icon as any} size={24} color={tintColor} />
           </View>
           <View style={styles.textContainer}>
-            <Text style={styles.title}>
-              {t(feature.titleKey)}
-            </Text>
-            <Text style={styles.description}>
-              {t(feature.descriptionKey)}
-            </Text>
+            <Text style={styles.title}>{t(feature.titleKey)}</Text>
+            <Text style={styles.description}>{t(feature.descriptionKey)}</Text>
           </View>
         </View>
       ))}
@@ -93,4 +82,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
     opacity: 0.7,
   },
-}); 
+});

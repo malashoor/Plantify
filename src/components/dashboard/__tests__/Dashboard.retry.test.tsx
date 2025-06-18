@@ -11,9 +11,9 @@ describe('Dashboard - Retry Functionality', () => {
   beforeEach(() => {
     jest.useFakeTimers();
     jest.clearAllMocks();
-    
+
     // Mock NetInfo default state
-    (NetInfo.addEventListener as jest.Mock).mockImplementation((callback) => {
+    (NetInfo.addEventListener as jest.Mock).mockImplementation(callback => {
       callback({ isConnected: true });
       return () => {};
     });
@@ -93,9 +93,7 @@ describe('Dashboard - Retry Functionality', () => {
   });
 
   it('cancels retry when cancel button is clicked', async () => {
-    (PlantService.getPlants as jest.Mock).mockRejectedValue(
-      new Error('Request timed out')
-    );
+    (PlantService.getPlants as jest.Mock).mockRejectedValue(new Error('Request timed out'));
 
     render(<Dashboard />);
 
@@ -120,7 +118,7 @@ describe('Dashboard - Retry Functionality', () => {
     let isOnline = false;
     let netInfoCallback: (state: { isConnected: boolean }) => void;
 
-    (NetInfo.addEventListener as jest.Mock).mockImplementation((callback) => {
+    (NetInfo.addEventListener as jest.Mock).mockImplementation(callback => {
       netInfoCallback = callback;
       callback({ isConnected: isOnline });
       return () => {};
@@ -174,4 +172,4 @@ describe('Dashboard - Retry Functionality', () => {
     expect(screen.getByText('Retry (3/3)')).toBeTruthy();
     expect(screen.queryByText(/Retrying in/)).toBeNull();
   });
-}); 
+});

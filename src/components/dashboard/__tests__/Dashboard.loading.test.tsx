@@ -42,19 +42,17 @@ describe('Dashboard Loading States', () => {
     const theme = {
       ...mockTheme,
       dark: isDark,
-      colors: isDark ? {
-        ...mockTheme.colors,
-        background: '#121212',
-        surface: '#1E1E1E',
-        text: '#FFFFFF',
-      } : mockTheme.colors,
+      colors: isDark
+        ? {
+            ...mockTheme.colors,
+            background: '#121212',
+            surface: '#1E1E1E',
+            text: '#FFFFFF',
+          }
+        : mockTheme.colors,
     };
 
-    return render(
-      <ThemeProvider theme={theme}>
-        {ui}
-      </ThemeProvider>
-    );
+    return render(<ThemeProvider theme={theme}>{ui}</ThemeProvider>);
   };
 
   beforeEach(() => {
@@ -99,8 +97,8 @@ describe('Dashboard Loading States', () => {
     });
 
     it('shows loading state with reduced motion', async () => {
-      (AccessibilityInfo.isReduceMotionEnabled as jest.Mock).mockImplementation(
-        () => Promise.resolve(true)
+      (AccessibilityInfo.isReduceMotionEnabled as jest.Mock).mockImplementation(() =>
+        Promise.resolve(true)
       );
 
       let resolvePlants: (value: any) => void;
@@ -161,9 +159,7 @@ describe('Dashboard Loading States', () => {
         moistureData: [{ timestamp: new Date(), moisture: 60 }],
       }));
 
-      const { toJSON, getByTestId } = renderWithTheme(
-        <Dashboard plants={mockPlants} />
-      );
+      const { toJSON, getByTestId } = renderWithTheme(<Dashboard plants={mockPlants} />);
 
       // Trigger complex sort
       await act(async () => {
@@ -186,13 +182,17 @@ describe('Dashboard Loading States', () => {
       (WeatherService.getMoistureForecast as jest.Mock).mockImplementation(() => moisturePromise);
 
       const { toJSON, getByTestId } = renderWithTheme(
-        <Dashboard plants={[{
-          id: '1',
-          name: 'Test Plant',
-          type: 'indoor',
-          nextWatering: new Date(),
-          moistureData: [],
-        }]} />
+        <Dashboard
+          plants={[
+            {
+              id: '1',
+              name: 'Test Plant',
+              type: 'indoor',
+              nextWatering: new Date(),
+              moistureData: [],
+            },
+          ]}
+        />
       );
 
       // Expand moisture timeline
@@ -217,13 +217,17 @@ describe('Dashboard Loading States', () => {
       (WeatherService.getCurrentConditions as jest.Mock).mockImplementation(() => weatherPromise);
 
       const { toJSON } = renderWithTheme(
-        <Dashboard plants={[{
-          id: '1',
-          name: 'Outdoor Plant',
-          type: 'outdoor',
-          nextWatering: new Date(),
-          moistureData: [],
-        }]} />
+        <Dashboard
+          plants={[
+            {
+              id: '1',
+              name: 'Outdoor Plant',
+              type: 'outdoor',
+              nextWatering: new Date(),
+              moistureData: [],
+            },
+          ]}
+        />
       );
 
       // Capture weather loading state
@@ -239,16 +243,22 @@ describe('Dashboard Loading States', () => {
       const calculationPromise = new Promise(resolve => {
         resolveCalculation = resolve;
       });
-      (PlantService.calculateSmartWatering as jest.Mock).mockImplementation(() => calculationPromise);
+      (PlantService.calculateSmartWatering as jest.Mock).mockImplementation(
+        () => calculationPromise
+      );
 
       const { toJSON, getByTestId } = renderWithTheme(
-        <Dashboard plants={[{
-          id: '1',
-          name: 'Test Plant',
-          type: 'indoor',
-          nextWatering: new Date(),
-          moistureData: [],
-        }]} />
+        <Dashboard
+          plants={[
+            {
+              id: '1',
+              name: 'Test Plant',
+              type: 'indoor',
+              nextWatering: new Date(),
+              moistureData: [],
+            },
+          ]}
+        />
       );
 
       // Toggle smart watering
@@ -267,8 +277,8 @@ describe('Dashboard Loading States', () => {
 
   describe('Accessibility During Loading', () => {
     it('announces loading states to screen readers', async () => {
-      (AccessibilityInfo.isScreenReaderEnabled as jest.Mock).mockImplementation(
-        () => Promise.resolve(true)
+      (AccessibilityInfo.isScreenReaderEnabled as jest.Mock).mockImplementation(() =>
+        Promise.resolve(true)
       );
 
       let resolvePlants: (value: any) => void;
@@ -303,4 +313,4 @@ describe('Dashboard Loading States', () => {
       expect(loadingSpinner.props['aria-busy']).toBe(true);
     });
   });
-}); 
+});

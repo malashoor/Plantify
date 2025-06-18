@@ -12,16 +12,10 @@ export default function PlantCard({ plant, onPress }: PlantCardProps) {
     <TouchableOpacity style={styles.card} onPress={onPress}>
       <View style={styles.content}>
         <Text style={styles.name}>{plant.name}</Text>
-        {plant.scientificName && (
-          <Text style={styles.scientificName}>{plant.scientificName}</Text>
-        )}
-        {plant.description && (
-          <Text style={styles.description}>{plant.description}</Text>
-        )}
+        {plant.scientificName && <Text style={styles.scientificName}>{plant.scientificName}</Text>}
+        {plant.description && <Text style={styles.description}>{plant.description}</Text>}
         <View style={styles.careInfo}>
-          {plant.careLevel && (
-            <Text style={styles.careLevel}>Care: {plant.careLevel}</Text>
-          )}
+          {plant.careLevel && <Text style={styles.careLevel}>Care: {plant.careLevel}</Text>}
           {plant.lightRequirement && (
             <Text style={styles.lightRequirement}>Light: {plant.lightRequirement}</Text>
           )}
@@ -79,4 +73,4 @@ const styles = StyleSheet.create({
     color: '#3182ce',
     fontWeight: '500',
   },
-}); 
+});

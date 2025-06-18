@@ -9,4 +9,4 @@ export const Spacing = {
   Screen: {
     Padding: 16,
   },
-} as const; 
+} as const;

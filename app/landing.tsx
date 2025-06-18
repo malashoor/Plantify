@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView, useColorScheme } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+  ScrollView,
+  useColorScheme,
+} from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -58,10 +66,7 @@ export default function LandingScreen() {
       </View>
 
       {/* Language Picker Modal */}
-      <LanguagePickerModal
-        isVisible={showLanguagePicker}
-        onClose={handleLanguagePickerClose}
-      />
+      <LanguagePickerModal isVisible={showLanguagePicker} onClose={handleLanguagePickerClose} />
 
       <ScrollView contentContainerStyle={styles.content}>
         {/* Header */}
@@ -69,9 +74,7 @@ export default function LandingScreen() {
           <View style={[styles.iconContainer, isDark && styles.iconContainerDark]}>
             <Ionicons name="leaf" size={60} color={isDark ? '#A3E635' : '#45B36B'} />
           </View>
-          <Text style={[styles.title, isDark && styles.textDark]}>
-            {t('landing.title')}
-          </Text>
+          <Text style={[styles.title, isDark && styles.textDark]}>{t('landing.title')}</Text>
           <Text style={[styles.subtitle, isDark && styles.textLightDark]}>
             {t('landing.subtitle')}
           </Text>
@@ -114,9 +117,7 @@ export default function LandingScreen() {
             accessibilityRole="button"
             accessibilityLabel={t('landing.buttons.getStarted')}
           >
-            <Text style={styles.primaryButtonText}>
-              {t('landing.buttons.getStarted')}
-            </Text>
+            <Text style={styles.primaryButtonText}>{t('landing.buttons.getStarted')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -331,4 +332,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
   },
-}); 
+});

@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, useColorScheme, ScrollView, RefreshControl } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  useColorScheme,
+  ScrollView,
+  RefreshControl,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -17,7 +25,7 @@ const createTheme = (colorScheme: 'light' | 'dark' | null) => ({
     success: '#4CAF50',
     warning: '#FF9800',
     error: '#F44336',
-  }
+  },
 });
 
 interface HydroponicSystem {
@@ -70,21 +78,31 @@ export default function HydroponicsScreen() {
 
   const getSystemIcon = (type: string) => {
     switch (type.toLowerCase()) {
-      case 'nft': return 'water';
-      case 'dwc': return 'flask';
-      case 'wick': return 'leaf';
-      case 'ebb and flow': return 'repeat';
-      case 'aeroponics': return 'cloud';
-      default: return 'hardware-chip';
+      case 'nft':
+        return 'water';
+      case 'dwc':
+        return 'flask';
+      case 'wick':
+        return 'leaf';
+      case 'ebb and flow':
+        return 'repeat';
+      case 'aeroponics':
+        return 'cloud';
+      default:
+        return 'hardware-chip';
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active': return theme.colors.success;
-      case 'maintenance': return theme.colors.warning;
-      case 'inactive': return theme.colors.textSecondary;
-      default: return theme.colors.textSecondary;
+      case 'active':
+        return theme.colors.success;
+      case 'maintenance':
+        return theme.colors.warning;
+      case 'inactive':
+        return theme.colors.textSecondary;
+      default:
+        return theme.colors.textSecondary;
     }
   };
 
@@ -92,7 +110,7 @@ export default function HydroponicsScreen() {
     return new Intl.DateTimeFormat('en-US', {
       month: 'short',
       day: 'numeric',
-      year: 'numeric'
+      year: 'numeric',
     }).format(date);
   };
 
@@ -100,14 +118,11 @@ export default function HydroponicsScreen() {
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       {/* Header */}
       <View style={[styles.header, { borderBottomColor: theme.colors.border }]}>
-        <TouchableOpacity
-          onPress={() => router.back()}
-          style={styles.backButton}
-        >
+        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: theme.colors.text }]}>Hydroponics</Text>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[styles.addButton, { backgroundColor: theme.colors.primary }]}
           onPress={() => router.push('/hydroponics/new')}
         >
@@ -129,26 +144,45 @@ export default function HydroponicsScreen() {
       >
         {/* Stats Overview */}
         <View style={styles.statsContainer}>
-          <View style={[styles.statCard, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
+          <View
+            style={[
+              styles.statCard,
+              { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+            ]}
+          >
             <Ionicons name="hardware-chip" size={24} color={theme.colors.primary} />
             <Text style={[styles.statNumber, { color: theme.colors.text }]}>{systems.length}</Text>
-            <Text style={[styles.statLabel, { color: theme.colors.textSecondary }]}>Total Systems</Text>
+            <Text style={[styles.statLabel, { color: theme.colors.textSecondary }]}>
+              Total Systems
+            </Text>
           </View>
-          
-          <View style={[styles.statCard, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
+
+          <View
+            style={[
+              styles.statCard,
+              { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+            ]}
+          >
             <Ionicons name="checkmark-circle" size={24} color={theme.colors.success} />
             <Text style={[styles.statNumber, { color: theme.colors.text }]}>
               {systems.filter(s => s.status === 'active').length}
             </Text>
             <Text style={[styles.statLabel, { color: theme.colors.textSecondary }]}>Active</Text>
           </View>
-          
-          <View style={[styles.statCard, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
+
+          <View
+            style={[
+              styles.statCard,
+              { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+            ]}
+          >
             <Ionicons name="construct" size={24} color={theme.colors.warning} />
             <Text style={[styles.statNumber, { color: theme.colors.text }]}>
               {systems.filter(s => s.status === 'maintenance').length}
             </Text>
-            <Text style={[styles.statLabel, { color: theme.colors.textSecondary }]}>Maintenance</Text>
+            <Text style={[styles.statLabel, { color: theme.colors.textSecondary }]}>
+              Maintenance
+            </Text>
           </View>
         </View>
 
@@ -158,10 +192,13 @@ export default function HydroponicsScreen() {
             <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>
               Your Systems ({systems.length})
             </Text>
-            {systems.map((system) => (
+            {systems.map(system => (
               <View
                 key={system.id}
-                style={[styles.systemCard, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}
+                style={[
+                  styles.systemCard,
+                  { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+                ]}
               >
                 <View style={styles.systemHeader}>
                   <View style={styles.systemTitleRow}>
@@ -171,9 +208,13 @@ export default function HydroponicsScreen() {
                       color={theme.colors.primary}
                       style={styles.systemIcon}
                     />
-                    <Text style={[styles.systemName, { color: theme.colors.text }]}>{system.name}</Text>
+                    <Text style={[styles.systemName, { color: theme.colors.text }]}>
+                      {system.name}
+                    </Text>
                   </View>
-                  <View style={[styles.statusBadge, { backgroundColor: getStatusColor(system.status) }]}>
+                  <View
+                    style={[styles.statusBadge, { backgroundColor: getStatusColor(system.status) }]}
+                  >
                     <Text style={styles.statusText}>{system.status}</Text>
                   </View>
                 </View>
@@ -188,7 +229,10 @@ export default function HydroponicsScreen() {
                 </View>
 
                 {system.notes && (
-                  <Text style={[styles.systemNotes, { color: theme.colors.textSecondary }]} numberOfLines={2}>
+                  <Text
+                    style={[styles.systemNotes, { color: theme.colors.textSecondary }]}
+                    numberOfLines={2}
+                  >
                     {system.notes}
                   </Text>
                 )}
@@ -201,7 +245,7 @@ export default function HydroponicsScreen() {
                     <Ionicons name="eye" size={14} color="white" />
                     <Text style={styles.actionButtonText}>View</Text>
                   </TouchableOpacity>
-                  
+
                   <TouchableOpacity
                     style={[styles.actionButton, { backgroundColor: theme.colors.textSecondary }]}
                     onPress={() => router.push(`/hydroponics/${system.id}/edit`)}
@@ -234,7 +278,12 @@ export default function HydroponicsScreen() {
         )}
 
         {/* Quick Tips */}
-        <View style={[styles.tipsCard, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
+        <View
+          style={[
+            styles.tipsCard,
+            { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+          ]}
+        >
           <Text style={[styles.tipsTitle, { color: theme.colors.text }]}>Hydroponic Tips</Text>
           <View style={styles.tipsList}>
             <View style={styles.tipItem}>

@@ -3,4 +3,4 @@ import DIYBuilderScreen from '../screens/DIYBuilderScreen';
 
 export default function DIYBuilderRoute() {
   return <DIYBuilderScreen />;
-} 
+}

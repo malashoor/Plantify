@@ -16,13 +16,12 @@ import { Ionicons } from '@expo/vector-icons';
 
 function PromotionCard({ promotion, onPress }: { promotion: Promotion; onPress: () => void }) {
   return (
-    <TouchableOpacity 
-      style={styles.card}
-      onPress={onPress}
-    >
+    <TouchableOpacity style={styles.card} onPress={onPress}>
       <View style={styles.cardHeader}>
         <Text variant="subtitle">{promotion.code}</Text>
-        <Text variant="caption" style={styles.type}>{promotion.type}</Text>
+        <Text variant="caption" style={styles.type}>
+          {promotion.type}
+        </Text>
       </View>
       <Text>Value: {promotion.value}</Text>
       {promotion.expires_at && (
@@ -82,16 +81,13 @@ function PromotionsScreen() {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text variant="title">Promotions</Text>
-        <TouchableOpacity 
-          style={styles.addButton}
-          onPress={handleCreateNew}
-        >
+        <TouchableOpacity style={styles.addButton} onPress={handleCreateNew}>
           <Ionicons name="add" size={24} color="white" />
         </TouchableOpacity>
       </View>
 
       <ScrollView style={styles.list}>
-        {promotions.map((promotion) => (
+        {promotions.map(promotion => (
           <PromotionCard
             key={promotion.id}
             promotion={promotion}
@@ -99,9 +95,7 @@ function PromotionsScreen() {
           />
         ))}
         {promotions.length === 0 && (
-          <Text style={styles.emptyText}>
-            No promotions yet. Create one to get started!
-          </Text>
+          <Text style={styles.emptyText}>No promotions yet. Create one to get started!</Text>
         )}
       </ScrollView>
     </View>
@@ -167,4 +161,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withAdminGuard(PromotionsScreen); 
+export default withAdminGuard(PromotionsScreen);

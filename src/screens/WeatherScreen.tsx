@@ -23,11 +23,11 @@ export function WeatherScreen() {
       priority: 'high',
       maxRetries: 5,
       showFeedback: true,
-      onSuccess: (data) => {
+      onSuccess: data => {
         setWeatherData(data);
         // After successful fetch, update the cache
         updateCache.execute(data);
-      }
+      },
     }
   );
 
@@ -39,7 +39,7 @@ export function WeatherScreen() {
       priority: 'low',
       maxRetries: 2,
       showFeedback: false,
-      isVolatile: true // Cache updates can be lost on app restart
+      isVolatile: true, // Cache updates can be lost on app restart
     }
   );
 
@@ -118,4 +118,4 @@ const styles = StyleSheet.create({
   loadingText: {
     fontSize: 16,
   },
-}); 
+});

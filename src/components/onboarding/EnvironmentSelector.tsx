@@ -45,7 +45,7 @@ export function EnvironmentSelector({ value, onChange, disabled }: EnvironmentSe
         {t('onboarding.environment.subtitle')}
       </Text>
       <View style={styles.environments}>
-        {environments.map((env) => (
+        {environments.map(env => (
           <TouchableOpacity
             key={env.value}
             style={[
@@ -62,12 +62,14 @@ export function EnvironmentSelector({ value, onChange, disabled }: EnvironmentSe
             accessibilityLabel={env.label}
             accessibilityHint={env.description}
           >
-            <View style={[
-              styles.iconContainer,
-              value === env.value && styles.iconContainerSelected,
-              isDark && styles.iconContainerDark,
-              value === env.value && isDark && styles.iconContainerSelectedDark,
-            ]}>
+            <View
+              style={[
+                styles.iconContainer,
+                value === env.value && styles.iconContainerSelected,
+                isDark && styles.iconContainerDark,
+                value === env.value && isDark && styles.iconContainerSelectedDark,
+              ]}
+            >
               <Ionicons
                 name={env.icon as any}
                 size={32}
@@ -77,8 +79,8 @@ export function EnvironmentSelector({ value, onChange, disabled }: EnvironmentSe
                       ? '#22C55E'
                       : '#16A34A'
                     : isDark
-                    ? '#9CA3AF'
-                    : '#6B7280'
+                      ? '#9CA3AF'
+                      : '#6B7280'
                 }
               />
             </View>
@@ -94,10 +96,7 @@ export function EnvironmentSelector({ value, onChange, disabled }: EnvironmentSe
                 {env.label}
               </Text>
               <Text
-                style={[
-                  styles.environmentDescription,
-                  isDark && styles.environmentDescriptionDark,
-                ]}
+                style={[styles.environmentDescription, isDark && styles.environmentDescriptionDark]}
                 numberOfLines={2}
               >
                 {env.description}
@@ -204,4 +203,4 @@ const styles = StyleSheet.create({
   environmentDescriptionDark: {
     color: '#9CA3AF',
   },
-}); 
+});

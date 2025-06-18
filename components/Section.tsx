@@ -15,7 +15,7 @@ const createTheme = (colorScheme: 'light' | 'dark' | null) => ({
     text: colorScheme === 'dark' ? '#FFFFFF' : '#000000',
     textSecondary: colorScheme === 'dark' ? '#BBBBBB' : '#666666',
     border: colorScheme === 'dark' ? '#444444' : '#E0E0E0',
-  }
+  },
 });
 
 export const Section: React.FC<SectionProps> = ({ title, children, style }) => {
@@ -24,12 +24,8 @@ export const Section: React.FC<SectionProps> = ({ title, children, style }) => {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.surface }, style]}>
-      <Text style={[styles.title, { color: theme.colors.text }]}>
-        {title}
-      </Text>
-      <View style={styles.content}>
-        {children}
-      </View>
+      <Text style={[styles.title, { color: theme.colors.text }]}>{title}</Text>
+      <View style={styles.content}>{children}</View>
     </View>
   );
 };
@@ -53,4 +49,4 @@ const styles = StyleSheet.create({
   content: {
     gap: 8,
   },
-}); 
+});

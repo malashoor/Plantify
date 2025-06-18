@@ -1,6 +1,6 @@
 # GreensAI Privacy Policy
 
-*Last Updated: March 19, 2024*
+_Last Updated: March 19, 2024_
 
 ## 1. Introduction
 
@@ -9,12 +9,14 @@ Welcome to GreensAI ("we," "our," or "us"). We respect your privacy and are comm
 ## 2. Information We Collect
 
 ### 2.1 Information You Provide
+
 - Account information (email, name)
 - Plant photos and identification requests
 - Plant care data and preferences
 - Location data (for weather-based care recommendations)
 
 ### 2.2 Automatically Collected Information
+
 - Device information (model, OS version)
 - Usage statistics
 - App performance data
@@ -23,12 +25,14 @@ Welcome to GreensAI ("we," "our," or "us"). We respect your privacy and are comm
 ## 3. How We Use Your Information
 
 ### 3.1 Primary Uses
+
 - Provide plant identification services
 - Generate personalized care recommendations
 - Send care reminders and notifications
 - Improve our AI models and services
 
 ### 3.2 Data Processing
+
 - Plant images are processed using our AI models
 - Location data is used for weather-based recommendations
 - Usage data helps improve app performance
@@ -36,11 +40,13 @@ Welcome to GreensAI ("we," "our," or "us"). We respect your privacy and are comm
 ## 4. Data Storage and Security
 
 ### 4.1 Storage
+
 - Data is stored securely in Supabase
 - Images are processed and stored in encrypted format
 - Regular security audits and updates
 
 ### 4.2 Security Measures
+
 - End-to-end encryption for sensitive data
 - Regular security assessments
 - Access controls and authentication
@@ -49,16 +55,19 @@ Welcome to GreensAI ("we," "our," or "us"). We respect your privacy and are comm
 ## 5. Data Sharing and Third Parties
 
 ### 5.1 Service Providers
+
 - Supabase (database and authentication)
 - Firebase (analytics and notifications)
 - Cloud storage providers
 
 ### 5.2 Legal Requirements
+
 We may disclose your information if required by law or to protect our rights.
 
 ## 6. Your Rights
 
 ### 6.1 GDPR Rights
+
 - Right to access your data
 - Right to rectification
 - Right to erasure
@@ -66,6 +75,7 @@ We may disclose your information if required by law or to protect our rights.
 - Right to object to processing
 
 ### 6.2 CCPA Rights
+
 - Right to know what personal information is collected
 - Right to delete personal information
 - Right to opt-out of sales
@@ -93,6 +103,7 @@ We may update this policy periodically. We will notify you of any material chang
 ## 11. Contact Us
 
 For privacy-related inquiries:
+
 - Email: privacy@greensai.app
 - Address: [Your Business Address]
 - Website: https://greensai.app/privacy
@@ -111,4 +122,4 @@ For EU-specific inquiries, contact our DPO at dpo@greensai.app
 
 ---
 
-*This privacy policy was last updated on March 19, 2024. Please check back regularly for updates.* 
+_This privacy policy was last updated on March 19, 2024. Please check back regularly for updates._

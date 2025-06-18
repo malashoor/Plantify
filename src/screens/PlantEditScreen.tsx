@@ -19,46 +19,34 @@ export function PlantEditScreen({ plant, isNew = false }: PlantEditScreenProps) 
   const [formData, setFormData] = useState<Partial<Plant>>(plant || {});
 
   // Save plant operation with retry support
-  const savePlant = useRetryableOperation(
-    RetryOperationKeys.SAVE_PLANT,
-    plant?.id || 'new',
-    {
-      priority: 'high',
-      maxRetries: 3,
-      showFeedback: true,
-      onSuccess: (savedPlant) => {
-        router.back();
-      }
-    }
-  );
+  const savePlant = useRetryableOperation(RetryOperationKeys.SAVE_PLANT, plant?.id || 'new', {
+    priority: 'high',
+    maxRetries: 3,
+    showFeedback: true,
+    onSuccess: savedPlant => {
+      router.back();
+    },
+  });
 
   // Update plant operation with retry support
-  const updatePlant = useRetryableOperation(
-    RetryOperationKeys.UPDATE_PLANT,
-    plant?.id || '',
-    {
-      priority: 'medium',
-      maxRetries: 3,
-      showFeedback: true,
-      onSuccess: () => {
-        router.back();
-      }
-    }
-  );
+  const updatePlant = useRetryableOperation(RetryOperationKeys.UPDATE_PLANT, plant?.id || '', {
+    priority: 'medium',
+    maxRetries: 3,
+    showFeedback: true,
+    onSuccess: () => {
+      router.back();
+    },
+  });
 
   // Delete plant operation with retry support
-  const deletePlant = useRetryableOperation(
-    RetryOperationKeys.DELETE_PLANT,
-    plant?.id || '',
-    {
-      priority: 'low',
-      maxRetries: 2,
-      showFeedback: true,
-      onSuccess: () => {
-        router.back();
-      }
-    }
-  );
+  const deletePlant = useRetryableOperation(RetryOperationKeys.DELETE_PLANT, plant?.id || '', {
+    priority: 'low',
+    maxRetries: 2,
+    showFeedback: true,
+    onSuccess: () => {
+      router.back();
+    },
+  });
 
   // Update watering schedule with retry support
   const updateSchedule = useRetryableOperation(
@@ -68,7 +56,7 @@ export function PlantEditScreen({ plant, isNew = false }: PlantEditScreenProps) 
       priority: 'medium',
       maxRetries: 3,
       // This operation depends on the plant being saved first
-      dependencies: isNew ? ['save-plant'] : undefined
+      dependencies: isNew ? ['save-plant'] : undefined,
     }
   );
 
@@ -92,17 +80,14 @@ export function PlantEditScreen({ plant, isNew = false }: PlantEditScreenProps) 
     }
   };
 
-  const isProcessing = 
-    savePlant.isProcessing || 
-    updatePlant.isProcessing || 
+  const isProcessing =
+    savePlant.isProcessing ||
+    updatePlant.isProcessing ||
     deletePlant.isProcessing ||
     updateSchedule.isProcessing;
 
-  const hasError = 
-    savePlant.error || 
-    updatePlant.error || 
-    deletePlant.error ||
-    updateSchedule.error;
+  const hasError =
+    savePlant.error || updatePlant.error || deletePlant.error || updateSchedule.error;
 
   return (
     <View style={styles.container}>
@@ -110,21 +95,21 @@ export function PlantEditScreen({ plant, isNew = false }: PlantEditScreenProps) 
         <TextInput
           label="Plant Name"
           value={formData.name}
-          onChangeText={(text) => setFormData(prev => ({ ...prev, name: text }))}
+          onChangeText={text => setFormData(prev => ({ ...prev, name: text }))}
           disabled={isProcessing}
         />
 
         <TextInput
           label="Species"
           value={formData.species}
-          onChangeText={(text) => setFormData(prev => ({ ...prev, species: text }))}
+          onChangeText={text => setFormData(prev => ({ ...prev, species: text }))}
           disabled={isProcessing}
         />
 
         <TextInput
           label="Location"
           value={formData.location}
-          onChangeText={(text) => setFormData(prev => ({ ...prev, location: text }))}
+          onChangeText={text => setFormData(prev => ({ ...prev, location: text }))}
           disabled={isProcessing}
         />
 
@@ -132,7 +117,7 @@ export function PlantEditScreen({ plant, isNew = false }: PlantEditScreenProps) 
 
         <View style={styles.buttonContainer}>
           <Button
-            title={isNew ? "Add Plant" : "Save Changes"}
+            title={isNew ? 'Add Plant' : 'Save Changes'}
             onPress={handleSave}
             disabled={isProcessing}
             loading={savePlant.isProcessing || updatePlant.isProcessing}
@@ -151,9 +136,7 @@ export function PlantEditScreen({ plant, isNew = false }: PlantEditScreenProps) 
 
         {hasError && (
           <View style={styles.errorContainer}>
-            <Text style={[styles.errorText, { color: colors.error }]}>
-              {hasError.message}
-            </Text>
+            <Text style={[styles.errorText, { color: colors.error }]}>{hasError.message}</Text>
             <Button
               title="Retry"
               onPress={handleSave}
@@ -192,5 +175,5 @@ const styles = StyleSheet.create({
   errorText: {
     marginBottom: 12,
     textAlign: 'center',
-  }
-}); 
+  },
+});

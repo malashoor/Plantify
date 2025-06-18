@@ -52,4 +52,4 @@ export const TextStyles = StyleSheet.create({
   Small_Dark: {
     color: '#bbb',
   },
-}); 
+});

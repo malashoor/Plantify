@@ -68,7 +68,7 @@ export const SmartWateringSettings: React.FC = () => {
               maximumValue={20}
               step={1}
               value={preferences.rainSkipThreshold}
-              onValueChange={(value) => handleSliderChange(value, 'rainSkipThreshold')}
+              onValueChange={value => handleSliderChange(value, 'rainSkipThreshold')}
               minimumTrackTintColor={theme.colors.primary}
               maximumTrackTintColor={theme.colors.surfaceVariant}
               thumbTintColor={theme.colors.primary}
@@ -87,7 +87,7 @@ export const SmartWateringSettings: React.FC = () => {
               maximumValue={40}
               step={1}
               value={preferences.heatIncreaseThreshold}
-              onValueChange={(value) => handleSliderChange(value, 'heatIncreaseThreshold')}
+              onValueChange={value => handleSliderChange(value, 'heatIncreaseThreshold')}
               minimumTrackTintColor={theme.colors.primary}
               maximumTrackTintColor={theme.colors.surfaceVariant}
               thumbTintColor={theme.colors.primary}
@@ -106,7 +106,7 @@ export const SmartWateringSettings: React.FC = () => {
               maximumValue={30}
               step={1}
               value={preferences.windSpeedThreshold}
-              onValueChange={(value) => handleSliderChange(value, 'windSpeedThreshold')}
+              onValueChange={value => handleSliderChange(value, 'windSpeedThreshold')}
               minimumTrackTintColor={theme.colors.primary}
               maximumTrackTintColor={theme.colors.surfaceVariant}
               thumbTintColor={theme.colors.primary}
@@ -125,7 +125,7 @@ export const SmartWateringSettings: React.FC = () => {
               maximumValue={50}
               step={1}
               value={preferences.lowHumidityThreshold}
-              onValueChange={(value) => handleSliderChange(value, 'lowHumidityThreshold')}
+              onValueChange={value => handleSliderChange(value, 'lowHumidityThreshold')}
               minimumTrackTintColor={theme.colors.primary}
               maximumTrackTintColor={theme.colors.surfaceVariant}
               thumbTintColor={theme.colors.primary}
@@ -152,4 +152,4 @@ const styles = StyleSheet.create({
   slider: {
     height: 40,
   },
-}); 
+});

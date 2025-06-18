@@ -20,16 +20,16 @@ export const PLANTS: Plant[] = [
     description: 'A succulent plant with healing properties',
     careLevel: 'Easy',
     lightRequirement: 'Bright indirect light',
-    waterFrequency: 'Every 2-3 weeks'
+    waterFrequency: 'Every 2-3 weeks',
   },
   {
-    id: '2', 
+    id: '2',
     name: 'Basil',
     scientificName: 'Ocimum basilicum',
     description: 'A fragrant herb perfect for cooking',
     careLevel: 'Easy',
     lightRequirement: 'Full sun',
-    waterFrequency: 'Daily when dry'
+    waterFrequency: 'Daily when dry',
   },
   {
     id: '3',
@@ -38,6 +38,6 @@ export const PLANTS: Plant[] = [
     description: 'A hardy plant that purifies air',
     careLevel: 'Easy',
     lightRequirement: 'Low to bright light',
-    waterFrequency: 'Every 2-4 weeks'
-  }
-]; 
+    waterFrequency: 'Every 2-4 weeks',
+  },
+];

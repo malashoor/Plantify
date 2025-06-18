@@ -18,7 +18,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     path: req.path,
     body: req.body,
     headers: req.headers as Record<string, string>,
-    timestamp: Date.now()
+    timestamp: Date.now(),
   });
   next();
 });
@@ -26,7 +26,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 // Mock response middleware
 app.use(async (req: Request, res: Response, next: NextFunction) => {
   const mockResponse = mockServerState.getMockResponse(req.path);
-  
+
   if (mockResponse) {
     if (mockResponse.delay) {
       await new Promise(resolve => setTimeout(resolve, mockResponse.delay));
@@ -40,7 +40,7 @@ app.use(async (req: Request, res: Response, next: NextFunction) => {
 
     if (mockResponse.error) {
       return res.status(mockResponse.status || 500).json({
-        error: mockResponse.error
+        error: mockResponse.error,
       });
     }
 
@@ -66,8 +66,8 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(500).json({
     error: {
       code: 'INTERNAL_ERROR',
-      message: err.message
-    }
+      message: err.message,
+    },
   });
 });
 
@@ -85,7 +85,7 @@ export function startMockServer(port: number = 3030): Promise<void> {
       });
 
       // Handle server errors
-      server.on('error', (error) => {
+      server.on('error', error => {
         console.error('Mock server error:', error);
         reject(error);
       });
@@ -101,4 +101,4 @@ export function startMockServer(port: number = 3030): Promise<void> {
   });
 }
 
-export default app; 
+export default app;

@@ -18,7 +18,7 @@ export default function TabLayout() {
         },
         tabBarIcon: ({ color, size }: { color: string; size: number }) => {
           let iconName: any = 'help-outline';
-          
+
           if (route.name === 'index') {
             iconName = 'home';
           } else if (route.name === 'plants') {
@@ -28,27 +28,15 @@ export default function TabLayout() {
           } else if (route.name === 'settings') {
             iconName = 'settings';
           }
-          
+
           return <MaterialIcons name={iconName} size={size} color={color} />;
         },
       })}
     >
-      <Tabs.Screen 
-        name="index" 
-        options={{ title: 'Home' }} 
-      />
-      <Tabs.Screen 
-        name="plants" 
-        options={{ title: 'Plants' }} 
-      />
-      <Tabs.Screen 
-        name="identify" 
-        options={{ title: 'Identify' }} 
-      />
-      <Tabs.Screen 
-        name="settings" 
-        options={{ title: 'Settings' }} 
-      />
+      <Tabs.Screen name="index" options={{ title: 'Home' }} />
+      <Tabs.Screen name="plants" options={{ title: 'Plants' }} />
+      <Tabs.Screen name="identify" options={{ title: 'Identify' }} />
+      <Tabs.Screen name="settings" options={{ title: 'Settings' }} />
     </Tabs>
   );
 }

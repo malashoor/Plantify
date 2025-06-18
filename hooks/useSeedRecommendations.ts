@@ -46,7 +46,7 @@ export function useSeedRecommendations() {
   const [hasMore, setHasMore] = useState(true);
   const [filters, setFilters] = useState<SeedFilters>({
     sortBy: 'rating',
-    sortOrder: 'desc'
+    sortOrder: 'desc',
   });
 
   // Mock seed data for development
@@ -66,7 +66,7 @@ export function useSeedRecommendations() {
       plantingInstructions: [
         'Start indoors 6-8 weeks before last frost',
         'Transplant after soil warms to 60°F',
-        'Space 18-24 inches apart'
+        'Space 18-24 inches apart',
       ],
       harvestTime: '65-75 days',
       localFavorites: 23,
@@ -76,7 +76,7 @@ export function useSeedRecommendations() {
       vendor: 'Heritage Seeds Co.',
       organicCertified: true,
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     },
     {
       id: '2',
@@ -93,7 +93,7 @@ export function useSeedRecommendations() {
       plantingInstructions: [
         'Sow directly in warm soil after last frost',
         'Keep soil consistently moist',
-        'Pinch flowers to encourage leaf growth'
+        'Pinch flowers to encourage leaf growth',
       ],
       harvestTime: '60-90 days',
       localFavorites: 18,
@@ -103,7 +103,7 @@ export function useSeedRecommendations() {
       vendor: 'Herb Garden Supply',
       organicCertified: true,
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     },
     {
       id: '3',
@@ -120,7 +120,7 @@ export function useSeedRecommendations() {
       plantingInstructions: [
         'Direct sow in loose, well-draining soil',
         'Sow every 2-3 weeks for continuous harvest',
-        'Thin to 2 inches apart when 2 inches tall'
+        'Thin to 2 inches apart when 2 inches tall',
       ],
       harvestTime: '70-80 days',
       localFavorites: 12,
@@ -130,7 +130,7 @@ export function useSeedRecommendations() {
       vendor: 'Garden Valley Seeds',
       organicCertified: false,
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     },
     {
       id: '4',
@@ -147,7 +147,7 @@ export function useSeedRecommendations() {
       plantingInstructions: [
         'Sow directly in cool weather',
         'Provide afternoon shade in hot climates',
-        'Harvest outer leaves for continuous production'
+        'Harvest outer leaves for continuous production',
       ],
       harvestTime: '55-65 days',
       localFavorites: 8,
@@ -157,7 +157,7 @@ export function useSeedRecommendations() {
       vendor: 'Cool Season Seeds',
       organicCertified: true,
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     },
     {
       id: '5',
@@ -174,7 +174,7 @@ export function useSeedRecommendations() {
       plantingInstructions: [
         'Start indoors 8-10 weeks before last frost',
         'Transplant to warm soil with full sun',
-        'Support plants with stakes or cages'
+        'Support plants with stakes or cages',
       ],
       harvestTime: '75-85 days',
       localFavorites: 15,
@@ -184,8 +184,8 @@ export function useSeedRecommendations() {
       vendor: 'Spicy Seeds Inc.',
       organicCertified: false,
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    }
+      updatedAt: new Date().toISOString(),
+    },
   ];
 
   const fetchSeeds = async () => {
@@ -208,10 +208,11 @@ export function useSeedRecommendations() {
       // Apply filters
       if (filters.searchText) {
         const searchLower = filters.searchText.toLowerCase();
-        filteredSeeds = filteredSeeds.filter(seed =>
-          seed.name.toLowerCase().includes(searchLower) ||
-          seed.variety.toLowerCase().includes(searchLower) ||
-          seed.description?.toLowerCase().includes(searchLower)
+        filteredSeeds = filteredSeeds.filter(
+          seed =>
+            seed.name.toLowerCase().includes(searchLower) ||
+            seed.variety.toLowerCase().includes(searchLower) ||
+            seed.description?.toLowerCase().includes(searchLower)
         );
       }
 
@@ -235,7 +236,7 @@ export function useSeedRecommendations() {
       if (filters.sortBy) {
         filteredSeeds.sort((a, b) => {
           let aValue, bValue;
-          
+
           switch (filters.sortBy) {
             case 'rating':
               aValue = a.rating;
@@ -298,6 +299,6 @@ export function useSeedRecommendations() {
     loadMore,
     hasMore,
     filters,
-    setFilters
+    setFilters,
   };
-} 
+}

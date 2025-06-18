@@ -23,14 +23,14 @@ const createTheme = (colorScheme: 'light' | 'dark' | null) => ({
     textSecondary: colorScheme === 'dark' ? '#AAAAAA' : '#757575',
     border: colorScheme === 'dark' ? '#333333' : '#E0E0E0',
     error: '#F44336',
-  }
+  },
 });
 
 export default function PrivacyScreen() {
   const router = useRouter();
   const colorScheme = useColorScheme();
   const theme = createTheme(colorScheme);
-  
+
   // Independent state for each privacy setting
   const [dataSharing, setDataSharing] = useState(false);
   const [analytics, setAnalytics] = useState(true);
@@ -49,12 +49,18 @@ export default function PrivacyScreen() {
 
   const getToggleFunction = (settingKey: string) => {
     switch (settingKey) {
-      case 'dataSharing': return setDataSharing;
-      case 'analytics': return setAnalytics;
-      case 'locationSharing': return setLocationSharing;
-      case 'photoAnalysis': return setPhotoAnalysis;
-      case 'marketingCommunications': return setMarketingCommunications;
-      default: return () => {};
+      case 'dataSharing':
+        return setDataSharing;
+      case 'analytics':
+        return setAnalytics;
+      case 'locationSharing':
+        return setLocationSharing;
+      case 'photoAnalysis':
+        return setPhotoAnalysis;
+      case 'marketingCommunications':
+        return setMarketingCommunications;
+      default:
+        return () => {};
     }
   };
 
@@ -72,22 +78,26 @@ export default function PrivacyScreen() {
       'This action cannot be undone. Are you sure you want to delete your account?',
       [
         { text: 'Cancel', style: 'cancel' },
-        { text: 'Delete', style: 'destructive', onPress: () => {
-          Alert.alert('Account Deletion', 'Account deletion will be available soon.');
-        }}
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => {
+            Alert.alert('Account Deletion', 'Account deletion will be available soon.');
+          },
+        },
       ]
     );
   };
 
-  const PrivacyOption = ({ 
-    title, 
-    description, 
-    settingKey, 
-    icon 
-  }: { 
-    title: string; 
-    description: string; 
-    settingKey: string; 
+  const PrivacyOption = ({
+    title,
+    description,
+    settingKey,
+    icon,
+  }: {
+    title: string;
+    description: string;
+    settingKey: string;
     icon: string;
   }) => (
     <View style={[styles.optionItem, { borderBottomColor: theme.colors.border }]}>
@@ -102,7 +112,7 @@ export default function PrivacyScreen() {
       </View>
       <Switch
         value={settings[settingKey]}
-        onValueChange={(value) => {
+        onValueChange={value => {
           console.log(`🔒 Toggling ${settingKey}:`, value);
           const toggleFunction = getToggleFunction(settingKey);
           toggleFunction(value);
@@ -133,14 +143,19 @@ export default function PrivacyScreen() {
     >
       <View style={styles.actionContent}>
         <View style={styles.actionHeader}>
-          <Ionicons 
-            name={icon as any} 
-            size={20} 
-            color={danger ? theme.colors.error : theme.colors.primary} 
+          <Ionicons
+            name={icon as any}
+            size={20}
+            color={danger ? theme.colors.error : theme.colors.primary}
           />
-          <Text style={[styles.actionTitle, { 
-            color: danger ? theme.colors.error : theme.colors.text 
-          }]}>
+          <Text
+            style={[
+              styles.actionTitle,
+              {
+                color: danger ? theme.colors.error : theme.colors.text,
+              },
+            ]}
+          >
             {title}
           </Text>
         </View>
@@ -148,11 +163,7 @@ export default function PrivacyScreen() {
           {description}
         </Text>
       </View>
-      <Ionicons 
-        name="chevron-forward" 
-        size={20} 
-        color={theme.colors.textSecondary} 
-      />
+      <Ionicons name="chevron-forward" size={20} color={theme.colors.textSecondary} />
     </TouchableOpacity>
   );
 
@@ -160,10 +171,7 @@ export default function PrivacyScreen() {
     <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
       {/* Header */}
       <View style={[styles.header, { borderBottomColor: theme.colors.border }]}>
-        <TouchableOpacity
-          onPress={() => router.back()}
-          style={styles.backButton}
-        >
+        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: theme.colors.text }]}>Privacy & Security</Text>
@@ -172,37 +180,42 @@ export default function PrivacyScreen() {
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         {/* Privacy Settings */}
-        <View style={[styles.section, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
+        <View
+          style={[
+            styles.section,
+            { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+          ]}
+        >
           <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>Privacy Settings</Text>
-          
+
           <PrivacyOption
             title="Data Sharing"
             description="Share anonymized usage data to improve the app"
             settingKey="dataSharing"
             icon="share"
           />
-          
+
           <PrivacyOption
             title="Analytics"
             description="Help us improve by sharing app usage analytics"
             settingKey="analytics"
             icon="analytics"
           />
-          
+
           <PrivacyOption
             title="Location Sharing"
             description="Share your location for weather and regional tips"
             settingKey="locationSharing"
             icon="location"
           />
-          
+
           <PrivacyOption
             title="Photo Analysis"
             description="Allow AI analysis of your plant photos for better identification"
             settingKey="photoAnalysis"
             icon="camera"
           />
-          
+
           <PrivacyOption
             title="Marketing Communications"
             description="Receive personalized tips and product recommendations"
@@ -212,16 +225,21 @@ export default function PrivacyScreen() {
         </View>
 
         {/* Security Actions */}
-        <View style={[styles.section, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
+        <View
+          style={[
+            styles.section,
+            { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+          ]}
+        >
           <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>Security</Text>
-          
+
           <ActionItem
             title="Change Password"
             description="Update your account password"
             icon="key"
             onPress={handleChangePassword}
           />
-          
+
           <ActionItem
             title="Two-Factor Authentication"
             description="Add an extra layer of security to your account"
@@ -231,9 +249,14 @@ export default function PrivacyScreen() {
         </View>
 
         {/* Data & Account */}
-        <View style={[styles.section, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
+        <View
+          style={[
+            styles.section,
+            { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+          ]}
+        >
           <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>Data & Account</Text>
-          
+
           <ActionItem
             title="Download My Data"
             description="Export all your data in a portable format"
@@ -248,7 +271,7 @@ export default function PrivacyScreen() {
               }
             }}
           />
-          
+
           <ActionItem
             title="Delete Account"
             description="Permanently delete your account and all data"
@@ -259,16 +282,23 @@ export default function PrivacyScreen() {
         </View>
 
         {/* Privacy Policy */}
-        <View style={[styles.section, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
+        <View
+          style={[
+            styles.section,
+            { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+          ]}
+        >
           <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>Legal</Text>
-          
+
           <ActionItem
             title="Privacy Policy"
             description="Read our privacy policy and terms of service"
             icon="document-text"
-            onPress={() => Alert.alert('Privacy Policy', 'View privacy policy at greensai.com/privacy')}
+            onPress={() =>
+              Alert.alert('Privacy Policy', 'View privacy policy at greensai.com/privacy')
+            }
           />
-          
+
           <ActionItem
             title="Terms of Service"
             description="Review our terms and conditions"
@@ -278,10 +308,16 @@ export default function PrivacyScreen() {
         </View>
 
         {/* Note */}
-        <View style={[styles.noteCard, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
+        <View
+          style={[
+            styles.noteCard,
+            { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+          ]}
+        >
           <Ionicons name="information-circle" size={20} color={theme.colors.primary} />
           <Text style={[styles.noteText, { color: theme.colors.textSecondary }]}>
-            We take your privacy seriously. Your plant data stays secure and is never shared without your permission.
+            We take your privacy seriously. Your plant data stays secure and is never shared without
+            your permission.
           </Text>
         </View>
       </ScrollView>
@@ -390,4 +426,4 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     flex: 1,
   },
-}); 
+});

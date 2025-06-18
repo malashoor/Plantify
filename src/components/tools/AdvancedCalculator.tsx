@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, useColorScheme } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  useColorScheme,
+} from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { withPremiumAccess } from '../premium/withPremiumAccess';
@@ -83,14 +91,8 @@ function AdvancedCalculatorBase() {
         style={[styles.calculateButton, isDark && styles.calculateButtonDark]}
         onPress={handleCalculate}
       >
-        <Ionicons 
-          name="calculator-outline" 
-          size={20} 
-          color="#FFFFFF" 
-        />
-        <Text style={styles.calculateButtonText}>
-          {t('tools.calculator.calculate')}
-        </Text>
+        <Ionicons name="calculator-outline" size={20} color="#FFFFFF" />
+        <Text style={styles.calculateButtonText}>{t('tools.calculator.calculate')}</Text>
       </TouchableOpacity>
 
       {results && (
@@ -98,14 +100,14 @@ function AdvancedCalculatorBase() {
           <Text style={[styles.resultsTitle, isDark && styles.textDark]}>
             {t('tools.calculator.results')}
           </Text>
-          
+
           <View style={styles.resultItem}>
             <Text style={[styles.resultLabel, isDark && styles.textLightDark]}>PPFD:</Text>
             <Text style={[styles.resultValue, isDark && styles.textDark]}>
               {results.ppfd} μmol/m²/s
             </Text>
           </View>
-          
+
           <View style={styles.resultItem}>
             <Text style={[styles.resultLabel, isDark && styles.textLightDark]}>DLI:</Text>
             <Text style={[styles.resultValue, isDark && styles.textDark]}>
@@ -256,4 +258,4 @@ const styles = StyleSheet.create({
 export const AdvancedCalculator = withPremiumAccess(AdvancedCalculatorBase, {
   featureId: 'advancedCalculator',
   variant: 'overlay',
-}); 
+});

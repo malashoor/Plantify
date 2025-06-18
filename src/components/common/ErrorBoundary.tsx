@@ -55,11 +55,7 @@ class ErrorBoundaryClass extends React.Component<ErrorBoundaryProps, ErrorBounda
 
 // Functional wrapper for easier usage
 export function ErrorBoundary({ children, fallback }: ErrorBoundaryProps) {
-  return (
-    <ErrorBoundaryClass fallback={fallback}>
-      {children}
-    </ErrorBoundaryClass>
-  );
+  return <ErrorBoundaryClass fallback={fallback}>{children}</ErrorBoundaryClass>;
 }
 
 const styles = StyleSheet.create({
@@ -93,4 +89,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
-}); 
+});

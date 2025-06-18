@@ -38,19 +38,14 @@ export function EmotionalInsightsScreen() {
   if (!emotions.length) {
     return (
       <View style={styles.container}>
-        <Text>
-          Start interacting with your plants to see your emotional journey!
-        </Text>
+        <Text>Start interacting with your plants to see your emotional journey!</Text>
       </View>
     );
   }
 
   return (
     <ScrollView
-      style={[
-        styles.container,
-        { backgroundColor: theme.colors.background },
-      ]}
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
       contentContainerStyle={styles.content}
     >
       <EmotionTrendChart emotions={emotions} />
@@ -61,36 +56,23 @@ export function EmotionalInsightsScreen() {
         </Text>
 
         <View style={styles.insightRow}>
-          <Badge
-            label="Communication"
-            color="#4CAF50"
-            size="small"
-          />
+          <Badge label="Communication" color="#4CAF50" size="small" />
           <Text style={styles.insightText}>
             You express {emotions.length} emotions about your plants this week
           </Text>
         </View>
 
         <View style={styles.insightRow}>
-          <Badge
-            label="Engagement"
-            color="#03A9F4"
-            size="small"
-          />
+          <Badge label="Engagement" color="#03A9F4" size="small" />
           <Text style={styles.insightText}>
             You check on your plants {Math.round(emotions.length / 7)} times per day
           </Text>
         </View>
 
         <View style={styles.insightRow}>
-          <Badge
-            label="Consistency"
-            color="#9C27B0"
-            size="small"
-          />
+          <Badge label="Consistency" color="#9C27B0" size="small" />
           <Text style={styles.insightText}>
-            You're most active with your plants in the{' '}
-            {getMostActiveTime(emotions)}
+            You're most active with your plants in the {getMostActiveTime(emotions)}
           </Text>
         </View>
       </Card>
@@ -119,11 +101,10 @@ function getMostActiveTime(emotions: Emotion[]): string {
     night: hours.filter(h => h >= 22 || h < 5).length,
   };
 
-  return Object.entries(periods)
-    .reduce((max, [period, count]) => 
-      count > max.count ? { period, count } : max,
-      { period: 'morning', count: 0 }
-    ).period;
+  return Object.entries(periods).reduce(
+    (max, [period, count]) => (count > max.count ? { period, count } : max),
+    { period: 'morning', count: 0 }
+  ).period;
 }
 
 function generateTips(emotions: Emotion[]): string[] {
@@ -131,33 +112,21 @@ function generateTips(emotions: Emotion[]): string[] {
 
   // Add tips based on emotional patterns
   const recentEmotions = emotions.slice(-3);
-  const hasNegativeEmotions = recentEmotions
-    .some(e => ['concern', 'frustration'].includes(e.type));
-  const hasPositiveEmotions = recentEmotions
-    .some(e => ['joy', 'satisfaction'].includes(e.type));
+  const hasNegativeEmotions = recentEmotions.some(e => ['concern', 'frustration'].includes(e.type));
+  const hasPositiveEmotions = recentEmotions.some(e => ['joy', 'satisfaction'].includes(e.type));
 
   if (hasNegativeEmotions) {
-    tips.push(
-      'Try setting reminders for regular plant care to reduce stress and worry.'
-    );
-    tips.push(
-      'Consider keeping a plant care journal to track what works and what doesn\'t.'
-    );
+    tips.push('Try setting reminders for regular plant care to reduce stress and worry.');
+    tips.push("Consider keeping a plant care journal to track what works and what doesn't.");
   }
 
   if (hasPositiveEmotions) {
-    tips.push(
-      'Share your plant success stories with the community to inspire others!'
-    );
-    tips.push(
-      'Document your thriving plants - it\'s great to look back on their progress.'
-    );
+    tips.push('Share your plant success stories with the community to inspire others!');
+    tips.push("Document your thriving plants - it's great to look back on their progress.");
   }
 
   // Add general tips
-  tips.push(
-    'Spend a few mindful minutes with your plants each day - it\'s good for both of you.'
-  );
+  tips.push("Spend a few mindful minutes with your plants each day - it's good for both of you.");
 
   return tips;
 }
@@ -204,4 +173,4 @@ const styles = StyleSheet.create({
   tipText: {
     flex: 1,
   },
-}); 
+});

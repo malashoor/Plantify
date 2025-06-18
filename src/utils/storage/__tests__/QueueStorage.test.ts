@@ -16,7 +16,7 @@ describe('QueueStorage', () => {
     it('should register and retrieve operations', () => {
       const operation = jest.fn();
       QueueStorage.registerOperation('test-op', operation);
-      
+
       const retrieved = QueueStorage.getOperation('test-op');
       expect(retrieved).toBe(operation);
     });
@@ -29,15 +29,17 @@ describe('QueueStorage', () => {
 
   describe('Queue Persistence', () => {
     it('should save queue entries to AsyncStorage', async () => {
-      const entries: StoredRetryRequest[] = [{
-        id: 'test-1',
-        priority: 'high',
-        attempts: 0,
-        lastAttempt: Date.now(),
-        maxRetries: 3,
-        operationKey: 'test-op',
-        createdAt: Date.now()
-      }];
+      const entries: StoredRetryRequest[] = [
+        {
+          id: 'test-1',
+          priority: 'high',
+          attempts: 0,
+          lastAttempt: Date.now(),
+          maxRetries: 3,
+          operationKey: 'test-op',
+          createdAt: Date.now(),
+        },
+      ];
 
       await QueueStorage.saveQueue(entries);
 
@@ -50,7 +52,7 @@ describe('QueueStorage', () => {
     it('should load and filter expired entries', async () => {
       const now = Date.now();
       const oneDayAgo = now - 25 * 60 * 60 * 1000;
-      
+
       const entries: StoredRetryRequest[] = [
         {
           id: 'valid',
@@ -59,7 +61,7 @@ describe('QueueStorage', () => {
           lastAttempt: now,
           maxRetries: 3,
           operationKey: 'test-op',
-          createdAt: now
+          createdAt: now,
         },
         {
           id: 'expired',
@@ -68,8 +70,8 @@ describe('QueueStorage', () => {
           lastAttempt: oneDayAgo,
           maxRetries: 3,
           operationKey: 'test-op',
-          createdAt: oneDayAgo
-        }
+          createdAt: oneDayAgo,
+        },
       ];
 
       (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(entries));
@@ -89,7 +91,7 @@ describe('QueueStorage', () => {
           lastAttempt: Date.now(),
           maxRetries: 3,
           operationKey: 'known-op',
-          createdAt: Date.now()
+          createdAt: Date.now(),
         },
         {
           id: 'invalid',
@@ -98,8 +100,8 @@ describe('QueueStorage', () => {
           lastAttempt: Date.now(),
           maxRetries: 3,
           operationKey: 'unknown-op',
-          createdAt: Date.now()
-        }
+          createdAt: Date.now(),
+        },
       ];
 
       (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(entries));
@@ -112,14 +114,14 @@ describe('QueueStorage', () => {
 
     it('should handle empty storage', async () => {
       (AsyncStorage.getItem as jest.Mock).mockResolvedValue(null);
-      
+
       const loaded = await QueueStorage.loadQueue();
       expect(loaded).toEqual([]);
     });
 
     it('should handle storage errors gracefully', async () => {
       (AsyncStorage.getItem as jest.Mock).mockRejectedValue(new Error('Storage error'));
-      
+
       const loaded = await QueueStorage.loadQueue();
       expect(loaded).toEqual([]);
     });
@@ -135,7 +137,7 @@ describe('QueueStorage', () => {
           lastAttempt: Date.now(),
           maxRetries: 3,
           operationKey: 'test-op',
-          createdAt: Date.now()
+          createdAt: Date.now(),
         },
         {
           id: 'remove',
@@ -144,8 +146,8 @@ describe('QueueStorage', () => {
           lastAttempt: Date.now(),
           maxRetries: 3,
           operationKey: 'test-op',
-          createdAt: Date.now()
-        }
+          createdAt: Date.now(),
+        },
       ];
 
       (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(entries));
@@ -171,14 +173,14 @@ describe('QueueStorage', () => {
           lastAttempt: Date.now(),
           maxRetries: 3,
           operationKey: 'test-op',
-          createdAt: Date.now()
-        }
+          createdAt: Date.now(),
+        },
       ];
 
       const update: StoredRetryRequest = {
         ...entries[0],
         attempts: 1,
-        lastAttempt: Date.now()
+        lastAttempt: Date.now(),
       };
 
       (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(entries));
@@ -196,4 +198,4 @@ describe('QueueStorage', () => {
       expect(AsyncStorage.removeItem).toHaveBeenCalledWith('@greensai:retry_queue');
     });
   });
-}); 
+});

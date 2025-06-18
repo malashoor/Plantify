@@ -56,9 +56,10 @@ export class WeatherService {
     }
   }
 
-  private static async fetchWeatherData(
-    coords: { latitude: number; longitude: number }
-  ): Promise<WeatherData | null> {
+  private static async fetchWeatherData(coords: {
+    latitude: number;
+    longitude: number;
+  }): Promise<WeatherData | null> {
     try {
       if (!OPENWEATHER_CONFIG.API_KEY) {
         throw new Error('OpenWeather API key not configured');
@@ -66,8 +67,8 @@ export class WeatherService {
 
       const response = await fetch(
         `${OPENWEATHER_CONFIG.BASE_URL}/weather?` +
-        `lat=${coords.latitude}&lon=${coords.longitude}&` +
-        `appid=${OPENWEATHER_CONFIG.API_KEY}&units=${OPENWEATHER_CONFIG.UNITS}`
+          `lat=${coords.latitude}&lon=${coords.longitude}&` +
+          `appid=${OPENWEATHER_CONFIG.API_KEY}&units=${OPENWEATHER_CONFIG.UNITS}`
       );
 
       if (!response.ok) {
@@ -91,9 +92,10 @@ export class WeatherService {
     }
   }
 
-  private static async getCachedWeather(
-    coords: { latitude: number; longitude: number }
-  ): Promise<WeatherData | null> {
+  private static async getCachedWeather(coords: {
+    latitude: number;
+    longitude: number;
+  }): Promise<WeatherData | null> {
     try {
       const cached = await AsyncStorage.getItem(OPENWEATHER_CONFIG.CACHE_KEY);
       if (!cached) return null;
@@ -105,8 +107,10 @@ export class WeatherService {
       if (now - cache.timestamp < OPENWEATHER_CONFIG.CACHE_DURATION) {
         // Check if location is roughly the same (within threshold)
         const isSameLocation =
-          Math.abs(cache.location.latitude - coords.latitude) < OPENWEATHER_CONFIG.LOCATION_THRESHOLD &&
-          Math.abs(cache.location.longitude - coords.longitude) < OPENWEATHER_CONFIG.LOCATION_THRESHOLD;
+          Math.abs(cache.location.latitude - coords.latitude) <
+            OPENWEATHER_CONFIG.LOCATION_THRESHOLD &&
+          Math.abs(cache.location.longitude - coords.longitude) <
+            OPENWEATHER_CONFIG.LOCATION_THRESHOLD;
 
         if (isSameLocation) {
           return cache.data;
@@ -178,47 +182,33 @@ export class WeatherService {
           'provide shade during peak hours and water more frequently to prevent heat stress'
         );
       } else if (weather.temperature < 10) {
-        advice.push(
-          'protect sensitive plants from cold and reduce watering frequency'
-        );
+        advice.push('protect sensitive plants from cold and reduce watering frequency');
       }
 
       // Humidity advice
       if (weather.humidity < 30) {
-        advice.push(
-          'consider misting your plants and using mulch to retain moisture'
-        );
+        advice.push('consider misting your plants and using mulch to retain moisture');
       } else if (weather.humidity > 70) {
-        advice.push(
-          'ensure good air circulation to prevent fungal issues'
-        );
+        advice.push('ensure good air circulation to prevent fungal issues');
       }
 
       // Wind advice
       if (weather.windSpeed > 20) {
-        advice.push(
-          'provide wind protection and check plant supports'
-        );
+        advice.push('provide wind protection and check plant supports');
       }
     } else {
       // Indoor advice based on outdoor conditions
       if (weather.temperature > 35) {
-        advice.push(
-          'keep plants away from hot windows and maintain indoor humidity'
-        );
+        advice.push('keep plants away from hot windows and maintain indoor humidity');
       } else if (weather.temperature < 10) {
-        advice.push(
-          'move plants away from cold drafts and reduce watering'
-        );
+        advice.push('move plants away from cold drafts and reduce watering');
       }
 
       if (weather.humidity < 30) {
-        advice.push(
-          'use a humidity tray or humidifier to maintain moisture'
-        );
+        advice.push('use a humidity tray or humidifier to maintain moisture');
       }
     }
 
     return advice.join(', ');
   }
-} 
+}

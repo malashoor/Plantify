@@ -32,7 +32,9 @@ export default function PlantCareScreen() {
       <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
         <BackHeader title="Plant Care" />
         <View style={styles.centered}>
-          <Text style={[styles.text, { color: theme.colors.text }]}>Loading plant care details...</Text>
+          <Text style={[styles.text, { color: theme.colors.text }]}>
+            Loading plant care details...
+          </Text>
         </View>
       </View>
     );
@@ -43,7 +45,9 @@ export default function PlantCareScreen() {
       <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
         <BackHeader title="Plant Care" />
         <View style={styles.centered}>
-          <Text style={[styles.text, { color: theme.colors.text }]}>No plant care information found.</Text>
+          <Text style={[styles.text, { color: theme.colors.text }]}>
+            No plant care information found.
+          </Text>
         </View>
       </View>
     );
@@ -56,25 +60,39 @@ export default function PlantCareScreen() {
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>Plant Information</Text>
           <Text style={[styles.label, { color: theme.colors.text }]}>Scientific Name:</Text>
-          <Text style={[styles.text, { color: theme.colors.text }]}>{plantDetails.scientificName}</Text>
+          <Text style={[styles.text, { color: theme.colors.text }]}>
+            {plantDetails.scientificName}
+          </Text>
           <Text style={[styles.label, { color: theme.colors.text }]}>Family:</Text>
           <Text style={[styles.text, { color: theme.colors.text }]}>{plantDetails.family}</Text>
           <Text style={[styles.label, { color: theme.colors.text }]}>Description:</Text>
-          <Text style={[styles.text, { color: theme.colors.text }]}>{plantDetails.description}</Text>
+          <Text style={[styles.text, { color: theme.colors.text }]}>
+            {plantDetails.description}
+          </Text>
         </View>
 
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>Care Instructions</Text>
           <Text style={[styles.label, { color: theme.colors.text }]}>Watering:</Text>
-          <Text style={[styles.text, { color: theme.colors.text }]}>{plantDetails.careInstructions.watering}</Text>
+          <Text style={[styles.text, { color: theme.colors.text }]}>
+            {plantDetails.careInstructions.watering}
+          </Text>
           <Text style={[styles.label, { color: theme.colors.text }]}>Sunlight:</Text>
-          <Text style={[styles.text, { color: theme.colors.text }]}>{plantDetails.careInstructions.sunlight}</Text>
+          <Text style={[styles.text, { color: theme.colors.text }]}>
+            {plantDetails.careInstructions.sunlight}
+          </Text>
           <Text style={[styles.label, { color: theme.colors.text }]}>Soil:</Text>
-          <Text style={[styles.text, { color: theme.colors.text }]}>{plantDetails.careInstructions.soil}</Text>
+          <Text style={[styles.text, { color: theme.colors.text }]}>
+            {plantDetails.careInstructions.soil}
+          </Text>
           <Text style={[styles.label, { color: theme.colors.text }]}>Temperature:</Text>
-          <Text style={[styles.text, { color: theme.colors.text }]}>{plantDetails.careInstructions.temperature}</Text>
+          <Text style={[styles.text, { color: theme.colors.text }]}>
+            {plantDetails.careInstructions.temperature}
+          </Text>
           <Text style={[styles.label, { color: theme.colors.text }]}>Humidity:</Text>
-          <Text style={[styles.text, { color: theme.colors.text }]}>{plantDetails.careInstructions.humidity}</Text>
+          <Text style={[styles.text, { color: theme.colors.text }]}>
+            {plantDetails.careInstructions.humidity}
+          </Text>
         </View>
 
         {plantDetails.diseases.length > 0 && (
@@ -83,7 +101,9 @@ export default function PlantCareScreen() {
             {plantDetails.diseases.map((disease, index) => (
               <View key={index} style={styles.diseaseItem}>
                 <Text style={[styles.label, { color: theme.colors.text }]}>{disease.name}</Text>
-                <Text style={[styles.text, { color: theme.colors.text }]}>{disease.description}</Text>
+                <Text style={[styles.text, { color: theme.colors.text }]}>
+                  {disease.description}
+                </Text>
                 <Text style={[styles.label, { color: theme.colors.text }]}>Treatment:</Text>
                 <Text style={[styles.text, { color: theme.colors.text }]}>{disease.treatment}</Text>
               </View>
@@ -128,4 +148,4 @@ const styles = StyleSheet.create({
   diseaseItem: {
     marginBottom: 16,
   },
-}); 
+});

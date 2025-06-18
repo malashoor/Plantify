@@ -29,10 +29,10 @@ export default function PremiumStatus({ onUpgrade }: PremiumStatusProps) {
     <View style={[styles.container, isDark && styles.containerDark]}>
       <View style={styles.header}>
         <View style={styles.statusContainer}>
-          <Ionicons 
-            name={isPremium ? 'star' : 'star-outline'} 
-            size={24} 
-            color={isDark ? '#A3E635' : '#45B36B'} 
+          <Ionicons
+            name={isPremium ? 'star' : 'star-outline'}
+            size={24}
+            color={isDark ? '#A3E635' : '#45B36B'}
           />
           <Text style={[styles.status, isDark && styles.textDark]}>
             {t(isPremium ? 'premium.status.active' : 'premium.status.inactive')}
@@ -53,16 +53,14 @@ export default function PremiumStatus({ onUpgrade }: PremiumStatusProps) {
             {t('premium.description')}
           </Text>
           <View style={styles.featuresList}>
-            {Object.values(PREMIUM_FEATURES).map((feature) => (
+            {Object.values(PREMIUM_FEATURES).map(feature => (
               <View key={feature.id} style={styles.featureItem}>
-                <Ionicons 
-                  name="checkmark-circle" 
-                  size={20} 
-                  color={isDark ? '#A3E635' : '#45B36B'} 
+                <Ionicons
+                  name="checkmark-circle"
+                  size={20}
+                  color={isDark ? '#A3E635' : '#45B36B'}
                 />
-                <Text style={[styles.featureText, isDark && styles.textDark]}>
-                  {feature.name}
-                </Text>
+                <Text style={[styles.featureText, isDark && styles.textDark]}>{feature.name}</Text>
               </View>
             ))}
           </View>
@@ -70,9 +68,7 @@ export default function PremiumStatus({ onUpgrade }: PremiumStatusProps) {
             style={[styles.upgradeButton, isDark && styles.upgradeButtonDark]}
             onPress={onUpgrade}
           >
-            <Text style={styles.upgradeButtonText}>
-              {t('premium.cta.upgrade')}
-            </Text>
+            <Text style={styles.upgradeButtonText}>{t('premium.cta.upgrade')}</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -155,4 +151,4 @@ const styles = StyleSheet.create({
   textLightDark: {
     color: '#9CA3AF',
   },
-}); 
+});

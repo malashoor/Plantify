@@ -30,7 +30,7 @@ export enum AnalyticsEvent {
   CONTENT_VIEW = 'Content View',
   CONTENT_SHARE = 'Content Share',
   NOTIFICATION_RECEIVED = 'Notification Received',
-  NOTIFICATION_OPENED = 'Notification Opened'
+  NOTIFICATION_OPENED = 'Notification Opened',
 }
 
 export enum UserProperty {
@@ -45,37 +45,37 @@ export enum UserProperty {
   PLATFORM = 'platform',
   APP_VERSION = 'app_version',
   DEVICE_TYPE = 'device_type',
-  ENGAGEMENT_SCORE = 'engagement_score'
+  ENGAGEMENT_SCORE = 'engagement_score',
 }
 
 export interface AnalyticsProperties {
   // Screen Properties
   screen_name?: string;
   previous_screen?: string;
-  
+
   // User Properties
   user_id?: string;
   email?: string;
-  
+
   // Subscription Properties
   subscription_id?: string;
   plan_type?: string;
   amount?: number;
   currency?: string;
   payment_method?: string;
-  
+
   // Feature Properties
   feature_name?: string;
   feature_type?: string;
   duration_ms?: number;
   result?: string;
-  
+
   // Error Properties
   error_type?: string;
   error_message?: string;
   error_code?: string;
   error_stack?: string;
-  
+
   // Custom Properties
   [key: string]: any;
 }
@@ -92,4 +92,4 @@ export interface AnalyticsUserProfile {
   [UserProperty.LAST_ANALYSIS]?: string;
   [UserProperty.USER_TYPE]?: string;
   [key: string]: any;
-} 
+}

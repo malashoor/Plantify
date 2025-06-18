@@ -23,7 +23,7 @@ export const journalScenarios = {
       mood: i % 3 === 0 ? 'happy' : i % 3 === 1 ? 'neutral' : 'sad',
       images: Array.from({ length: 3 }, (_, j) => `image-${i}-${j}.jpg`),
       timestamp: new Date(Date.now() - i * 86400000).toISOString(),
-      tags: [`tag-${i % 5}`, `category-${i % 3}`]
+      tags: [`tag-${i % 5}`, `category-${i % 3}`],
     }));
 
     entries.forEach(entry => {
@@ -33,7 +33,7 @@ export const journalScenarios = {
     // Simulate slow response due to large payload
     mockServerState.setMockResponse('/api/journal', {
       delay: Math.min(entryCount * 100, 5000), // Cap at 5 seconds
-      data: entries
+      data: entries,
     });
   },
 
@@ -42,19 +42,19 @@ export const journalScenarios = {
    */
   simulateFailOnSadMood() {
     mockServerState.setMockResponse('/api/journal', {
-      status: (req) => {
+      status: req => {
         if (req.body.mood === 'sad') {
           return 422;
         }
         return 201;
       },
-      data: (req) => {
+      data: req => {
         if (req.body.mood === 'sad') {
           return {
             error: {
               code: 'MOOD_NOT_ALLOWED',
-              message: 'Cannot save journal entries with sad mood'
-            }
+              message: 'Cannot save journal entries with sad mood',
+            },
           };
         }
 
@@ -62,11 +62,11 @@ export const journalScenarios = {
         const entry = {
           id: entryId,
           ...req.body,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         };
         mockServerState.updateState('journal', entryId, entry);
         return entry;
-      }
+      },
     });
   },
 
@@ -78,16 +78,16 @@ export const journalScenarios = {
     mockServerState.setMockResponse('/api/journal', {
       delay: delayMs,
       status: 201,
-      data: (req) => {
+      data: req => {
         const entryId = `journal-${Date.now()}`;
         const entry = {
           id: entryId,
           ...req.body,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         };
         mockServerState.updateState('journal', entryId, entry);
         return entry;
-      }
+      },
     });
   },
 
@@ -97,14 +97,14 @@ export const journalScenarios = {
    */
   simulatePlantDependency(plantId: string) {
     mockServerState.setMockResponse('/api/journal', {
-      status: (req) => {
+      status: req => {
         const state = mockServerState.getState();
         if (!state.plants[plantId]) {
           return 424; // Failed Dependency
         }
         return 201;
       },
-      data: (req) => {
+      data: req => {
         const state = mockServerState.getState();
         if (!state.plants[plantId]) {
           return {
@@ -113,9 +113,9 @@ export const journalScenarios = {
               message: `Cannot create journal entry: Plant ${plantId} not found`,
               dependency: {
                 service: 'plants',
-                id: plantId
-              }
-            }
+                id: plantId,
+              },
+            },
           };
         }
 
@@ -124,11 +124,11 @@ export const journalScenarios = {
           id: entryId,
           ...req.body,
           plantId,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         };
         mockServerState.updateState('journal', entryId, entry);
         return entry;
-      }
+      },
     });
   },
 
@@ -147,9 +147,9 @@ export const journalScenarios = {
               success: false,
               error: {
                 code: 'BATCH_ENTRY_FAILED',
-                message: 'Failed to process entry'
+                message: 'Failed to process entry',
               },
-              entry
+              entry,
             };
           }
 
@@ -157,12 +157,12 @@ export const journalScenarios = {
           const savedEntry = {
             id: entryId,
             ...entry,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
           };
           mockServerState.updateState('journal', entryId, savedEntry);
           return {
             success: true,
-            entry: savedEntry
+            entry: savedEntry,
           };
         });
 
@@ -171,10 +171,10 @@ export const journalScenarios = {
           summary: {
             total: entries.length,
             succeeded: results.filter(r => r.success).length,
-            failed: results.filter(r => !r.success).length
-          }
+            failed: results.filter(r => !r.success).length,
+          },
         };
-      }
+      },
     });
   },
 
@@ -184,5 +184,5 @@ export const journalScenarios = {
   reset() {
     mockServerState.clearMockResponse('/api/journal');
     mockServerState.clearMockResponse('/api/journal/batch');
-  }
-}; 
+  },
+};

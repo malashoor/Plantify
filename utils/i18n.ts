@@ -14,4 +14,4 @@ export const setupI18n = () => {
 
 export const I18nContext = {
   Provider: ({ children }: { children: any }) => children,
-}; 
+};

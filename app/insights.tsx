@@ -6,7 +6,7 @@ import { EmotionalInsightsScreen } from '@screens/insights/EmotionalInsightsScre
 export default function InsightsScreen() {
   return (
     <>
-      <Stack.Screen 
+      <Stack.Screen
         options={{
           title: 'Plant Care Insights',
           headerLargeTitle: true,
@@ -17,4 +17,4 @@ export default function InsightsScreen() {
       </View>
     </>
   );
-} 
+}

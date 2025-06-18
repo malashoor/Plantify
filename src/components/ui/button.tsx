@@ -1,5 +1,12 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ActivityIndicator, ViewStyle, TextStyle } from 'react-native';
+import {
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  ViewStyle,
+  TextStyle,
+} from 'react-native';
 
 interface ButtonProps {
   title: string;
@@ -24,13 +31,13 @@ export function Button({
 }: ButtonProps) {
   const getButtonStyle = () => {
     const baseStyle = [styles.button, styles[`button_${size}`]];
-    
+
     if (disabled || loading) {
       baseStyle.push(styles.buttonDisabled);
     } else {
       baseStyle.push(styles[`button_${variant}`]);
     }
-    
+
     if (style) {
       if (Array.isArray(style)) {
         baseStyle.push(...style.filter(Boolean));
@@ -38,19 +45,19 @@ export function Button({
         baseStyle.push(style);
       }
     }
-    
+
     return baseStyle;
   };
 
   const getTextStyle = () => {
     const baseStyle = [styles.text, styles[`text_${size}`]];
-    
+
     if (disabled || loading) {
       baseStyle.push(styles.textDisabled);
     } else {
       baseStyle.push(styles[`text_${variant}`]);
     }
-    
+
     if (textStyle) {
       if (Array.isArray(textStyle)) {
         baseStyle.push(...textStyle.filter(Boolean));
@@ -58,7 +65,7 @@ export function Button({
         baseStyle.push(textStyle);
       }
     }
-    
+
     return baseStyle;
   };
 
@@ -144,4 +151,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Button; 
+export default Button;

@@ -13,36 +13,33 @@ export const RetryOperationKeys = {
   SAVE_PLANT: 'savePlant',
   UPDATE_PLANT: 'updatePlant',
   DELETE_PLANT: 'deletePlant',
-  
+
   // Weather operations
   FETCH_FORECAST: 'fetchForecast',
   UPDATE_WEATHER_CACHE: 'updateWeatherCache',
-  
+
   // Journal operations
   ADD_JOURNAL_ENTRY: 'addJournalEntry',
   UPDATE_JOURNAL_ENTRY: 'updateJournalEntry',
   LOG_PLANT_MOOD: 'logPlantMood',
-  
+
   // Watering operations
   UPDATE_WATERING_SCHEDULE: 'updateWateringSchedule',
   SYNC_WATERING_HISTORY: 'syncWateringHistory',
-  UPDATE_RECOMMENDATIONS: 'updateRecommendations'
+  UPDATE_RECOMMENDATIONS: 'updateRecommendations',
 } as const;
 
-export type RetryOperationKey = typeof RetryOperationKeys[keyof typeof RetryOperationKeys];
+export type RetryOperationKey = (typeof RetryOperationKeys)[keyof typeof RetryOperationKeys];
 
 /**
  * Register all retryable operations with the queue
  */
 export function registerRetryOperations(retryQueue: RetryQueue) {
   // Plant operations
-  retryQueue.registerOperation(
-    RetryOperationKeys.SAVE_PLANT,
-    async (plant: Plant) => {
-      const result = await PlantService.savePlant(plant);
-      return result;
-    }
-  );
+  retryQueue.registerOperation(RetryOperationKeys.SAVE_PLANT, async (plant: Plant) => {
+    const result = await PlantService.savePlant(plant);
+    return result;
+  });
 
   retryQueue.registerOperation(
     RetryOperationKeys.UPDATE_PLANT,
@@ -52,12 +49,9 @@ export function registerRetryOperations(retryQueue: RetryQueue) {
     }
   );
 
-  retryQueue.registerOperation(
-    RetryOperationKeys.DELETE_PLANT,
-    async (plantId: string) => {
-      await PlantService.deletePlant(plantId);
-    }
-  );
+  retryQueue.registerOperation(RetryOperationKeys.DELETE_PLANT, async (plantId: string) => {
+    await PlantService.deletePlant(plantId);
+  });
 
   // Weather operations
   retryQueue.registerOperation(
@@ -135,4 +129,4 @@ export function createOperationData<T extends any[]>(data: T): string {
  */
 export function generateOperationId(key: RetryOperationKey, uniqueId: string): string {
   return `${key}-${uniqueId}-${Date.now()}`;
-} 
+}

@@ -28,13 +28,9 @@ export const AnalysisResultCard = ({ result }: AnalysisResultCardProps): React.R
         <Text style={styles.title}>{result.condition}</Text>
       </View>
 
-      {result.scientificName && (
-        <Text style={styles.scientificName}>{result.scientificName}</Text>
-      )}
+      {result.scientificName && <Text style={styles.scientificName}>{result.scientificName}</Text>}
 
-      {result.commonName && (
-        <Text style={styles.commonName}>Common Name: {result.commonName}</Text>
-      )}
+      {result.commonName && <Text style={styles.commonName}>Common Name: {result.commonName}</Text>}
 
       <View style={styles.confidenceContainer}>
         <Text style={styles.confidenceLabel}>Confidence:</Text>
@@ -129,4 +125,4 @@ const styles = StyleSheet.create({
     flex: 1,
     lineHeight: 20,
   },
-}); 
+});

@@ -22,7 +22,7 @@ export function useWateringGuides(plantId?: string) {
       schedule: 'Every 7 days',
       lastWatered: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
       waterAmount: '200ml',
-      notes: 'Water when top inch of soil is dry'
+      notes: 'Water when top inch of soil is dry',
     },
     {
       plantId: 'plant-2',
@@ -30,7 +30,7 @@ export function useWateringGuides(plantId?: string) {
       schedule: 'Every 14 days',
       lastWatered: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
       waterAmount: '150ml',
-      notes: 'Very drought tolerant, less is more'
+      notes: 'Very drought tolerant, less is more',
     },
     {
       plantId: 'plant-3',
@@ -38,8 +38,8 @@ export function useWateringGuides(plantId?: string) {
       schedule: 'Every 5 days',
       lastWatered: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
       waterAmount: '180ml',
-      notes: 'Likes consistent moisture'
-    }
+      notes: 'Likes consistent moisture',
+    },
   ];
 
   const fetchWateringGuides = async () => {
@@ -81,11 +81,9 @@ export function useWateringGuides(plantId?: string) {
       //   .update({ last_watered: date })
       //   .eq('plant_id', plantId);
 
-      setGuides(prev => prev.map(guide => 
-        guide.plantId === plantId 
-          ? { ...guide, lastWatered: date }
-          : guide
-      ));
+      setGuides(prev =>
+        prev.map(guide => (guide.plantId === plantId ? { ...guide, lastWatered: date } : guide))
+      );
       setIsLoading(false);
     } catch (err) {
       setError('Failed to update watering record');
@@ -103,6 +101,6 @@ export function useWateringGuides(plantId?: string) {
     isLoading,
     error,
     refetch: fetchWateringGuides,
-    updateLastWatered
+    updateLastWatered,
   };
-} 
+}

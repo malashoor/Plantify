@@ -70,9 +70,9 @@ describe('SortControl', () => {
 
     it('should show menu on button press', () => {
       const { getByTestId, queryByText } = render(<SortControl {...defaultProps} />);
-      
+
       fireEvent.press(getByTestId('icon-button'));
-      
+
       expect(queryByText('sorting.primaryLabel')).toBeTruthy();
       expect(queryByText('sorting.secondaryLabel')).toBeTruthy();
     });
@@ -87,10 +87,10 @@ describe('SortControl', () => {
   describe('Sort Criteria Selection', () => {
     it('should call onSortChange when selecting primary criteria', () => {
       const { getByTestId } = render(<SortControl {...defaultProps} />);
-      
+
       fireEvent.press(getByTestId('icon-button')); // Open menu
       fireEvent.press(getByTestId('menu-item-name')); // Select 'name' criteria
-      
+
       expect(defaultProps.onSortChange).toHaveBeenCalledWith({
         primary: {
           criteria: 'name',
@@ -116,10 +116,10 @@ describe('SortControl', () => {
       };
 
       const { getByTestId } = render(<SortControl {...props} />);
-      
+
       fireEvent.press(getByTestId('icon-button')); // Open menu
       fireEvent.press(getByTestId('menu-item-name')); // Select 'name' as secondary
-      
+
       expect(props.onSortChange).toHaveBeenCalledWith({
         primary: {
           criteria: 'nextWatering',
@@ -136,10 +136,10 @@ describe('SortControl', () => {
   describe('Direction Toggle', () => {
     it('should toggle primary sort direction', () => {
       const { getByTestId } = render(<SortControl {...defaultProps} />);
-      
+
       fireEvent.press(getByTestId('icon-button')); // Open menu
       fireEvent.press(getByTestId('direction-toggle-primary')); // Toggle direction
-      
+
       expect(defaultProps.onSortChange).toHaveBeenCalledWith({
         primary: {
           criteria: 'nextWatering',
@@ -165,10 +165,10 @@ describe('SortControl', () => {
       };
 
       const { getByTestId } = render(<SortControl {...props} />);
-      
+
       fireEvent.press(getByTestId('icon-button')); // Open menu
       fireEvent.press(getByTestId('direction-toggle-secondary')); // Toggle direction
-      
+
       expect(props.onSortChange).toHaveBeenCalledWith({
         primary: {
           criteria: 'nextWatering',
@@ -186,14 +186,14 @@ describe('SortControl', () => {
     it('should provide accessible labels', () => {
       const { getByTestId } = render(<SortControl {...defaultProps} />);
       const button = getByTestId('icon-button');
-      
+
       expect(button.props.accessibilityLabel).toBeTruthy();
       expect(button.props.accessibilityHint).toBeTruthy();
     });
 
     it('should update accessibility labels on sort change', () => {
       const { getByTestId, rerender } = render(<SortControl {...defaultProps} />);
-      
+
       const newProps = {
         ...defaultProps,
         currentSort: {
@@ -204,11 +204,11 @@ describe('SortControl', () => {
           secondary: null,
         },
       };
-      
+
       rerender(<SortControl {...newProps} />);
-      
+
       const button = getByTestId('icon-button');
       expect(button.props.accessibilityLabel).toContain('name');
     });
   });
-}); 
+});

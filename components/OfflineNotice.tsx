@@ -4,7 +4,7 @@ import { View, Text, StyleSheet } from 'react-native';
 export default function OfflineNotice() {
   // TODO: Add actual network connectivity checking
   const isConnected = true; // For now, assume always connected
-  
+
   if (isConnected) {
     return null;
   }
@@ -27,4 +27,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500',
   },
-}); 
+});

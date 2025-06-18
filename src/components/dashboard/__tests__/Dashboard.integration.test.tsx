@@ -75,7 +75,7 @@ describe('Dashboard Integration', () => {
   describe('Initial Load', () => {
     it('should load and display all plants by default', async () => {
       const { getAllByTestId } = render(<Dashboard plants={mockPlants} />);
-      
+
       await waitFor(() => {
         const plantItems = getAllByTestId('plant-item');
         expect(plantItems).toHaveLength(mockPlants.length);
@@ -86,12 +86,15 @@ describe('Dashboard Integration', () => {
       // Mock saved preferences
       const savedPreferences = [
         ['@plantai:filter_preference', 'indoor'],
-        ['@plantai:dashboard_sort', JSON.stringify({
-          primary: { criteria: 'name', direction: 'asc' },
-          secondary: null,
-        })],
+        [
+          '@plantai:dashboard_sort',
+          JSON.stringify({
+            primary: { criteria: 'name', direction: 'asc' },
+            secondary: null,
+          }),
+        ],
       ];
-      
+
       (AsyncStorage.multiGet as jest.Mock).mockResolvedValue(savedPreferences);
 
       const { getAllByTestId, getByTestId } = render(<Dashboard plants={mockPlants} />);
@@ -100,11 +103,11 @@ describe('Dashboard Integration', () => {
         // Should only show indoor plants
         const plantItems = getAllByTestId('plant-item');
         expect(plantItems).toHaveLength(2);
-        
+
         // Filter tab should be selected
         const indoorTab = getByTestId('filter-tab-indoor');
         expect(indoorTab).toHaveAccessibilityState({ selected: true });
-        
+
         // Plants should be sorted by name
         const plantNames = plantItems.map(item => item.props.accessibilityLabel);
         expect(plantNames).toEqual(['Indoor Aloe', 'Indoor Cactus']);
@@ -189,7 +192,12 @@ describe('Dashboard Integration', () => {
         const plantItems = getAllByTestId('plant-item');
         const plantNames = plantItems.map(item => item.props.accessibilityLabel);
         // Plants with same watering date should be sorted by name
-        expect(plantNames).toEqual(['Outdoor Bamboo', 'Indoor Aloe', 'Hydroponic Basil', 'Indoor Cactus']);
+        expect(plantNames).toEqual([
+          'Outdoor Bamboo',
+          'Indoor Aloe',
+          'Hydroponic Basil',
+          'Indoor Cactus',
+        ]);
       });
     });
   });
@@ -206,10 +214,7 @@ describe('Dashboard Integration', () => {
       });
 
       await waitFor(() => {
-        expect(AsyncStorage.setItem).toHaveBeenCalledWith(
-          '@plantai:filter_preference',
-          'indoor'
-        );
+        expect(AsyncStorage.setItem).toHaveBeenCalledWith('@plantai:filter_preference', 'indoor');
         expect(AsyncStorage.setItem).toHaveBeenCalledWith(
           '@plantai:dashboard_sort',
           expect.stringContaining('name')
@@ -219,7 +224,7 @@ describe('Dashboard Integration', () => {
 
     it('should handle storage errors gracefully', async () => {
       (AsyncStorage.setItem as jest.Mock).mockRejectedValue(new Error('Storage error'));
-      
+
       const { getByTestId, getAllByTestId } = render(<Dashboard plants={mockPlants} />);
 
       // Should still work despite storage error
@@ -327,4 +332,4 @@ describe('Dashboard Integration', () => {
       });
     });
   });
-}); 
+});

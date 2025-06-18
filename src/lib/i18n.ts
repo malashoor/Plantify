@@ -27,16 +27,14 @@ const resources = {
   },
 };
 
-i18n
-  .use(initReactI18next)
-  .init({
-    resources,
-    lng: Localization.locale,
-    fallbackLng: 'en',
-    interpolation: {
-      escapeValue: false,
-    },
-    compatibilityJSON: 'v4',
-  });
+i18n.use(initReactI18next).init({
+  resources,
+  lng: Localization.locale,
+  fallbackLng: 'en',
+  interpolation: {
+    escapeValue: false,
+  },
+  compatibilityJSON: 'v4',
+});
 
-export default i18n; 
+export default i18n;

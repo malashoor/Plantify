@@ -17,9 +17,9 @@ export default function LearnScreen() {
         >
           <Ionicons name="arrow-back" size={24} color="#1A1A1A" />
         </TouchableOpacity>
-        
+
         <Text style={styles.headerTitle}>Learning Center</Text>
-        
+
         <View style={styles.spacer} />
       </View>
 
@@ -27,9 +27,7 @@ export default function LearnScreen() {
       <View style={styles.content}>
         <View style={styles.placeholderContainer}>
           <Ionicons name="school-outline" size={80} color="#666666" />
-          <Text style={styles.placeholderTitle}>
-            📚 Learning Center
-          </Text>
+          <Text style={styles.placeholderTitle}>📚 Learning Center</Text>
           <Text style={styles.placeholderSubtitle}>
             (Placeholder - Full functionality coming soon)
           </Text>
@@ -97,4 +95,4 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     maxWidth: 280,
   },
-}); 
+});

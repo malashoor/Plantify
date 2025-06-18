@@ -64,12 +64,8 @@ export default function GardenScreen() {
   return (
     <SafeAreaView style={[styles.container, isDark && styles.containerDark]}>
       <View style={styles.header}>
-        <Text style={[styles.title, isDark && styles.textDark]}>
-          {t('garden.title')}
-        </Text>
-        <TouchableOpacity
-          style={[styles.addButton, isDark && { backgroundColor: '#333333' }]}
-        >
+        <Text style={[styles.title, isDark && styles.textDark]}>{t('garden.title')}</Text>
+        <TouchableOpacity style={[styles.addButton, isDark && { backgroundColor: '#333333' }]}>
           <Ionicons name="add" size={22} color={isDark ? '#FFFFFF' : '#2E7D32'} />
         </TouchableOpacity>
       </View>
@@ -84,9 +80,7 @@ export default function GardenScreen() {
           <View style={styles.statsContent}>
             <View>
               <Text style={styles.statsTitle}>{t('garden.stats.title')}</Text>
-              <Text style={styles.statsSubtitle}>
-                {t('garden.stats.subtitle')}
-              </Text>
+              <Text style={styles.statsSubtitle}>{t('garden.stats.subtitle')}</Text>
             </View>
             <View style={styles.statsNumbers}>
               <View style={styles.statItem}>
@@ -96,11 +90,9 @@ export default function GardenScreen() {
               <View style={styles.statDivider} />
               <View style={styles.statItem}>
                 <Text style={styles.statNumber}>
-                  {plants.filter((p) => p.wateringStatus === 'today').length}
+                  {plants.filter(p => p.wateringStatus === 'today').length}
                 </Text>
-                <Text style={styles.statLabel}>
-                  {t('garden.stats.needWater')}
-                </Text>
+                <Text style={styles.statLabel}>{t('garden.stats.needWater')}</Text>
               </View>
             </View>
           </View>
@@ -113,7 +105,7 @@ export default function GardenScreen() {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.tabs}
         >
-          {['all', 'indoor', 'outdoor', 'succulents', 'herbs'].map((tab) => (
+          {['all', 'indoor', 'outdoor', 'succulents', 'herbs'].map(tab => (
             <TouchableOpacity
               key={tab}
               style={[
@@ -139,24 +131,14 @@ export default function GardenScreen() {
         </ScrollView>
       </View>
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={styles.plantsList}
-      >
+      <ScrollView showsVerticalScrollIndicator={false} style={styles.plantsList}>
         {plants.map((plant, index) => (
-          <TouchableOpacity
-            key={index}
-            style={[styles.plantCard, isDark && styles.cardDark]}
-          >
+          <TouchableOpacity key={index} style={[styles.plantCard, isDark && styles.cardDark]}>
             <Image source={{ uri: plant.image }} style={styles.plantImage} />
             <View style={styles.plantInfo}>
               <View>
-                <Text style={[styles.plantName, isDark && styles.textDark]}>
-                  {plant.name}
-                </Text>
-                <Text
-                  style={[styles.plantLocation, isDark && styles.textLightDark]}
-                >
+                <Text style={[styles.plantName, isDark && styles.textDark]}>{plant.name}</Text>
+                <Text style={[styles.plantLocation, isDark && styles.textLightDark]}>
                   {plant.location}
                 </Text>
               </View>

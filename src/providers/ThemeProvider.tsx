@@ -1,6 +1,11 @@
 import React from 'react';
 import { useColorScheme } from 'react-native';
-import { Provider as PaperProvider, MD3LightTheme, MD3DarkTheme, type MD3Theme } from 'react-native-paper';
+import {
+  Provider as PaperProvider,
+  MD3LightTheme,
+  MD3DarkTheme,
+  type MD3Theme,
+} from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 interface ThemeProviderProps {
@@ -33,9 +38,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
 
   return (
     <SafeAreaProvider>
-      <PaperProvider theme={theme}>
-        {children}
-      </PaperProvider>
+      <PaperProvider theme={theme}>{children}</PaperProvider>
     </SafeAreaProvider>
   );
-} 
+}

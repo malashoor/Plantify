@@ -11,7 +11,7 @@ export class NetworkManager {
   private networkState: NetworkState = {
     isConnected: false,
     isInternetReachable: false,
-    type: 'unknown'
+    type: 'unknown',
   };
 
   static getInstance(): NetworkManager {
@@ -38,7 +38,7 @@ export class NetworkManager {
     this.networkState = {
       isConnected: Boolean(state.isConnected),
       isInternetReachable: Boolean(state.isInternetReachable),
-      type: state.type || 'unknown'
+      type: state.type || 'unknown',
     };
   }
 
@@ -74,7 +74,7 @@ export async function withRetry<T>(
       return await operation();
     } catch (error) {
       lastError = error as Error;
-      
+
       // Don't retry on certain errors
       if (error instanceof Error) {
         const message = error.message.toLowerCase();
@@ -109,16 +109,16 @@ export async function fetchWithTimeout(
       ...options,
       signal: controller.signal,
     });
-    
+
     clearTimeout(timeoutId);
     return response;
   } catch (error) {
     clearTimeout(timeoutId);
-    
+
     if (error instanceof Error && error.name === 'AbortError') {
       throw new Error('Request timeout');
     }
-    
+
     throw error;
   }
-} 
+}

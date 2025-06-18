@@ -26,14 +26,11 @@ export const useSeeds = () => {
     try {
       setLoading(true);
       setError(null);
-      
-      const { data, error: supabaseError } = await supabase
-        .from('seeds')
-        .select('*')
-        .order('name');
+
+      const { data, error: supabaseError } = await supabase.from('seeds').select('*').order('name');
 
       if (supabaseError) throw new Error(supabaseError.message);
-      
+
       setSeeds(data || []);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch seeds data');
@@ -52,4 +49,4 @@ export const useSeeds = () => {
     error,
     refetch: fetchSeeds,
   };
-}; 
+};

@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  View, 
-  Text, 
-  ScrollView, 
-  Switch,
-  Alert,
-  Platform,
-  Linking 
-} from 'react-native';
+import { View, Text, ScrollView, Switch, Alert, Platform, Linking } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
@@ -81,34 +73,30 @@ export default function Settings() {
     const currentIndex = languages.indexOf(currentLanguage);
     const nextIndex = (currentIndex + 1) % languages.length;
     const newLanguage = languages[nextIndex];
-    
+
     setCurrentLanguage(newLanguage);
     saveSetting(SETTINGS_KEYS.LANGUAGE, newLanguage);
     Alert.alert('Language Changed', `Language set to ${newLanguage}`);
   };
 
   const handleLogout = () => {
-    Alert.alert(
-      'Logout',
-      'Are you sure you want to logout?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        { 
-          text: 'Logout', 
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              // Clear user data
-              await AsyncStorage.multiRemove(['user_token', 'user_data']);
-              // Navigate to auth/login
-              router.replace('/auth/login');
-            } catch (error) {
-              Alert.alert('Error', 'Failed to logout');
-            }
+    Alert.alert('Logout', 'Are you sure you want to logout?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Logout',
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            // Clear user data
+            await AsyncStorage.multiRemove(['user_token', 'user_data']);
+            // Navigate to auth/login
+            router.replace('/auth/login');
+          } catch (error) {
+            Alert.alert('Error', 'Failed to logout');
           }
         },
-      ]
-    );
+      },
+    ]);
   };
 
   const handleRateApp = async () => {
@@ -118,9 +106,10 @@ export default function Settings() {
         await StoreReview.requestReview();
       } else {
         // Fallback to app store
-        const appStoreUrl = Platform.OS === 'ios' 
-          ? 'https://apps.apple.com/app/plantai' 
-          : 'https://play.google.com/store/apps/details?id=com.plantai.app';
+        const appStoreUrl =
+          Platform.OS === 'ios'
+            ? 'https://apps.apple.com/app/plantai'
+            : 'https://play.google.com/store/apps/details?id=com.plantai.app';
         await Linking.openURL(appStoreUrl);
       }
     } catch (error) {
@@ -144,12 +133,12 @@ export default function Settings() {
     }
   };
 
-  const SettingRow = ({ 
-    icon, 
-    title, 
-    subtitle, 
-    onPress, 
-    rightComponent 
+  const SettingRow = ({
+    icon,
+    title,
+    subtitle,
+    onPress,
+    rightComponent,
   }: {
     icon: string;
     title: string;
@@ -157,7 +146,7 @@ export default function Settings() {
     onPress?: () => void;
     rightComponent?: React.ReactNode;
   }) => (
-    <View 
+    <View
       style={{
         flexDirection: 'row',
         alignItems: 'center',
@@ -170,50 +159,48 @@ export default function Settings() {
     >
       <MaterialIcons name={icon as any} size={24} color="#2E7D32" />
       <View style={{ flex: 1, marginLeft: 16 }}>
-        <Text style={{ fontSize: 16, fontWeight: '500', color: '#333' }}>
-          {title}
-        </Text>
-        {subtitle && (
-          <Text style={{ fontSize: 14, color: '#666', marginTop: 2 }}>
-            {subtitle}
-          </Text>
-        )}
+        <Text style={{ fontSize: 16, fontWeight: '500', color: '#333' }}>{title}</Text>
+        {subtitle && <Text style={{ fontSize: 14, color: '#666', marginTop: 2 }}>{subtitle}</Text>}
       </View>
-      {rightComponent || (
-        <MaterialIcons name="chevron-right" size={20} color="#ccc" />
-      )}
+      {rightComponent || <MaterialIcons name="chevron-right" size={20} color="#ccc" />}
     </View>
   );
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: '#fff' }}>
       {/* Header */}
-      <View style={{ 
-        padding: 20, 
-        backgroundColor: '#2E7D32', 
-        alignItems: 'center',
-        paddingTop: 60 
-      }}>
+      <View
+        style={{
+          padding: 20,
+          backgroundColor: '#2E7D32',
+          alignItems: 'center',
+          paddingTop: 60,
+        }}
+      >
         <MaterialIcons name="settings" size={48} color="#fff" />
-        <Text style={{ 
-          fontSize: 24, 
-          fontWeight: 'bold', 
-          color: '#fff', 
-          marginTop: 12 
-        }}>
+        <Text
+          style={{
+            fontSize: 24,
+            fontWeight: 'bold',
+            color: '#fff',
+            marginTop: 12,
+          }}
+        >
           Settings
         </Text>
       </View>
 
       {/* Preferences Section */}
       <View style={{ marginTop: 20 }}>
-        <Text style={{ 
-          fontSize: 18, 
-          fontWeight: '600', 
-          color: '#333', 
-          marginBottom: 12,
-          paddingHorizontal: 20 
-        }}>
+        <Text
+          style={{
+            fontSize: 18,
+            fontWeight: '600',
+            color: '#333',
+            marginBottom: 12,
+            paddingHorizontal: 20,
+          }}
+        >
           Preferences
         </Text>
 
@@ -269,13 +256,15 @@ export default function Settings() {
 
       {/* More Options */}
       <View style={{ marginTop: 30 }}>
-        <Text style={{ 
-          fontSize: 18, 
-          fontWeight: '600', 
-          color: '#333', 
-          marginBottom: 12,
-          paddingHorizontal: 20 
-        }}>
+        <Text
+          style={{
+            fontSize: 18,
+            fontWeight: '600',
+            color: '#333',
+            marginBottom: 12,
+            paddingHorizontal: 20,
+          }}
+        >
           More
         </Text>
 
@@ -310,13 +299,15 @@ export default function Settings() {
 
       {/* Account Actions */}
       <View style={{ marginTop: 30, marginBottom: 40 }}>
-        <Text style={{ 
-          fontSize: 18, 
-          fontWeight: '600', 
-          color: '#333', 
-          marginBottom: 12,
-          paddingHorizontal: 20 
-        }}>
+        <Text
+          style={{
+            fontSize: 18,
+            fontWeight: '600',
+            color: '#333',
+            marginBottom: 12,
+            paddingHorizontal: 20,
+          }}
+        >
           Account
         </Text>
 
@@ -329,18 +320,18 @@ export default function Settings() {
       </View>
 
       {/* App Version */}
-      <View style={{ 
-        alignItems: 'center', 
-        paddingBottom: 40,
-        paddingTop: 20 
-      }}>
-        <Text style={{ fontSize: 14, color: '#888' }}>
-          PlantAI v1.0.0
-        </Text>
+      <View
+        style={{
+          alignItems: 'center',
+          paddingBottom: 40,
+          paddingTop: 20,
+        }}
+      >
+        <Text style={{ fontSize: 14, color: '#888' }}>PlantAI v1.0.0</Text>
         <Text style={{ fontSize: 12, color: '#aaa', marginTop: 4 }}>
           Made with 💚 for plant lovers
         </Text>
       </View>
     </ScrollView>
   );
-} 
+}

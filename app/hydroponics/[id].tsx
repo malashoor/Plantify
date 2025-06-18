@@ -1,6 +1,14 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useCallback, useState } from 'react';
-import { View, StyleSheet, ScrollView, Text, TouchableOpacity, useColorScheme, ActivityIndicator } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  useColorScheme,
+  ActivityIndicator,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Modal from 'react-native-modal';
 
@@ -23,16 +31,30 @@ const createTheme = (colorScheme: 'light' | 'dark' | null) => ({
     textSecondary: colorScheme === 'dark' ? '#BBBBBB' : '#666666',
     border: colorScheme === 'dark' ? '#444444' : '#E0E0E0',
     error: '#F44336',
-  }
+  },
 });
 
 // Custom Card component
-const Card = ({ children, style, title }: { children: React.ReactNode; style?: any; title?: string }) => {
+const Card = ({
+  children,
+  style,
+  title,
+}: {
+  children: React.ReactNode;
+  style?: any;
+  title?: string;
+}) => {
   const colorScheme = useColorScheme();
   const theme = createTheme(colorScheme);
-  
+
   return (
-    <View style={[styles.cardBase, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }, style]}>
+    <View
+      style={[
+        styles.cardBase,
+        { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+        style,
+      ]}
+    >
       {title && (
         <>
           <Text style={[styles.cardTitle, { color: theme.colors.text }]}>{title}</Text>
@@ -45,29 +67,25 @@ const Card = ({ children, style, title }: { children: React.ReactNode; style?: a
 };
 
 // Custom Button component
-const Button = ({ 
-  title, 
-  onPress, 
+const Button = ({
+  title,
+  onPress,
   iconName,
   theme,
   style,
   disabled = false,
-  loading = false
-}: { 
-  title: string; 
-  onPress: () => void; 
+  loading = false,
+}: {
+  title: string;
+  onPress: () => void;
   iconName?: keyof typeof Ionicons.glyphMap;
   theme: any;
   style?: any;
   disabled?: boolean;
   loading?: boolean;
 }) => (
-  <TouchableOpacity 
-    style={[
-      styles.button, 
-      { backgroundColor: disabled ? '#E0E0E0' : theme.colors.primary },
-      style
-    ]} 
+  <TouchableOpacity
+    style={[styles.button, { backgroundColor: disabled ? '#E0E0E0' : theme.colors.primary }, style]}
     onPress={onPress}
     disabled={disabled || loading}
   >
@@ -77,12 +95,7 @@ const Button = ({
       ) : (
         <>
           {iconName && (
-            <Ionicons 
-              name={iconName} 
-              size={20} 
-              color="white" 
-              style={styles.buttonIcon} 
-            />
+            <Ionicons name={iconName} size={20} color="white" style={styles.buttonIcon} />
           )}
           <Text style={styles.buttonText}>{title}</Text>
         </>
@@ -92,38 +105,31 @@ const Button = ({
 );
 
 // Custom Tab component
-const TabButton = ({ 
-  title, 
-  iconName, 
-  isActive, 
-  onPress, 
-  theme 
-}: { 
-  title: string; 
-  iconName: keyof typeof Ionicons.glyphMap; 
-  isActive: boolean; 
+const TabButton = ({
+  title,
+  iconName,
+  isActive,
+  onPress,
+  theme,
+}: {
+  title: string;
+  iconName: keyof typeof Ionicons.glyphMap;
+  isActive: boolean;
   onPress: () => void;
   theme: any;
 }) => (
-  <TouchableOpacity 
+  <TouchableOpacity
     style={[
-      styles.tabButton, 
-      { 
+      styles.tabButton,
+      {
         backgroundColor: isActive ? theme.colors.primary : 'transparent',
-        borderBottomColor: isActive ? theme.colors.primary : theme.colors.border
-      }
-    ]} 
+        borderBottomColor: isActive ? theme.colors.primary : theme.colors.border,
+      },
+    ]}
     onPress={onPress}
   >
-    <Ionicons 
-      name={iconName} 
-      size={20} 
-      color={isActive ? 'white' : theme.colors.text} 
-    />
-    <Text style={[
-      styles.tabButtonText, 
-      { color: isActive ? 'white' : theme.colors.text }
-    ]}>
+    <Ionicons name={iconName} size={20} color={isActive ? 'white' : theme.colors.text} />
+    <Text style={[styles.tabButtonText, { color: isActive ? 'white' : theme.colors.text }]}>
       {title}
     </Text>
   </TouchableOpacity>
@@ -141,44 +147,53 @@ export default function HydroponicDetailScreen() {
   const [isAddReminderVisible, setIsAddReminderVisible] = useState(false);
   const [selectedTab, setSelectedTab] = useState(0);
 
-  const handleDeleteMeasurement = useCallback(async (measurementId: string) => {
-    try {
-      await deleteMeasurement.mutateAsync({ systemId: id, measurementId });
-    } catch (error) {
-      // Error is handled by the hook
-    }
-  }, [id, deleteMeasurement]);
+  const handleDeleteMeasurement = useCallback(
+    async (measurementId: string) => {
+      try {
+        await deleteMeasurement.mutateAsync({ systemId: id, measurementId });
+      } catch (error) {
+        // Error is handled by the hook
+      }
+    },
+    [id, deleteMeasurement]
+  );
 
-  const handleMeasurementSubmit = useCallback(async (data) => {
-    try {
-      await addMeasurement.mutateAsync({
-        systemId: id,
-        measurement: data
-      });
-      setIsAddMeasurementVisible(false);
-    } catch (error) {
-      // Error is handled by the hook
-    }
-  }, [id, addMeasurement]);
+  const handleMeasurementSubmit = useCallback(
+    async data => {
+      try {
+        await addMeasurement.mutateAsync({
+          systemId: id,
+          measurement: data,
+        });
+        setIsAddMeasurementVisible(false);
+      } catch (error) {
+        // Error is handled by the hook
+      }
+    },
+    [id, addMeasurement]
+  );
 
-  const handleReminderSubmit = useCallback(async (data) => {
-    try {
-      await createReminder.mutateAsync({
-        title: data.title,
-        type: 'hydroponic',
-        related_id: id,
-        trigger_date: data.trigger_date,
-        repeat_interval: data.repeat_interval,
-        context_type: 'hydroponic',
-        priority: data.priority || 'medium',
-        emotion_tone: data.emotion_tone || 'neutral',
-        category: data.category || 'daily_check'
-      });
-      setIsAddReminderVisible(false);
-    } catch (error) {
-      // Error is handled by the hook
-    }
-  }, [id, createReminder]);
+  const handleReminderSubmit = useCallback(
+    async data => {
+      try {
+        await createReminder.mutateAsync({
+          title: data.title,
+          type: 'hydroponic',
+          related_id: id,
+          trigger_date: data.trigger_date,
+          repeat_interval: data.repeat_interval,
+          context_type: 'hydroponic',
+          priority: data.priority || 'medium',
+          emotion_tone: data.emotion_tone || 'neutral',
+          category: data.category || 'daily_check',
+        });
+        setIsAddReminderVisible(false);
+      } catch (error) {
+        // Error is handled by the hook
+      }
+    },
+    [id, createReminder]
+  );
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -215,8 +230,8 @@ export default function HydroponicDetailScreen() {
               style={styles.addButton}
             />
             <View style={styles.measurements}>
-              {system.measurements.map((measurement) => (
-                <Card 
+              {system.measurements.map(measurement => (
+                <Card
                   key={measurement.id}
                   title={new Date(measurement.measured_at).toLocaleString()}
                 >
@@ -253,16 +268,8 @@ export default function HydroponicDetailScreen() {
               type="nutrients"
               title="Nutrient Levels"
             />
-            <NutrientChart
-              measurements={system.measurements}
-              type="ph"
-              title="pH Levels"
-            />
-            <NutrientChart
-              measurements={system.measurements}
-              type="ec"
-              title="EC Levels"
-            />
+            <NutrientChart measurements={system.measurements} type="ph" title="pH Levels" />
+            <NutrientChart measurements={system.measurements} type="ec" title="EC Levels" />
             <NutrientChart
               measurements={system.measurements}
               type="temperature"
@@ -303,9 +310,7 @@ export default function HydroponicDetailScreen() {
       </View>
 
       {/* Tab Content */}
-      <View style={styles.contentContainer}>
-        {renderTabContent()}
-      </View>
+      <View style={styles.contentContainer}>{renderTabContent()}</View>
 
       {/* Measurement Form Modal */}
       <Modal

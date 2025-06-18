@@ -6,9 +6,9 @@ import { QueueStorage } from '../storage/QueueStorage';
 jest.mock('../network', () => ({
   NetworkManager: {
     getInstance: jest.fn(() => ({
-      isOnline: jest.fn(() => true)
-    }))
-  }
+      isOnline: jest.fn(() => true),
+    })),
+  },
 }));
 
 // Mock QueueStorage
@@ -19,8 +19,8 @@ jest.mock('../storage/QueueStorage', () => ({
     removeEntries: jest.fn(),
     updateEntries: jest.fn(),
     registerOperation: jest.fn(),
-    getOperation: jest.fn()
-  }
+    getOperation: jest.fn(),
+  },
 }));
 
 describe('RetryQueue', () => {
@@ -46,7 +46,7 @@ describe('RetryQueue', () => {
       const id = retryQueue.enqueue({
         id: 'test-1',
         operation,
-        priority: 'high'
+        priority: 'high',
       });
 
       expect(id).toBe('test-1');
@@ -56,17 +56,17 @@ describe('RetryQueue', () => {
 
     it('should prevent duplicate operations', () => {
       const operation = jest.fn().mockResolvedValue('success');
-      
+
       const id1 = retryQueue.enqueue({
         id: 'test-1',
         operation,
-        priority: 'high'
+        priority: 'high',
       });
 
       const id2 = retryQueue.enqueue({
         id: 'test-2',
         operation,
-        priority: 'medium'
+        priority: 'medium',
       });
 
       expect(id1).toBe('test-1');
@@ -84,19 +84,19 @@ describe('RetryQueue', () => {
       retryQueue.enqueue({
         id: 'low',
         operation: createOperation('low'),
-        priority: 'low'
+        priority: 'low',
       });
 
       retryQueue.enqueue({
         id: 'high',
         operation: createOperation('high'),
-        priority: 'high'
+        priority: 'high',
       });
 
       retryQueue.enqueue({
         id: 'critical',
         operation: createOperation('critical'),
-        priority: 'critical'
+        priority: 'critical',
       });
 
       // Let queue process
@@ -108,7 +108,8 @@ describe('RetryQueue', () => {
 
   describe('Retry Execution', () => {
     it('should retry failed operations with exponential backoff', async () => {
-      const operation = jest.fn()
+      const operation = jest
+        .fn()
         .mockRejectedValueOnce(new Error('fail'))
         .mockRejectedValueOnce(new Error('fail'))
         .mockResolvedValue('success');
@@ -124,7 +125,7 @@ describe('RetryQueue', () => {
         delay: 1000,
         onRetry,
         onSuccess,
-        onError
+        onError,
       });
 
       // First attempt
@@ -153,7 +154,7 @@ describe('RetryQueue', () => {
         operation,
         maxRetries: 2,
         delay: 1000,
-        onError
+        onError,
       });
 
       // Run through all retries
@@ -174,7 +175,7 @@ describe('RetryQueue', () => {
           operations.push('dep-1');
           return Promise.resolve();
         },
-        priority: 'high'
+        priority: 'high',
       });
 
       retryQueue.enqueue({
@@ -184,7 +185,7 @@ describe('RetryQueue', () => {
           return Promise.resolve();
         },
         priority: 'critical',
-        dependencies: [dep1]
+        dependencies: [dep1],
       });
 
       await jest.runAllTimersAsync();
@@ -196,7 +197,7 @@ describe('RetryQueue', () => {
       const dep1 = retryQueue.enqueue({
         id: 'dep-1',
         operation: () => Promise.reject(new Error('fail')),
-        maxRetries: 1
+        maxRetries: 1,
       });
 
       const dependent = retryQueue.enqueue({
@@ -205,7 +206,7 @@ describe('RetryQueue', () => {
           operations.push('dependent');
           return Promise.resolve();
         },
-        dependencies: [dep1]
+        dependencies: [dep1],
       });
 
       await jest.runAllTimersAsync();
@@ -221,7 +222,7 @@ describe('RetryQueue', () => {
       retryQueue.enqueue({
         id: 'test-offline',
         operation,
-        maxRetries: 3
+        maxRetries: 3,
       });
 
       await jest.advanceTimersByTimeAsync(5000);
@@ -242,14 +243,14 @@ describe('RetryQueue', () => {
       retryQueue.enqueue({
         id: 'success-1',
         operation: successOp,
-        priority: 'high'
+        priority: 'high',
       });
 
       retryQueue.enqueue({
         id: 'fail-1',
         operation: failOp,
         priority: 'low',
-        maxRetries: 1
+        maxRetries: 1,
       });
 
       const stats = retryQueue.getStats();
@@ -276,13 +277,15 @@ describe('RetryQueue', () => {
       const operation = jest.fn().mockResolvedValue('success');
       const id = retryQueue.enqueue({
         id: 'test-events',
-        operation
+        operation,
       });
 
-      expect(onQueued).toHaveBeenCalledWith(expect.objectContaining({
-        id: 'test-events',
-        queueSize: 1
-      }));
+      expect(onQueued).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: 'test-events',
+          queueSize: 1,
+        })
+      );
 
       unsubscribeQueued();
       unsubscribeDequeued();
@@ -295,16 +298,18 @@ describe('RetryQueue', () => {
       const mockOperation = jest.fn().mockResolvedValue('success');
       const now = Date.now();
 
-      (QueueStorage.loadQueue as jest.Mock).mockResolvedValueOnce([{
-        id: 'persisted-1',
-        priority: 'high',
-        attempts: 1,
-        lastAttempt: now,
-        maxRetries: 3,
-        operationKey: 'test-op',
-        operationData: JSON.stringify(['arg1', 'arg2']),
-        createdAt: now
-      }]);
+      (QueueStorage.loadQueue as jest.Mock).mockResolvedValueOnce([
+        {
+          id: 'persisted-1',
+          priority: 'high',
+          attempts: 1,
+          lastAttempt: now,
+          maxRetries: 3,
+          operationKey: 'test-op',
+          operationData: JSON.stringify(['arg1', 'arg2']),
+          createdAt: now,
+        },
+      ]);
 
       (QueueStorage.getOperation as jest.Mock).mockReturnValue(mockOperation);
 
@@ -321,15 +326,15 @@ describe('RetryQueue', () => {
 
     it('should persist non-volatile operations', async () => {
       const operation = jest.fn().mockResolvedValue('success');
-      
+
       retryQueue.registerOperation('test-op', operation);
-      
+
       retryQueue.enqueue({
         id: 'test-1',
         operation,
         priority: 'high',
         operationKey: 'test-op',
-        operationData: JSON.stringify(['arg1'])
+        operationData: JSON.stringify(['arg1']),
       });
 
       expect(QueueStorage.saveQueue).toHaveBeenCalled();
@@ -337,19 +342,20 @@ describe('RetryQueue', () => {
 
     it('should not persist volatile operations', async () => {
       const operation = jest.fn().mockResolvedValue('success');
-      
+
       retryQueue.enqueue({
         id: 'test-1',
         operation,
         priority: 'high',
-        isVolatile: true
+        isVolatile: true,
       });
 
       expect(QueueStorage.saveQueue).not.toHaveBeenCalled();
     });
 
     it('should update persistence on retry attempts', async () => {
-      const operation = jest.fn()
+      const operation = jest
+        .fn()
         .mockRejectedValueOnce(new Error('fail'))
         .mockResolvedValue('success');
 
@@ -358,7 +364,7 @@ describe('RetryQueue', () => {
         operation,
         priority: 'high',
         operationKey: 'test-op',
-        maxRetries: 2
+        maxRetries: 2,
       });
 
       await jest.runAllTimersAsync();
@@ -367,20 +373,20 @@ describe('RetryQueue', () => {
         expect.arrayContaining([
           expect.objectContaining({
             id: 'test-1',
-            attempts: 1
-          })
+            attempts: 1,
+          }),
         ])
       );
     });
 
     it('should remove entries from persistence when dequeued', async () => {
       const operation = jest.fn().mockResolvedValue('success');
-      
+
       retryQueue.enqueue({
         id: 'test-1',
         operation,
         priority: 'high',
-        operationKey: 'test-op'
+        operationKey: 'test-op',
       });
 
       retryQueue.dequeue('test-1');
@@ -390,16 +396,18 @@ describe('RetryQueue', () => {
 
     it('should handle persistence errors gracefully', async () => {
       (QueueStorage.saveQueue as jest.Mock).mockRejectedValue(new Error('Storage error'));
-      
+
       const operation = jest.fn().mockResolvedValue('success');
-      
+
       // Should not throw
-      expect(() => retryQueue.enqueue({
-        id: 'test-1',
-        operation,
-        priority: 'high',
-        operationKey: 'test-op'
-      })).not.toThrow();
+      expect(() =>
+        retryQueue.enqueue({
+          id: 'test-1',
+          operation,
+          priority: 'high',
+          operationKey: 'test-op',
+        })
+      ).not.toThrow();
     });
 
     it('should register and use persisted operations', async () => {
@@ -414,9 +422,9 @@ describe('RetryQueue', () => {
 
       // Reset singleton to trigger initialization
       (RetryQueue as any).instance = undefined;
-      
+
       // Should not throw
       expect(() => RetryQueue.getInstance()).not.toThrow();
     });
   });
-}); 
+});

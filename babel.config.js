@@ -2,11 +2,12 @@
 // This file needs to be CommonJS format for Expo/Metro to work properly
 
 /** @type {import('@babel/core').ConfigFunction} */
-module.exports = function(api) {
+module.exports = function (api) {
   api.cache(true);
   return {
     presets: ['babel-preset-expo'],
     plugins: [
+      'expo-router/babel',
       // Handle React Native reanimated
       'react-native-reanimated/plugin',
       // Handle module resolution
@@ -14,29 +15,28 @@ module.exports = function(api) {
         'module-resolver',
         {
           root: ['.'],
-          extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
           alias: {
-            '@': './src',
-            '@components': './src/components',
-            '@screens': './src/screens',
-            '@hooks': './src/hooks',
-            '@services': './src/services',
-            '@providers': './src/providers',
-            '@types': './src/types',
-            '@lib': './src/lib',
-            '@layouts': './src/components/layout'
+            '@components': './components',
+            '@constants': './constants',
+            '@hooks': './hooks',
+            '@services': './services',
+            '@screens': './app/screens',
+            '@assets': './assets',
           },
         },
       ],
       // Handle environment variables
-      ['module:react-native-dotenv', {
-        moduleName: '@env',
-        path: '.env',
-        blacklist: null,
-        whitelist: null,
-        safe: true,
-        allowUndefined: false,
-      }],
+      [
+        'module:react-native-dotenv',
+        {
+          moduleName: '@env',
+          path: '.env',
+          blacklist: null,
+          whitelist: null,
+          safe: true,
+          allowUndefined: false,
+        },
+      ],
     ],
   };
-}; 
+};

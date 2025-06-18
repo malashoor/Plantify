@@ -3,12 +3,12 @@ import { View, Image, Text, TouchableOpacity, StyleSheet, ActivityIndicator } fr
 import { useAnalytics } from '../hooks/useAnalytics';
 import { AnalyticsEvent } from '../types/analytics';
 import { ImageProcessingErrorBoundary } from './ImageProcessingErrorBoundary';
-import { 
-  compressImage, 
-  cleanupTemporaryImages, 
+import {
+  compressImage,
+  cleanupTemporaryImages,
   validateImage,
   ProcessedImage,
-  ImageProcessingError 
+  ImageProcessingError,
 } from '../utils/imageProcessing';
 
 interface PlantAnalyzerProps {
@@ -27,7 +27,7 @@ interface AnalysisResult {
 export const PlantAnalyzer: React.FC<PlantAnalyzerProps> = ({
   imageUri,
   onAnalysisComplete,
-  onError
+  onError,
 }) => {
   const [analyzing, setAnalyzing] = useState(false);
   const [processedImage, setProcessedImage] = useState<ProcessedImage | null>(null);
@@ -55,25 +55,19 @@ export const PlantAnalyzer: React.FC<PlantAnalyzerProps> = ({
       // Validate image first
       const isValid = await validateImage(uri);
       if (!isValid) {
-        throw new ImageProcessingError(
-          'Invalid or corrupted image file',
-          'INVALID_IMAGE'
-        );
+        throw new ImageProcessingError('Invalid or corrupted image file', 'INVALID_IMAGE');
       }
 
       // Compress and process image
       const processed = await compressImage(uri);
       setProcessedImage(processed);
-      
+
       return processed;
     } catch (error) {
       if (error instanceof ImageProcessingError) {
         throw error;
       }
-      throw new ImageProcessingError(
-        'Failed to process image',
-        'PROCESSING_FAILED'
-      );
+      throw new ImageProcessingError('Failed to process image', 'PROCESSING_FAILED');
     }
   };
 
@@ -84,13 +78,13 @@ export const PlantAnalyzer: React.FC<PlantAnalyzerProps> = ({
     const featureTracker = await trackFeature('plant_analysis', {
       image_size: `${processedImage.width}x${processedImage.height}`,
       file_size: processedImage.size,
-      format: processedImage.format
+      format: processedImage.format,
     });
 
     try {
       // Simulate plant analysis
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
+
       const analysisResult: AnalysisResult = {
         plantName: 'Monstera Deliciosa',
         confidence: 0.95,
@@ -98,8 +92,8 @@ export const PlantAnalyzer: React.FC<PlantAnalyzerProps> = ({
         recommendations: [
           'Indirect bright light',
           'Water when top soil is dry',
-          'High humidity preferred'
-        ]
+          'High humidity preferred',
+        ],
       };
 
       setResult(analysisResult);
@@ -107,12 +101,11 @@ export const PlantAnalyzer: React.FC<PlantAnalyzerProps> = ({
 
       // Track successful analysis
       await featureTracker.complete('success');
-
     } catch (error) {
       // Track error
       await trackError(error as Error, {
         feature: 'plant_analysis',
-        image_uri: processedImage.uri
+        image_uri: processedImage.uri,
       });
 
       await featureTracker.complete('error');
@@ -142,11 +135,7 @@ export const PlantAnalyzer: React.FC<PlantAnalyzerProps> = ({
     <ImageProcessingErrorBoundary onRetry={handleRetry} onError={onError}>
       <View style={styles.container}>
         {processedImage ? (
-          <Image
-            source={{ uri: processedImage.uri }}
-            style={styles.image}
-            resizeMode="cover"
-          />
+          <Image source={{ uri: processedImage.uri }} style={styles.image} resizeMode="cover" />
         ) : (
           <ActivityIndicator size="large" color="#0000ff" />
         )}
@@ -156,9 +145,7 @@ export const PlantAnalyzer: React.FC<PlantAnalyzerProps> = ({
           onPress={handleAnalyze}
           disabled={analyzing || !processedImage}
         >
-          <Text style={styles.buttonText}>
-            {analyzing ? 'Analyzing...' : 'Analyze Plant'}
-          </Text>
+          <Text style={styles.buttonText}>{analyzing ? 'Analyzing...' : 'Analyze Plant'}</Text>
         </TouchableOpacity>
 
         {result && (
@@ -166,7 +153,7 @@ export const PlantAnalyzer: React.FC<PlantAnalyzerProps> = ({
             <Text style={styles.plantName}>{result.plantName}</Text>
             <Text>Confidence: {(result.confidence * 100).toFixed(1)}%</Text>
             <Text>Health Score: {(result.healthScore * 100).toFixed(1)}%</Text>
-            
+
             <Text style={styles.recommendationsTitle}>Recommendations:</Text>
             {result.recommendations.map((rec, index) => (
               <Text key={index} style={styles.recommendation}>
@@ -189,53 +176,53 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3
+    elevation: 3,
   },
   message: {
     textAlign: 'center',
     fontSize: 16,
-    color: '#666'
+    color: '#666',
   },
   image: {
     width: '100%',
     height: 200,
     borderRadius: 8,
-    marginBottom: 16
+    marginBottom: 16,
   },
   analyzeButton: {
     backgroundColor: '#2ecc71',
     paddingVertical: 12,
     borderRadius: 6,
     alignItems: 'center',
-    marginVertical: 16
+    marginVertical: 16,
   },
   analyzeButtonDisabled: {
-    backgroundColor: '#95a5a6'
+    backgroundColor: '#95a5a6',
   },
   buttonText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: '600'
+    fontWeight: '600',
   },
   resultContainer: {
     marginTop: 16,
     padding: 16,
     backgroundColor: '#f5f5f5',
-    borderRadius: 8
+    borderRadius: 8,
   },
   plantName: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 8
+    marginBottom: 8,
   },
   recommendationsTitle: {
     fontSize: 16,
     fontWeight: '600',
     marginTop: 12,
-    marginBottom: 8
+    marginBottom: 8,
   },
   recommendation: {
     marginLeft: 8,
-    marginBottom: 4
-  }
-}); 
+    marginBottom: 4,
+  },
+});

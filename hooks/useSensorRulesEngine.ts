@@ -6,10 +6,10 @@ interface UseSensorRulesEngineProps {
   refreshInterval?: number;
 }
 
-export function useSensorRulesEngine({ 
-  plantId, 
+export function useSensorRulesEngine({
+  plantId,
   systemId,
-  refreshInterval = 60000 
+  refreshInterval = 60000,
 }: UseSensorRulesEngineProps) {
   const [rules] = useState([]);
   const [isRunning] = useState(false);
@@ -17,7 +17,7 @@ export function useSensorRulesEngine({
   const startEngine = () => {
     console.log('Sensor rules engine started (mock)');
   };
-  
+
   const stopEngine = () => {
     console.log('Sensor rules engine stopped (mock)');
   };
@@ -26,6 +26,6 @@ export function useSensorRulesEngine({
     rules,
     isRunning,
     startEngine,
-    stopEngine
+    stopEngine,
   };
-} 
+}

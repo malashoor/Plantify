@@ -23,4 +23,4 @@ export interface Plant {
     lightLevel: 'low' | 'medium' | 'high';
     room?: string;
   };
-} 
+}

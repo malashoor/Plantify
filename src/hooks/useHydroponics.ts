@@ -49,9 +49,7 @@ export function useHydroponics() {
   };
 
   const updateSystem = (id: string, updates: Partial<HydroponicSystem>) => {
-    setSystems(prev => prev.map(system => 
-      system.id === id ? { ...system, ...updates } : system
-    ));
+    setSystems(prev => prev.map(system => (system.id === id ? { ...system, ...updates } : system)));
   };
 
   return {
@@ -60,4 +58,4 @@ export function useHydroponics() {
     getSystemById,
     updateSystem,
   };
-} 
+}

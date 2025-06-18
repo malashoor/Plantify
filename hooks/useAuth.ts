@@ -29,13 +29,16 @@ export function useAuth(): AuthState {
     // Get initial session
     const getInitialSession = async () => {
       try {
-        const { data: { session }, error } = await supabase.auth.getSession();
-        
+        const {
+          data: { session },
+          error,
+        } = await supabase.auth.getSession();
+
         if (error) {
           console.error('Error getting session:', error);
         } else {
           setSession(session);
-          setUser(session?.user as AuthUser || null);
+          setUser((session?.user as AuthUser) || null);
         }
       } catch (error) {
         console.error('Error in getInitialSession:', error);
@@ -47,24 +50,24 @@ export function useAuth(): AuthState {
     getInitialSession();
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        console.log('Auth state changed:', event, session?.user?.email);
-        
-        setSession(session);
-        setUser(session?.user as AuthUser || null);
-        setLoading(false);
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('Auth state changed:', event, session?.user?.email);
 
-        // Handle specific auth events
-        if (event === 'SIGNED_IN') {
-          console.log('User signed in:', session?.user?.email);
-        } else if (event === 'SIGNED_OUT') {
-          console.log('User signed out');
-        } else if (event === 'TOKEN_REFRESHED') {
-          console.log('Token refreshed');
-        }
+      setSession(session);
+      setUser((session?.user as AuthUser) || null);
+      setLoading(false);
+
+      // Handle specific auth events
+      if (event === 'SIGNED_IN') {
+        console.log('User signed in:', session?.user?.email);
+      } else if (event === 'SIGNED_OUT') {
+        console.log('User signed out');
+      } else if (event === 'TOKEN_REFRESHED') {
+        console.log('Token refreshed');
       }
-    );
+    });
 
     return () => {
       subscription.unsubscribe();
@@ -74,7 +77,7 @@ export function useAuth(): AuthState {
   const signUp = async (email: string, password: string, name?: string) => {
     try {
       setLoading(true);
-      
+
       const { data, error } = await supabase.auth.signUp({
         email: email.trim(),
         password,
@@ -82,8 +85,8 @@ export function useAuth(): AuthState {
           data: {
             name: name?.trim() || '',
             role: 'grower', // Default role
-          }
-        }
+          },
+        },
       });
 
       if (error) {
@@ -107,7 +110,7 @@ export function useAuth(): AuthState {
   const signIn = async (email: string, password: string) => {
     try {
       setLoading(true);
-      
+
       const { data, error } = await supabase.auth.signInWithPassword({
         email: email.trim(),
         password,
@@ -129,9 +132,9 @@ export function useAuth(): AuthState {
   const signOut = async () => {
     try {
       setLoading(true);
-      
+
       const { error } = await supabase.auth.signOut();
-      
+
       if (error) {
         return { error: error.message };
       }
@@ -139,7 +142,7 @@ export function useAuth(): AuthState {
       // Clear local state
       setUser(null);
       setSession(null);
-      
+
       return { error: null };
     } catch (error: any) {
       console.error('Sign out error:', error);
@@ -172,7 +175,7 @@ export function useAuth(): AuthState {
         provider: provider as any,
         options: {
           redirectTo: 'exp://localhost:8081/',
-        }
+        },
       });
 
       if (error) {
@@ -189,15 +192,15 @@ export function useAuth(): AuthState {
   // Determine user role from user metadata or default
   const getUserRole = (): UserRole => {
     if (!user) return 'grower';
-    
+
     // Check user metadata for role
     const role = user.user_metadata?.role || user.app_metadata?.role;
-    
+
     // Validate role
     if (['admin', 'grower', 'child'].includes(role)) {
       return role as UserRole;
     }
-    
+
     return 'grower'; // Default role
   };
 
@@ -212,4 +215,4 @@ export function useAuth(): AuthState {
     resetPassword,
     signInWithOAuth,
   };
-} 
+}

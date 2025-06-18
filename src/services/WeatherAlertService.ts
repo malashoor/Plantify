@@ -70,7 +70,8 @@ export class WeatherAlertService {
         type: 'heat',
         severity: 'critical',
         message: 'Extreme heat warning',
-        recommendation: 'Move sensitive plants to shade, increase watering frequency, and avoid fertilizing',
+        recommendation:
+          'Move sensitive plants to shade, increase watering frequency, and avoid fertilizing',
         affectedPlants: this.getAffectedPlants(seeds, 'heat'),
         timestamp,
       });
@@ -182,21 +183,13 @@ export class WeatherAlertService {
 
   private static isHeatSensitive(species: string): boolean {
     // Add logic to identify heat-sensitive species
-    const heatSensitiveSpecies = [
-      'Camellia japonica',
-      'Hydrangea macrophylla',
-      'Lobelia erinus',
-    ];
+    const heatSensitiveSpecies = ['Camellia japonica', 'Hydrangea macrophylla', 'Lobelia erinus'];
     return heatSensitiveSpecies.includes(species);
   }
 
   private static isColdSensitive(species: string): boolean {
     // Add logic to identify cold-sensitive species
-    const coldSensitiveSpecies = [
-      'Calathea',
-      'Monstera deliciosa',
-      'Ficus lyrata',
-    ];
+    const coldSensitiveSpecies = ['Calathea', 'Monstera deliciosa', 'Ficus lyrata'];
     return coldSensitiveSpecies.includes(species);
   }
 
@@ -279,4 +272,4 @@ export class WeatherAlertService {
       }
     }
   }
-} 
+}

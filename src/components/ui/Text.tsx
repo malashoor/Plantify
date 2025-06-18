@@ -35,24 +35,12 @@ const variantStyles: Record<NonNullable<TextProps['variant']>, TextStyle> = {
   },
 };
 
-export function Text({ 
-  children,
-  variant = 'body',
-  style,
-  ...props
-}: TextProps) {
+export function Text({ children, variant = 'body', style, ...props }: TextProps) {
   const theme = useTheme();
 
   return (
-    <RNText
-      style={[
-        variantStyles[variant],
-        { color: theme.colors.text },
-        style,
-      ]}
-      {...props}
-    >
+    <RNText style={[variantStyles[variant], { color: theme.colors.text }, style]} {...props}>
       {children}
     </RNText>
   );
-} 
+}

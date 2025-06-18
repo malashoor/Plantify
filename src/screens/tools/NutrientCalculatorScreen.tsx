@@ -67,11 +67,7 @@ export default function NutrientCalculatorScreen() {
               style={{ backgroundColor: '#fff' }}
             />
 
-            <Button
-              mode="contained"
-              onPress={calculateNutrients}
-              style={{ marginTop: 8 }}
-            >
+            <Button mode="contained" onPress={calculateNutrients} style={{ marginTop: 8 }}>
               Calculate
             </Button>
           </Surface>
@@ -80,15 +76,33 @@ export default function NutrientCalculatorScreen() {
             <Card style={{ marginTop: 16, backgroundColor: '#e8f5e9' }}>
               <Card.Content>
                 <Title>Recommended Nutrients (grams)</Title>
-                <Surface style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 4 }}>
+                <Surface
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    marginVertical: 4,
+                  }}
+                >
                   <Text>Nitrogen (N):</Text>
                   <Text>{results.nitrogen.toFixed(2)}g</Text>
                 </Surface>
-                <Surface style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 4 }}>
+                <Surface
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    marginVertical: 4,
+                  }}
+                >
                   <Text>Phosphorus (P):</Text>
                   <Text>{results.phosphorus.toFixed(2)}g</Text>
                 </Surface>
-                <Surface style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 4 }}>
+                <Surface
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    marginVertical: 4,
+                  }}
+                >
                   <Text>Potassium (K):</Text>
                   <Text>{results.potassium.toFixed(2)}g</Text>
                 </Surface>
@@ -99,4 +113,4 @@ export default function NutrientCalculatorScreen() {
       </Card>
     </ScrollView>
   );
-} 
+}

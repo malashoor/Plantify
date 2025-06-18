@@ -27,9 +27,9 @@ export default function KeyboardDismissView({
 
   const handleDismiss = () => {
     if (!enabled) return;
-    
+
     Keyboard.dismiss();
-    
+
     if (shouldAnnounce && Platform.OS === 'ios') {
       AccessibilityInfo.announceForAccessibility(
         t('accessibility.keyboard_dismissed', 'Keyboard dismissed')
@@ -62,4 +62,4 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-}); 
+});

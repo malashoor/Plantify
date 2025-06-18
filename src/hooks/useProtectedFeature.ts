@@ -48,4 +48,4 @@ export function useProtectedFeature({
 //
 // const handleCalculate = protectedAction(async () => {
 //   // Your premium feature logic here
-// }); 
+// });

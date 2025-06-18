@@ -23,7 +23,7 @@ mockAccessibilityInfo();
 mockAccessibilityHooks();
 
 describe('LightingCalculatorScreen Accessibility', () => {
-  const mockT = jest.fn((key) => key);
+  const mockT = jest.fn(key => key);
   const mockI18n = { language: 'en' };
   const mockCalculator = {
     selectedCrop: null,
@@ -85,10 +85,7 @@ describe('LightingCalculatorScreen Accessibility', () => {
         'lighting.accessibility.distance_slider': 'adjustable',
         'lighting.accessibility.calculate_button': 'button',
       },
-      announcements: [
-        'lighting.accessibility.screen_loaded',
-        'lighting.accessibility.form_ready',
-      ],
+      announcements: ['lighting.accessibility.screen_loaded', 'lighting.accessibility.form_ready'],
       focusOrder: [
         'lighting.accessibility.crop_section',
         'lighting.accessibility.stage_section',
@@ -102,7 +99,7 @@ describe('LightingCalculatorScreen Accessibility', () => {
 
   it('announces crop selection via screen reader', async () => {
     const { getAllByA11yRole } = render(<LightingCalculatorScreen />);
-    
+
     const cropButtons = getAllByA11yRole('radio');
     await act(async () => {
       fireEvent.press(cropButtons[0]);
@@ -115,7 +112,7 @@ describe('LightingCalculatorScreen Accessibility', () => {
 
   it('provides accessible slider controls for distance adjustment', () => {
     const { getByA11yLabel } = render(<LightingCalculatorScreen />);
-    
+
     const slider = getByA11yLabel('lighting.accessibility.distance_slider');
     expect(slider).toBeTruthy();
     expect(slider.props.accessibilityRole).toBe('adjustable');
@@ -124,14 +121,14 @@ describe('LightingCalculatorScreen Accessibility', () => {
 
   it('announces calculation results to screen reader', async () => {
     const { getByA11yLabel } = render(<LightingCalculatorScreen />);
-    
+
     // Mock calculations result
     const mockResults = {
       dli: 40.5,
       powerConsumption: 2.4,
       estimatedCost: 0.72,
     };
-    
+
     (useLightingCalculator as jest.Mock).mockReturnValue({
       ...mockCalculator,
       calculations: mockResults,
@@ -154,7 +151,7 @@ describe('LightingCalculatorScreen Accessibility', () => {
     });
 
     const { getByA11yLabel } = render(<LightingCalculatorScreen />);
-    
+
     await waitFor(() => {
       expect(AccessibilityInfo.announceForAccessibility).toHaveBeenCalledWith(
         expect.stringContaining('Test error message')
@@ -164,7 +161,7 @@ describe('LightingCalculatorScreen Accessibility', () => {
 
   it('announces photoperiod changes', async () => {
     const { getAllByA11yRole } = render(<LightingCalculatorScreen />);
-    
+
     const photoperiodButtons = getAllByA11yRole('radio').filter(
       button => button.props.accessibilityHint === 'lighting.accessibility.photoperiod_hint'
     );
@@ -180,9 +177,9 @@ describe('LightingCalculatorScreen Accessibility', () => {
 
   it('provides accessible LED selection with detailed information', () => {
     const { getAllByA11yRole } = render(<LightingCalculatorScreen />);
-    
-    const ledButtons = getAllByA11yRole('radio').filter(
-      button => button.props.accessibilityLabel?.includes('LED light')
+
+    const ledButtons = getAllByA11yRole('radio').filter(button =>
+      button.props.accessibilityLabel?.includes('LED light')
     );
 
     expect(ledButtons[0].props.accessibilityLabel).toContain('Test LED');
@@ -190,4 +187,4 @@ describe('LightingCalculatorScreen Accessibility', () => {
     expect(ledButtons[0].props.accessibilityLabel).toContain('1000');
     expect(ledButtons[0].props.accessibilityLabel).toContain('4');
   });
-}); 
+});

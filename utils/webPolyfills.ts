@@ -11,14 +11,14 @@ if (Platform.OS === 'web') {
       return setTimeout(callback, 0);
     };
   }
-  
+
   // Polyfill for cancelAnimationFrame
   if (!window.cancelAnimationFrame) {
     window.cancelAnimationFrame = id => {
       clearTimeout(id);
     };
   }
-  
+
   // Warn about any missing native modules
   const originalConsoleError = console.error;
   console.error = (...args) => {
@@ -33,7 +33,7 @@ if (Platform.OS === 'web') {
       console.warn('Web compatibility warning:', ...args);
       return;
     }
-    
+
     originalConsoleError(...args);
   };
 }
@@ -41,4 +41,4 @@ if (Platform.OS === 'web') {
 export default function ensureWebPolyfills() {
   // This function can be imported to ensure polyfills are loaded
   // even if the file content isn't used directly
-} 
+}

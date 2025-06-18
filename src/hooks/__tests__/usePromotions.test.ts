@@ -31,7 +31,7 @@ describe('useApplyPromotion', () => {
 
   it('should successfully apply a valid promotion', async () => {
     // Mock Supabase responses
-    (supabase.from as jest.Mock).mockImplementation((table) => ({
+    (supabase.from as jest.Mock).mockImplementation(table => ({
       select: jest.fn().mockReturnThis(),
       eq: jest.fn().mockReturnThis(),
       single: jest.fn().mockResolvedValue({ data: mockPromotion }),
@@ -39,7 +39,7 @@ describe('useApplyPromotion', () => {
     }));
 
     const { result } = renderHook(() => useApplyPromotion());
-    
+
     let response;
     await act(async () => {
       response = await result.current.applyPromotion('TEST123');
@@ -57,14 +57,14 @@ describe('useApplyPromotion', () => {
       expires_at: '2020-01-01T00:00:00Z',
     };
 
-    (supabase.from as jest.Mock).mockImplementation((table) => ({
+    (supabase.from as jest.Mock).mockImplementation(table => ({
       select: jest.fn().mockReturnThis(),
       eq: jest.fn().mockReturnThis(),
       single: jest.fn().mockResolvedValue({ data: expiredPromotion }),
     }));
 
     const { result } = renderHook(() => useApplyPromotion());
-    
+
     let response;
     await act(async () => {
       response = await result.current.applyPromotion('TEST123');
@@ -98,14 +98,14 @@ describe('useUserPromotions', () => {
   });
 
   it('should fetch user promotions successfully', async () => {
-    (supabase.from as jest.Mock).mockImplementation((table) => ({
+    (supabase.from as jest.Mock).mockImplementation(table => ({
       select: jest.fn().mockReturnThis(),
       eq: jest.fn().mockReturnThis(),
       single: jest.fn().mockResolvedValue({ data: mockUserPromotions }),
     }));
 
     const { result } = renderHook(() => useUserPromotions());
-    
+
     await act(async () => {
       await result.current.fetchPromotions();
     });
@@ -116,7 +116,7 @@ describe('useUserPromotions', () => {
 
   it('should detect active premium access', async () => {
     const { result } = renderHook(() => useUserPromotions());
-    
+
     act(() => {
       // @ts-ignore - we're setting state directly for testing
       result.current.promotions = mockUserPromotions;
@@ -124,4 +124,4 @@ describe('useUserPromotions', () => {
 
     expect(result.current.hasActivePremium()).toBe(true);
   });
-}); 
+});

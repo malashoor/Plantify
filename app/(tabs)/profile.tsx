@@ -30,12 +30,14 @@ const ProfileScreen = () => {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
 
-  const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(i18n.language as LanguageCode);
+  const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(
+    i18n.language as LanguageCode
+  );
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [darkModeEnabled, setDarkModeEnabled] = useState(isDark);
 
   useEffect(() => {
-    AsyncStorage.getItem('app_language').then((language) => {
+    AsyncStorage.getItem('app_language').then(language => {
       if (language && Object.keys(LANGUAGES).includes(language)) {
         setCurrentLanguage(language as LanguageCode);
       }
@@ -49,11 +51,9 @@ const ProfileScreen = () => {
       setCurrentLanguage(lng);
     } catch (error) {
       console.error('Failed to change language:', error);
-      Alert.alert(
-        t('common.error'),
-        t('profile.settings.languageChangeError'),
-        [{ text: t('common.ok') }]
-      );
+      Alert.alert(t('common.error'), t('profile.settings.languageChangeError'), [
+        { text: t('common.ok') },
+      ]);
     }
   };
 
@@ -74,9 +74,7 @@ const ProfileScreen = () => {
       <BackHeader title={t('profile.title')} />
       <SafeAreaView style={[styles.container, isDark && styles.containerDark]}>
         <View style={styles.header}>
-          <Text style={[styles.title, isDark && styles.textDark]}>
-            {t('profile.title')}
-          </Text>
+          <Text style={[styles.title, isDark && styles.textDark]}>{t('profile.title')}</Text>
         </View>
 
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -101,33 +99,25 @@ const ProfileScreen = () => {
               <Text style={styles.profileName}>Moayed</Text>
               <Text style={styles.profileEmail}>moayed@example.com</Text>
               <TouchableOpacity style={styles.editProfileButton} onPress={handleEditPress}>
-                <Text style={styles.editProfileText}>
-                  {t('profile.editProfile')}
-                </Text>
+                <Text style={styles.editProfileText}>{t('profile.editProfile')}</Text>
               </TouchableOpacity>
             </LinearGradient>
 
             <View style={styles.statsRow}>
               <View style={[styles.statCard, isDark && styles.cardDark]}>
-                <Text style={[styles.statNumber, isDark && styles.textDark]}>
-                  12
-                </Text>
+                <Text style={[styles.statNumber, isDark && styles.textDark]}>12</Text>
                 <Text style={[styles.statLabel, isDark && styles.textLightDark]}>
                   {t('profile.stats.plants')}
                 </Text>
               </View>
               <View style={[styles.statCard, isDark && styles.cardDark]}>
-                <Text style={[styles.statNumber, isDark && styles.textDark]}>
-                  28
-                </Text>
+                <Text style={[styles.statNumber, isDark && styles.textDark]}>28</Text>
                 <Text style={[styles.statLabel, isDark && styles.textLightDark]}>
                   {t('profile.stats.scans')}
                 </Text>
               </View>
               <View style={[styles.statCard, isDark && styles.cardDark]}>
-                <Text style={[styles.statNumber, isDark && styles.textDark]}>
-                  5
-                </Text>
+                <Text style={[styles.statNumber, isDark && styles.textDark]}>5</Text>
                 <Text style={[styles.statLabel, isDark && styles.textLightDark]}>
                   {t('profile.stats.badges')}
                 </Text>
@@ -145,8 +135,7 @@ const ProfileScreen = () => {
               <Ionicons name="star" size={32} color="#FFD700" />
               <Text style={styles.premiumTitle}>Premium Features</Text>
               <Text style={styles.premiumDescription}>
-                Unlock unlimited plant identification, expert consultations, and
-                more!
+                Unlock unlimited plant identification, expert consultations, and more!
               </Text>
               <TouchableOpacity style={styles.upgradeButton}>
                 <Text style={styles.upgradeButtonText}>Upgrade Now</Text>
@@ -155,9 +144,7 @@ const ProfileScreen = () => {
           </View>
 
           <View style={styles.rewardsSection}>
-            <Text style={[styles.sectionTitle, isDark && styles.textDark]}>
-              Rewards & Store
-            </Text>
+            <Text style={[styles.sectionTitle, isDark && styles.textDark]}>Rewards & Store</Text>
             <View style={[styles.rewardsCard, isDark && styles.cardDark]}>
               <View style={styles.rewardItem}>
                 <Ionicons name="gift" size={24} color="#2E7D32" />
@@ -165,9 +152,7 @@ const ProfileScreen = () => {
                   <Text style={[styles.rewardTitle, isDark && styles.textDark]}>
                     Referral Rewards
                   </Text>
-                  <Text
-                    style={[styles.rewardPoints, isDark && styles.textLightDark]}
-                  >
+                  <Text style={[styles.rewardPoints, isDark && styles.textLightDark]}>
                     250 points
                   </Text>
                 </View>

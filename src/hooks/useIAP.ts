@@ -1,56 +1,46 @@
 import { useState, useEffect, useCallback } from 'react';
-import * as InAppPurchases from 'expo-in-app-purchases';
 import { Platform } from 'react-native';
-import { supabase } from '../lib/supabase';
+import * as RNIap from 'react-native-iap';
+import { PaymentProcessor } from '../services/payment/processor';
+import { PaymentError, PaymentProduct, ProductId } from '../types/payment';
 
-// Product IDs must match exactly in both App Store and Play Store
+// Product IDs for both platforms
 export const PRODUCT_IDS = {
-  premiumMonthly: 'premium_monthly_subscription',
-  premiumYearly: 'premium_yearly_subscription',
+  ios: {
+    premiumMonthly: 'com.greensai.premium.monthly' as ProductId,
+    premiumYearly: 'com.greensai.premium.yearly' as ProductId,
+  },
+  android: {
+    premiumMonthly: 'com.greensai.premium.monthly' as ProductId,
+    premiumYearly: 'com.greensai.premium.yearly' as ProductId,
+  },
 } as const;
 
-export type ProductId = keyof typeof PRODUCT_IDS;
-
-interface IAPProduct {
-  productId: string;
-  price: string;
-  title: string;
-  description: string;
-}
-
-interface UseIAPReturn {
-  products: IAPProduct[];
-  loading: boolean;
-  error: string | null;
-  purchaseProduct: (productId: string) => Promise<boolean>;
-  restorePurchases: () => Promise<boolean>;
-}
-
-export function useIAP(): UseIAPReturn {
-  const [products, setProducts] = useState<IAPProduct[]>([]);
+export function useIAP() {
+  const [products, setProducts] = useState<PaymentProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const processor = PaymentProcessor.getInstance();
 
-  // Initialize IAP connection
   useEffect(() => {
     const initializeIAP = async () => {
       try {
-        await InAppPurchases.connectAsync();
-        
-        // Get product details
-        const { responseCode, results } = await InAppPurchases.getProductsAsync([
-          PRODUCT_IDS.premiumMonthly,
-          PRODUCT_IDS.premiumYearly,
-        ]);
+        await processor.initConnection();
 
-        if (responseCode === InAppPurchases.IAPResponseCode.OK) {
-          setProducts(results);
-        } else {
-          throw new Error('Failed to fetch products');
-        }
+        const productIds = Platform.select({
+          ios: [PRODUCT_IDS.ios.premiumMonthly, PRODUCT_IDS.ios.premiumYearly],
+          android: [PRODUCT_IDS.android.premiumMonthly, PRODUCT_IDS.android.premiumYearly],
+          default: [],
+        }) as ProductId[];
+
+        const products = await RNIap.getProducts({ skus: productIds });
+        setProducts(products as PaymentProduct[]);
+        setError(null);
       } catch (err) {
-        console.error('Failed to initialize IAP:', err);
-        setError('Failed to initialize in-app purchases');
+        const errorMessage =
+          err instanceof Error ? err.message : 'Failed to initialize in-app purchases';
+        setError(errorMessage);
+        console.error('IAP initialization error:', err);
       } finally {
         setLoading(false);
       }
@@ -58,105 +48,37 @@ export function useIAP(): UseIAPReturn {
 
     initializeIAP();
 
-    // Set up purchase listener
-    const subscription = InAppPurchases.setPurchaseListener(
-      async ({ responseCode, results, errorCode }) => {
-        if (responseCode === InAppPurchases.IAPResponseCode.OK) {
-          // Handle successful purchase
-          for (const purchase of results) {
-            if (!purchase.acknowledged) {
-              // Acknowledge the purchase
-              await InAppPurchases.finishTransactionAsync(purchase, true);
-
-              // Update Supabase with premium status
-              try {
-                const userId = supabase.auth.session()?.user?.id;
-                if (!userId) throw new Error('User not authenticated');
-
-                const expiryDate = new Date();
-                // Set expiry based on product (1 month or 1 year)
-                expiryDate.setMonth(
-                  expiryDate.getMonth() + 
-                  (purchase.productId === PRODUCT_IDS.premiumYearly ? 12 : 1)
-                );
-
-                const { error: dbError } = await supabase
-                  .from('user_promotions')
-                  .insert([
-                    {
-                      user_id: userId,
-                      code: `iap_${purchase.productId}`,
-                      is_active: true,
-                      expires_at: expiryDate.toISOString(),
-                    },
-                  ]);
-
-                if (dbError) throw dbError;
-              } catch (error) {
-                console.error('Failed to update premium status:', error);
-                setError('Purchase successful but failed to activate premium');
-              }
-            }
-          }
-        } else if (errorCode) {
-          setError(`Purchase failed: ${errorCode}`);
-        }
-      }
-    );
-
     return () => {
-      subscription.remove();
-      InAppPurchases.disconnectAsync();
+      RNIap.endConnection();
     };
   }, []);
 
-  const purchaseProduct = useCallback(async (productId: string): Promise<boolean> => {
+  const purchaseProduct = useCallback(async (productId: ProductId) => {
     try {
       setError(null);
-      const { responseCode, results } = await InAppPurchases.purchaseItemAsync(productId);
-      return responseCode === InAppPurchases.IAPResponseCode.OK;
+      const result = await processor.purchaseProduct(productId, {
+        userId: 'user_id', // Replace with actual user ID from auth context
+        productId,
+        platform: Platform.OS,
+      });
+      return result.success;
     } catch (err) {
-      console.error('Purchase failed:', err);
-      setError('Failed to complete purchase');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to complete purchase';
+      setError(errorMessage);
+      console.error('IAP purchase error:', err);
       return false;
     }
   }, []);
 
-  const restorePurchases = useCallback(async (): Promise<boolean> => {
+  const restorePurchases = useCallback(async () => {
     try {
       setError(null);
-      const { responseCode, results } = await InAppPurchases.getPurchaseHistoryAsync();
-      
-      if (responseCode === InAppPurchases.IAPResponseCode.OK && results.length > 0) {
-        // Handle restored purchases similar to new purchases
-        const userId = supabase.auth.session()?.user?.id;
-        if (!userId) throw new Error('User not authenticated');
-
-        const latestPurchase = results[0];
-        const expiryDate = new Date();
-        expiryDate.setMonth(
-          expiryDate.getMonth() + 
-          (latestPurchase.productId === PRODUCT_IDS.premiumYearly ? 12 : 1)
-        );
-
-        const { error: dbError } = await supabase
-          .from('user_promotions')
-          .insert([
-            {
-              user_id: userId,
-              code: `iap_restored_${latestPurchase.productId}`,
-              is_active: true,
-              expires_at: expiryDate.toISOString(),
-            },
-          ]);
-
-        if (dbError) throw dbError;
-        return true;
-      }
-      return false;
+      const purchases = await RNIap.getAvailablePurchases();
+      return purchases.length > 0;
     } catch (err) {
-      console.error('Restore failed:', err);
-      setError('Failed to restore purchases');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to restore purchases';
+      setError(errorMessage);
+      console.error('IAP restore error:', err);
       return false;
     }
   }, []);
@@ -168,4 +90,4 @@ export function useIAP(): UseIAPReturn {
     purchaseProduct,
     restorePurchases,
   };
-} 
+}

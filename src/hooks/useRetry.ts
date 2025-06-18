@@ -32,7 +32,7 @@ export function useRetry<T>(
   });
   const [isLoading, setIsLoading] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
-  
+
   const retryControllerRef = useRef<RetryController | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -86,10 +86,7 @@ export function useRetry<T>(
 
     try {
       if (!retryControllerRef.current) {
-        retryControllerRef.current = new RetryController(
-          options,
-          handleStateChange
-        );
+        retryControllerRef.current = new RetryController(options, handleStateChange);
       }
 
       const result = await retryControllerRef.current.execute(operation, options);
@@ -127,4 +124,4 @@ export function useRetry<T>(
     isOffline: state.isOffline,
     timeRemaining,
   };
-} 
+}

@@ -14,57 +14,51 @@ interface ActionButtonProps {
   testID?: string;
 }
 
-export default function ActionButton({ 
-  title, 
-  subtitle, 
-  icon, 
-  onPress, 
-  color, 
-  accessibilityLabel, 
+export default function ActionButton({
+  title,
+  subtitle,
+  icon,
+  onPress,
+  color,
+  accessibilityLabel,
   accessibilityHint,
-  testID 
+  testID,
 }: ActionButtonProps) {
   const { t } = useTranslation();
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
 
   return (
-    <TouchableOpacity 
-      style={[
-        styles.actionButton, 
-        { borderLeftColor: color },
-        isDark && styles.actionButtonDark
-      ]}
+    <TouchableOpacity
+      style={[styles.actionButton, { borderLeftColor: color }, isDark && styles.actionButtonDark]}
       onPress={onPress}
       activeOpacity={0.7}
       accessible={true}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel || `${title}. ${subtitle}`}
-      accessibilityHint={accessibilityHint || t('accessibility.action_hint', 'Double tap to activate')}
+      accessibilityHint={
+        accessibilityHint || t('accessibility.action_hint', 'Double tap to activate')
+      }
       testID={testID}
     >
-      <View 
+      <View
         style={[styles.actionIcon, { backgroundColor: color + '20' }]}
         importantForAccessibility="no"
       >
         <Ionicons name={icon} size={24} color={color} />
       </View>
-      <View 
+      <View
         style={styles.actionContent}
         accessibilityElementsHidden={true}
         importantForAccessibility="no-hide-descendants"
       >
-        <Text style={[styles.actionTitle, isDark && styles.textDark]}>
-          {title}
-        </Text>
-        <Text style={[styles.actionSubtitle, isDark && styles.textLightDark]}>
-          {subtitle}
-        </Text>
+        <Text style={[styles.actionTitle, isDark && styles.textDark]}>{title}</Text>
+        <Text style={[styles.actionSubtitle, isDark && styles.textLightDark]}>{subtitle}</Text>
       </View>
-      <Ionicons 
-        name="chevron-forward" 
-        size={20} 
-        color={isDark ? '#AAAAAA' : '#666666'} 
+      <Ionicons
+        name="chevron-forward"
+        size={20}
+        color={isDark ? '#AAAAAA' : '#666666'}
         style={styles.chevron}
         accessibilityElementsHidden={true}
       />
@@ -120,4 +114,4 @@ const styles = StyleSheet.create({
   chevron: {
     marginLeft: 8,
   },
-}); 
+});

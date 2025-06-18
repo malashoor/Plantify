@@ -6,7 +6,7 @@ import {
   Alert,
   ScrollView,
   Platform,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native';
 import { Text, Button } from '@components/themed';
 import { usePayment } from '@hooks/usePayment';
@@ -20,7 +20,7 @@ export default function PaymentScreen() {
   const { user } = useAuth();
   const [status, setStatus] = useState<PaymentStatus>('idle');
   const [selectedProduct, setSelectedProduct] = useState<IAPProduct | null>(null);
-  
+
   const {
     products,
     subscriptions,
@@ -32,7 +32,7 @@ export default function PaymentScreen() {
     restorePurchases,
     resetError,
     loadProducts,
-    purchase
+    purchase,
   } = usePayment({
     autoInit: true,
     showErrorDialog: true,
@@ -43,7 +43,7 @@ export default function PaymentScreen() {
         'Thank you for your purchase! Your premium features are now available.'
       );
     },
-    onError: () => setStatus('error')
+    onError: () => setStatus('error'),
   });
 
   useEffect(() => {
@@ -57,14 +57,10 @@ export default function PaymentScreen() {
   useEffect(() => {
     if (error) {
       setStatus('error');
-      Alert.alert(
-        'Purchase Failed',
-        error.message,
-        [
-          { text: 'Try Again', onPress: resetError },
-          { text: 'Cancel', onPress: () => {} }
-        ]
-      );
+      Alert.alert('Purchase Failed', error.message, [
+        { text: 'Try Again', onPress: resetError },
+        { text: 'Cancel', onPress: () => {} },
+      ]);
     }
   }, [error, resetError]);
 
@@ -99,9 +95,7 @@ export default function PaymentScreen() {
     <View key={product.productId} style={styles.productCard}>
       <Text style={styles.productTitle}>{product.title}</Text>
       <Text style={styles.productDescription}>{product.description}</Text>
-      <Text style={styles.productPrice}>
-        {formatCurrency(product.price, product.currency)}
-      </Text>
+      <Text style={styles.productPrice}>{formatCurrency(product.price, product.currency)}</Text>
       <View style={styles.purchaseButton}>
         <TouchableOpacity
           style={styles.purchaseButton}
@@ -126,7 +120,7 @@ export default function PaymentScreen() {
     <ScrollView style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.header}>Available Products</Text>
-        
+
         {/* One-time purchases */}
         {products.length > 0 && (
           <>
@@ -153,12 +147,8 @@ export default function PaymentScreen() {
         {/* Error state */}
         {status === 'error' && error && (
           <View style={styles.errorContainer}>
-            <Text style={styles.errorText}>
-              {error.message}
-            </Text>
-            <Button onPress={resetError}>
-              Try Again
-            </Button>
+            <Text style={styles.errorText}>{error.message}</Text>
+            <Button onPress={resetError}>Try Again</Button>
           </View>
         )}
       </View>
@@ -246,4 +236,4 @@ const styles = StyleSheet.create({
     color: '#c00',
     marginBottom: 12,
   },
-}); 
+});

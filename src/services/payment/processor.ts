@@ -1,12 +1,12 @@
 import { Platform } from 'react-native';
 import * as RNIap from 'react-native-iap';
-import { 
-  PaymentError, 
-  PaymentResult, 
+import {
+  PaymentError,
+  PaymentResult,
   PaymentMetadata,
   RetryConfig,
   ProductId,
-  PaymentProduct
+  PaymentProduct,
 } from '../../types/payment';
 import { validateReceipt, prepareReceiptData } from './receiptValidator';
 import * as Sentry from '@sentry/react-native';
@@ -16,7 +16,7 @@ import analytics from '@react-native-firebase/analytics';
 const DEFAULT_RETRY_CONFIG: RetryConfig = {
   maxAttempts: 3,
   backoffMs: 1000,
-  maxBackoffMs: 10000
+  maxBackoffMs: 10000,
 };
 
 export class PaymentProcessor {
@@ -60,7 +60,7 @@ export class PaymentProcessor {
       const products = await RNIap.getProducts(productIds);
       return products.map(product => ({
         ...product,
-        type: product.productId.includes('sub_') ? 'subscription' : 'inapp'
+        type: product.productId.includes('sub_') ? 'subscription' : 'inapp',
       }));
     } catch (error) {
       console.error('Failed to fetch products:', error);
@@ -73,19 +73,16 @@ export class PaymentProcessor {
       return await RNIap.getSubscriptions({ skus: subscriptionIds });
     } catch (error) {
       Sentry.captureException(error, {
-        extra: { context: 'get_subscriptions', subscriptionIds }
+        extra: { context: 'get_subscriptions', subscriptionIds },
       });
       throw this.mapError(error);
     }
   }
 
-  async purchaseProduct(
-    productId: ProductId,
-    metadata: PaymentMetadata
-  ): Promise<PaymentResult> {
+  async purchaseProduct(productId: ProductId, metadata: PaymentMetadata): Promise<PaymentResult> {
     return this.processPayment(async () => {
       const purchase = await RNIap.requestPurchase({
-        sku: productId
+        sku: productId,
       });
       return this.handlePurchaseResult(purchase as RNIap.Purchase, metadata);
     }, metadata);
@@ -97,7 +94,7 @@ export class PaymentProcessor {
   ): Promise<PaymentResult> {
     return this.processPayment(async () => {
       const purchase = await RNIap.requestSubscription({
-        sku: subscriptionId
+        sku: subscriptionId,
       });
       return this.handlePurchaseResult(purchase as RNIap.Purchase, metadata);
     }, metadata);
@@ -111,7 +108,7 @@ export class PaymentProcessor {
       // Log purchase attempt
       await analytics().logEvent('purchase_attempt', {
         productId: metadata.productId,
-        platform: Platform.OS
+        platform: Platform.OS,
       });
 
       // Validate receipt with backend
@@ -129,21 +126,21 @@ export class PaymentProcessor {
       await analytics().logEvent('purchase_success', {
         productId: metadata.productId,
         platform: Platform.OS,
-        transactionId: purchase.transactionId || 'unknown'
+        transactionId: purchase.transactionId || 'unknown',
       });
 
       return {
         success: true,
         transactionId: purchase.transactionId || 'unknown',
         receipt: purchase.transactionReceipt || '',
-        timestamp: Date.now()
+        timestamp: Date.now(),
       };
     } catch (error) {
       // Log purchase failure
       await analytics().logEvent('purchase_failure', {
         productId: metadata.productId,
         platform: Platform.OS,
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Unknown error',
       });
 
       // If validation fails, we should still finish the transaction
@@ -156,7 +153,7 @@ export class PaymentProcessor {
         }
       } catch (finishError) {
         Sentry.captureException(finishError, {
-          extra: { context: 'finish_transaction_after_validation_error' }
+          extra: { context: 'finish_transaction_after_validation_error' },
         });
       }
 
@@ -167,7 +164,7 @@ export class PaymentProcessor {
   private async handlePendingTransactions(): Promise<void> {
     try {
       const purchases = await RNIap.getPendingPurchasesIOS();
-      
+
       for (const purchase of purchases) {
         try {
           if (Platform.OS === 'ios') {
@@ -177,13 +174,13 @@ export class PaymentProcessor {
           }
         } catch (error) {
           Sentry.captureException(error, {
-            extra: { context: 'handle_pending_transaction' }
+            extra: { context: 'handle_pending_transaction' },
           });
         }
       }
     } catch (error) {
       Sentry.captureException(error, {
-        extra: { context: 'get_pending_purchases' }
+        extra: { context: 'get_pending_purchases' },
       });
     }
   }
@@ -202,12 +199,11 @@ export class PaymentProcessor {
         return await paymentFn();
       } catch (error) {
         lastError = error instanceof Error ? error : new Error('Unknown error');
-        
+
         // Don't retry user cancellations or invalid products
         if (
           error instanceof Error &&
-          (error.message.includes('USER_CANCELLED') ||
-           error.message.includes('ITEM_UNAVAILABLE'))
+          (error.message.includes('USER_CANCELLED') || error.message.includes('ITEM_UNAVAILABLE'))
         ) {
           break;
         }
@@ -223,7 +219,7 @@ export class PaymentProcessor {
           productId: metadata.productId,
           platform: Platform.OS,
           attempt,
-          error: lastError.message
+          error: lastError.message,
         });
 
         // Wait before retrying
@@ -234,12 +230,12 @@ export class PaymentProcessor {
 
     // If we get here, all retries failed
     const mappedError = this.mapError(lastError!);
-    
+
     return {
       success: false,
       error: mappedError,
       timestamp: Date.now(),
-      retryCount: attempt - 1
+      retryCount: attempt - 1,
     };
   }
 
@@ -251,7 +247,7 @@ export class PaymentProcessor {
           type: 'user_cancelled',
           code: 'E_USER_CANCELLED',
           message: 'Purchase was cancelled by the user.',
-          originalError: error
+          originalError: error,
         };
       }
       if (error.message.includes('ITEM_UNAVAILABLE')) {
@@ -259,7 +255,7 @@ export class PaymentProcessor {
           type: 'product_not_found',
           code: 'E_ITEM_UNAVAILABLE',
           message: 'The requested product is not available.',
-          originalError: error
+          originalError: error,
         };
       }
       if (error.message.includes('NETWORK_ERROR')) {
@@ -267,14 +263,14 @@ export class PaymentProcessor {
           type: 'network_error',
           code: 'E_NETWORK_ERROR',
           message: 'Network connection error. Please try again.',
-          originalError: error
+          originalError: error,
         };
       }
       return {
         type: 'billing_error',
         code: 'E_UNKNOWN',
         message: error.message || 'An error occurred with the payment system.',
-        originalError: error
+        originalError: error,
       };
     }
 
@@ -282,7 +278,7 @@ export class PaymentProcessor {
       type: 'unknown_error',
       code: 'E_UNKNOWN',
       message: 'An unexpected error occurred.',
-      originalError: error
+      originalError: error,
     };
   }
 
@@ -306,7 +302,7 @@ export const createPaymentMetadata = (
   amount,
   currency,
   platform: Platform.OS as 'ios' | 'android',
-  attempt: 1
+  attempt: 1,
 });
 
-export const paymentProcessor = new PaymentProcessor(); 
+export const paymentProcessor = new PaymentProcessor();

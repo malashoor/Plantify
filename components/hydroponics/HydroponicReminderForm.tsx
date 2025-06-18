@@ -37,7 +37,7 @@ const createTheme = (colorScheme: 'light' | 'dark' | null) => ({
     success: '#4CAF50',
     warning: '#FF9800',
     error: '#F44336',
-  }
+  },
 });
 
 const REPEAT_OPTIONS = [
@@ -94,7 +94,7 @@ export const HydroponicReminderForm: React.FC<HydroponicReminderFormProps> = ({
     const selectedDate = new Date(formData.trigger_date);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
+
     if (selectedDate < today) {
       Alert.alert('Error', 'Please select a date that is today or in the future.');
       return;
@@ -138,7 +138,7 @@ export const HydroponicReminderForm: React.FC<HydroponicReminderFormProps> = ({
               },
             ]}
             value={formData.title}
-            onChangeText={(value) => updateField('title', value)}
+            onChangeText={value => updateField('title', value)}
             placeholder="Enter reminder title..."
             placeholderTextColor={theme.colors.textSecondary}
             maxLength={100}
@@ -158,7 +158,7 @@ export const HydroponicReminderForm: React.FC<HydroponicReminderFormProps> = ({
               },
             ]}
             value={formData.trigger_date}
-            onChangeText={(value) => updateField('trigger_date', value)}
+            onChangeText={value => updateField('trigger_date', value)}
             placeholder="YYYY-MM-DD"
             placeholderTextColor={theme.colors.textSecondary}
           />
@@ -171,14 +171,18 @@ export const HydroponicReminderForm: React.FC<HydroponicReminderFormProps> = ({
         <View style={styles.inputContainer}>
           <Text style={[styles.label, { color: theme.colors.text }]}>Category</Text>
           <View style={styles.optionsGrid}>
-            {CATEGORY_OPTIONS.map((option) => (
+            {CATEGORY_OPTIONS.map(option => (
               <TouchableOpacity
                 key={option.key}
                 style={[
                   styles.optionButton,
                   {
-                    backgroundColor: formData.category === option.key ? theme.colors.primary + '20' : theme.colors.surface,
-                    borderColor: formData.category === option.key ? theme.colors.primary : theme.colors.border,
+                    backgroundColor:
+                      formData.category === option.key
+                        ? theme.colors.primary + '20'
+                        : theme.colors.surface,
+                    borderColor:
+                      formData.category === option.key ? theme.colors.primary : theme.colors.border,
                   },
                 ]}
                 onPress={() => updateField('category', option.key as any)}
@@ -186,13 +190,20 @@ export const HydroponicReminderForm: React.FC<HydroponicReminderFormProps> = ({
                 <Ionicons
                   name={option.icon as any}
                   size={20}
-                  color={formData.category === option.key ? theme.colors.primary : theme.colors.textSecondary}
+                  color={
+                    formData.category === option.key
+                      ? theme.colors.primary
+                      : theme.colors.textSecondary
+                  }
                 />
                 <Text
                   style={[
                     styles.optionText,
                     {
-                      color: formData.category === option.key ? theme.colors.primary : theme.colors.textSecondary,
+                      color:
+                        formData.category === option.key
+                          ? theme.colors.primary
+                          : theme.colors.textSecondary,
                     },
                   ]}
                 >
@@ -207,14 +218,20 @@ export const HydroponicReminderForm: React.FC<HydroponicReminderFormProps> = ({
         <View style={styles.inputContainer}>
           <Text style={[styles.label, { color: theme.colors.text }]}>Repeat</Text>
           <View style={styles.optionsRow}>
-            {REPEAT_OPTIONS.map((option) => (
+            {REPEAT_OPTIONS.map(option => (
               <TouchableOpacity
                 key={option.key}
                 style={[
                   styles.optionButton,
                   {
-                    backgroundColor: formData.repeat_interval === option.key ? theme.colors.primary + '20' : theme.colors.surface,
-                    borderColor: formData.repeat_interval === option.key ? theme.colors.primary : theme.colors.border,
+                    backgroundColor:
+                      formData.repeat_interval === option.key
+                        ? theme.colors.primary + '20'
+                        : theme.colors.surface,
+                    borderColor:
+                      formData.repeat_interval === option.key
+                        ? theme.colors.primary
+                        : theme.colors.border,
                     flex: 1,
                   },
                 ]}
@@ -223,13 +240,20 @@ export const HydroponicReminderForm: React.FC<HydroponicReminderFormProps> = ({
                 <Ionicons
                   name={option.icon as any}
                   size={16}
-                  color={formData.repeat_interval === option.key ? theme.colors.primary : theme.colors.textSecondary}
+                  color={
+                    formData.repeat_interval === option.key
+                      ? theme.colors.primary
+                      : theme.colors.textSecondary
+                  }
                 />
                 <Text
                   style={[
                     styles.optionTextSmall,
                     {
-                      color: formData.repeat_interval === option.key ? theme.colors.primary : theme.colors.textSecondary,
+                      color:
+                        formData.repeat_interval === option.key
+                          ? theme.colors.primary
+                          : theme.colors.textSecondary,
                     },
                   ]}
                 >
@@ -244,14 +268,16 @@ export const HydroponicReminderForm: React.FC<HydroponicReminderFormProps> = ({
         <View style={styles.inputContainer}>
           <Text style={[styles.label, { color: theme.colors.text }]}>Priority</Text>
           <View style={styles.optionsRow}>
-            {PRIORITY_OPTIONS.map((option) => (
+            {PRIORITY_OPTIONS.map(option => (
               <TouchableOpacity
                 key={option.key}
                 style={[
                   styles.optionButton,
                   {
-                    backgroundColor: formData.priority === option.key ? option.color + '20' : theme.colors.surface,
-                    borderColor: formData.priority === option.key ? option.color : theme.colors.border,
+                    backgroundColor:
+                      formData.priority === option.key ? option.color + '20' : theme.colors.surface,
+                    borderColor:
+                      formData.priority === option.key ? option.color : theme.colors.border,
                     flex: 1,
                   },
                 ]}
@@ -260,13 +286,18 @@ export const HydroponicReminderForm: React.FC<HydroponicReminderFormProps> = ({
                 <Ionicons
                   name={option.icon as any}
                   size={16}
-                  color={formData.priority === option.key ? option.color : theme.colors.textSecondary}
+                  color={
+                    formData.priority === option.key ? option.color : theme.colors.textSecondary
+                  }
                 />
                 <Text
                   style={[
                     styles.optionTextSmall,
                     {
-                      color: formData.priority === option.key ? option.color : theme.colors.textSecondary,
+                      color:
+                        formData.priority === option.key
+                          ? option.color
+                          : theme.colors.textSecondary,
                     },
                   ]}
                 >
@@ -281,14 +312,20 @@ export const HydroponicReminderForm: React.FC<HydroponicReminderFormProps> = ({
         <View style={styles.inputContainer}>
           <Text style={[styles.label, { color: theme.colors.text }]}>Tone</Text>
           <View style={styles.optionsRow}>
-            {EMOTION_OPTIONS.map((option) => (
+            {EMOTION_OPTIONS.map(option => (
               <TouchableOpacity
                 key={option.key}
                 style={[
                   styles.optionButton,
                   {
-                    backgroundColor: formData.emotion_tone === option.key ? theme.colors.primary + '20' : theme.colors.surface,
-                    borderColor: formData.emotion_tone === option.key ? theme.colors.primary : theme.colors.border,
+                    backgroundColor:
+                      formData.emotion_tone === option.key
+                        ? theme.colors.primary + '20'
+                        : theme.colors.surface,
+                    borderColor:
+                      formData.emotion_tone === option.key
+                        ? theme.colors.primary
+                        : theme.colors.border,
                     flex: 1,
                   },
                 ]}
@@ -297,13 +334,20 @@ export const HydroponicReminderForm: React.FC<HydroponicReminderFormProps> = ({
                 <Ionicons
                   name={option.icon as any}
                   size={16}
-                  color={formData.emotion_tone === option.key ? theme.colors.primary : theme.colors.textSecondary}
+                  color={
+                    formData.emotion_tone === option.key
+                      ? theme.colors.primary
+                      : theme.colors.textSecondary
+                  }
                 />
                 <Text
                   style={[
                     styles.optionTextSmall,
                     {
-                      color: formData.emotion_tone === option.key ? theme.colors.primary : theme.colors.textSecondary,
+                      color:
+                        formData.emotion_tone === option.key
+                          ? theme.colors.primary
+                          : theme.colors.textSecondary,
                     },
                   ]}
                 >
@@ -323,7 +367,7 @@ export const HydroponicReminderForm: React.FC<HydroponicReminderFormProps> = ({
           >
             <Text style={[styles.buttonText, { color: theme.colors.textSecondary }]}>Cancel</Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity
             style={[
               styles.button,
@@ -438,4 +482,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
-}); 
+});

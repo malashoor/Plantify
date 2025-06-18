@@ -13,6 +13,7 @@
 
 1. In Firebase Console, click "Add app" and select iOS
 2. Enter iOS app details:
+
    - Bundle ID: `com.greensai.app`
    - App nickname: `GreensAI`
    - App Store ID: (leave blank for now)
@@ -29,6 +30,7 @@
 
 1. In Firebase Console, click "Add app" and select Android
 2. Enter Android app details:
+
    - Package name: `com.greensai.app`
    - App nickname: `GreensAI`
    - Debug signing certificate SHA-1: (optional for now)
@@ -39,6 +41,7 @@
 ## 4. Enable Services
 
 ### 4.1 Analytics
+
 1. Go to Analytics in Firebase Console
 2. Enable Google Analytics
 3. Set up custom events:
@@ -47,6 +50,7 @@
    - `plant_health_updated`
 
 ### 4.2 Cloud Messaging
+
 1. Go to Cloud Messaging
 2. Enable FCM
 3. Configure APNs for iOS:
@@ -54,6 +58,7 @@
    - Set up notification channels
 
 ### 4.3 Crashlytics
+
 1. Go to Crashlytics
 2. Enable for both platforms
 3. Add SDK to your project
@@ -61,6 +66,7 @@
 ## 5. Update App Configuration
 
 ### 5.1 iOS (app.config.js)
+
 ```javascript
 ios: {
   googleServicesFile: "./GoogleService-Info.plist",
@@ -69,6 +75,7 @@ ios: {
 ```
 
 ### 5.2 Android (app.config.js)
+
 ```javascript
 android: {
   googleServicesFile: "./google-services.json",
@@ -86,6 +93,7 @@ android: {
 ## 7. Production Setup
 
 1. Update Firebase project settings:
+
    - Set up production environment
    - Configure security rules
    - Set up monitoring alerts
@@ -97,11 +105,14 @@ android: {
 ## 8. Troubleshooting
 
 ### Common Issues
+
 1. Analytics not showing data:
+
    - Check bundle ID matches
    - Verify GoogleService-Info.plist is included in build
 
 2. Push notifications not working:
+
    - Verify APNs key is valid
    - Check notification permissions
 
@@ -112,6 +123,7 @@ android: {
 ## 9. Security Rules
 
 ### 9.1 Analytics
+
 ```javascript
 {
   "rules": {
@@ -122,6 +134,7 @@ android: {
 ```
 
 ### 9.2 Cloud Messaging
+
 ```javascript
 {
   "rules": {
@@ -138,6 +151,7 @@ android: {
 ## 10. Maintenance
 
 1. Regular tasks:
+
    - Monitor Firebase usage
    - Review security rules
    - Update SDK versions
@@ -151,5 +165,6 @@ android: {
 ## Support
 
 For Firebase-related issues:
+
 - Email: support@greensai.app
-- Firebase Support: https://firebase.google.com/support 
+- Firebase Support: https://firebase.google.com/support

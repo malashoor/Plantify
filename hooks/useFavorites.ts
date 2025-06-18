@@ -28,10 +28,8 @@ export function useFavorites() {
   }, [favorites]);
 
   const toggleFavorite = (id: string) => {
-    setFavorites(prev =>
-      prev.includes(id) ? prev.filter(fid => fid !== id) : [...prev, id]
-    );
+    setFavorites(prev => (prev.includes(id) ? prev.filter(fid => fid !== id) : [...prev, id]));
   };
 
   return { favorites, toggleFavorite };
-} 
+}

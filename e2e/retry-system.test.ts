@@ -1,10 +1,10 @@
 import { device, element, by, waitFor } from 'detox';
-import { 
+import {
   NetworkControl,
   QueueInspector,
   RetryUI,
   AppControl,
-  MockServer
+  MockServer,
 } from './helpers/retry-helpers';
 import { RetryOperationKeys } from '../src/services/RetryOperations';
 
@@ -12,7 +12,7 @@ describe('Retry System E2E Tests', () => {
   beforeAll(async () => {
     await device.launchApp({
       newInstance: true,
-      permissions: { location: 'always' }
+      permissions: { location: 'always' },
     });
   });
 
@@ -28,7 +28,7 @@ describe('Retry System E2E Tests', () => {
       // Configure endpoint to fail
       await MockServer.configureEndpoint('/api/plants', {
         failureRate: 1,
-        errorMessage: 'Network Error'
+        errorMessage: 'Network Error',
       });
 
       // Navigate to add plant screen
@@ -48,7 +48,7 @@ describe('Retry System E2E Tests', () => {
 
       // Configure endpoint to succeed
       await MockServer.configureEndpoint('/api/plants', {
-        failureRate: 0
+        failureRate: 0,
       });
 
       // Operation should resume and complete
@@ -107,11 +107,11 @@ describe('Retry System E2E Tests', () => {
       // Configure endpoints
       await MockServer.configureEndpoint('/api/plants', {
         failureRate: 0.5,
-        delay: 1000
+        delay: 1000,
       });
       await MockServer.configureEndpoint('/api/journal', {
         failureRate: 0.5,
-        delay: 500
+        delay: 500,
       });
 
       // Add new plant and immediately add journal entry
@@ -144,10 +144,10 @@ describe('Retry System E2E Tests', () => {
     it('should process operations in priority order', async () => {
       // Configure slow responses
       await MockServer.configureEndpoint('/api/plants', {
-        delay: 1000
+        delay: 1000,
       });
       await MockServer.configureEndpoint('/api/weather', {
-        delay: 1000
+        delay: 1000,
       });
 
       // Queue low priority weather update
@@ -177,7 +177,7 @@ describe('Retry System E2E Tests', () => {
     it('should handle manual retry after cancellation', async () => {
       // Configure endpoint to fail
       await MockServer.configureEndpoint('/api/plants', {
-        failureRate: 1
+        failureRate: 1,
       });
 
       // Start plant save
@@ -192,7 +192,7 @@ describe('Retry System E2E Tests', () => {
 
       // Configure endpoint to succeed
       await MockServer.configureEndpoint('/api/plants', {
-        failureRate: 0
+        failureRate: 0,
       });
 
       // Retry manually
@@ -208,7 +208,7 @@ describe('Retry System E2E Tests', () => {
       // Configure endpoint to fail multiple times
       await MockServer.configureEndpoint('/api/plants', {
         failureRate: 0.8,
-        delay: 500
+        delay: 500,
       });
 
       // Start operation
@@ -218,7 +218,7 @@ describe('Retry System E2E Tests', () => {
 
       // Verify retry UI appears
       await RetryUI.waitForRetryStatus();
-      
+
       // Check accessibility
       await expect(element(by.id('retry-queue-status'))).toHaveLabel();
       await expect(element(by.id('retry-queue-badge'))).toHaveLabel();
@@ -248,7 +248,7 @@ describe('Retry System E2E Tests', () => {
       // Force some retries
       await MockServer.configureEndpoint('/api/plants', {
         failureRate: 0.5,
-        delay: 500
+        delay: 500,
       });
 
       // Wait for operation to complete
@@ -264,4 +264,4 @@ describe('Retry System E2E Tests', () => {
       await expect(element(by.text('Plant added'))).toBeVisible();
     });
   });
-}); 
+});

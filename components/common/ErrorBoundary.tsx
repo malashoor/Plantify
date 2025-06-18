@@ -23,7 +23,7 @@ const createTheme = (colorScheme: 'light' | 'dark' | null) => ({
     textSecondary: colorScheme === 'dark' ? '#BBBBBB' : '#666666',
     error: '#F44336',
     primary: '#4CAF50',
-  }
+  },
 });
 
 // Error fallback component
@@ -40,17 +40,17 @@ const ErrorFallback: React.FC<{
       <View style={[styles.iconContainer, { backgroundColor: theme.colors.error + '20' }]}>
         <Ionicons name="alert-circle-outline" size={48} color={theme.colors.error} />
       </View>
-      
+
       <Text style={[styles.title, { color: theme.colors.text }]}>
         {message || 'Something went wrong'}
       </Text>
-      
+
       {error && (
         <Text style={[styles.errorMessage, { color: theme.colors.textSecondary }]}>
           {error.message}
         </Text>
       )}
-      
+
       {onRetry && (
         <TouchableOpacity
           style={[styles.retryButton, { backgroundColor: theme.colors.primary }]}
@@ -149,4 +149,4 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginLeft: 8,
   },
-}); 
+});

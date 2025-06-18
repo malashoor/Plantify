@@ -28,6 +28,6 @@ export function useHydroponics() {
     addSystem,
     updateSystem,
     deleteSystem,
-    refreshSystems
+    refreshSystems,
   };
-} 
+}

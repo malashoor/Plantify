@@ -149,7 +149,7 @@ export const COMMON_NUTRIENTS: NutrientElement[] = [
     minValue: 100,
     maxValue: 300,
     optimalValue: 200,
-    category: 'macro'
+    category: 'macro',
   },
   {
     id: 'phosphorus',
@@ -160,7 +160,7 @@ export const COMMON_NUTRIENTS: NutrientElement[] = [
     minValue: 30,
     maxValue: 80,
     optimalValue: 50,
-    category: 'macro'
+    category: 'macro',
   },
   {
     id: 'potassium',
@@ -171,7 +171,7 @@ export const COMMON_NUTRIENTS: NutrientElement[] = [
     minValue: 150,
     maxValue: 350,
     optimalValue: 250,
-    category: 'macro'
+    category: 'macro',
   },
   // Secondary nutrients
   {
@@ -183,7 +183,7 @@ export const COMMON_NUTRIENTS: NutrientElement[] = [
     minValue: 100,
     maxValue: 200,
     optimalValue: 150,
-    category: 'secondary'
+    category: 'secondary',
   },
   {
     id: 'magnesium',
@@ -194,7 +194,7 @@ export const COMMON_NUTRIENTS: NutrientElement[] = [
     minValue: 30,
     maxValue: 70,
     optimalValue: 50,
-    category: 'secondary'
+    category: 'secondary',
   },
   {
     id: 'sulfur',
@@ -205,7 +205,7 @@ export const COMMON_NUTRIENTS: NutrientElement[] = [
     minValue: 50,
     maxValue: 150,
     optimalValue: 100,
-    category: 'secondary'
+    category: 'secondary',
   },
   // Micronutrients
   {
@@ -217,7 +217,7 @@ export const COMMON_NUTRIENTS: NutrientElement[] = [
     minValue: 2,
     maxValue: 6,
     optimalValue: 4,
-    category: 'micro'
+    category: 'micro',
   },
   {
     id: 'manganese',
@@ -228,7 +228,7 @@ export const COMMON_NUTRIENTS: NutrientElement[] = [
     minValue: 0.5,
     maxValue: 2,
     optimalValue: 1,
-    category: 'micro'
+    category: 'micro',
   },
   {
     id: 'zinc',
@@ -239,7 +239,7 @@ export const COMMON_NUTRIENTS: NutrientElement[] = [
     minValue: 0.3,
     maxValue: 1,
     optimalValue: 0.5,
-    category: 'micro'
+    category: 'micro',
   },
   {
     id: 'copper',
@@ -250,7 +250,7 @@ export const COMMON_NUTRIENTS: NutrientElement[] = [
     minValue: 0.1,
     maxValue: 0.5,
     optimalValue: 0.2,
-    category: 'micro'
+    category: 'micro',
   },
   {
     id: 'boron',
@@ -261,7 +261,7 @@ export const COMMON_NUTRIENTS: NutrientElement[] = [
     minValue: 0.3,
     maxValue: 1,
     optimalValue: 0.5,
-    category: 'micro'
+    category: 'micro',
   },
   {
     id: 'molybdenum',
@@ -272,8 +272,8 @@ export const COMMON_NUTRIENTS: NutrientElement[] = [
     minValue: 0.01,
     maxValue: 0.1,
     optimalValue: 0.05,
-    category: 'micro'
-  }
+    category: 'micro',
+  },
 ];
 
 // Common crop stages
@@ -285,7 +285,7 @@ export const COMMON_CROP_STAGES: CropStage[] = [
     durationDays: 21,
     order: 1,
     nameAr: 'شتلة',
-    descriptionAr: 'أول 2-3 أسابيع بعد الإنبات'
+    descriptionAr: 'أول 2-3 أسابيع بعد الإنبات',
   },
   {
     id: 'vegetative',
@@ -294,7 +294,7 @@ export const COMMON_CROP_STAGES: CropStage[] = [
     durationDays: 42,
     order: 2,
     nameAr: 'النمو الخضري',
-    descriptionAr: 'تطوير الأوراق والساق النشط'
+    descriptionAr: 'تطوير الأوراق والساق النشط',
   },
   {
     id: 'flowering',
@@ -303,7 +303,7 @@ export const COMMON_CROP_STAGES: CropStage[] = [
     durationDays: 28,
     order: 3,
     nameAr: 'الإزهار',
-    descriptionAr: 'بداية وتطوير الأزهار'
+    descriptionAr: 'بداية وتطوير الأزهار',
   },
   {
     id: 'fruiting',
@@ -312,6 +312,6 @@ export const COMMON_CROP_STAGES: CropStage[] = [
     durationDays: 35,
     order: 4,
     nameAr: 'الإثمار',
-    descriptionAr: 'تطوير ونضج الثمار'
-  }
-]; 
+    descriptionAr: 'تطوير ونضج الثمار',
+  },
+];

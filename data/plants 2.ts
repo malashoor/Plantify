@@ -39,4 +39,4 @@ export const PLANTS_MAP = {
   '2': PLANTS[1],
   '3': PLANTS[2],
   '4': PLANTS[3],
-}; 
+};

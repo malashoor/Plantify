@@ -66,4 +66,4 @@ export const ThemeColors = {
   onSecondary: 'onSecondary' as const,
   onError: 'onError' as const,
   tint: 'primary' as const, // Map 'tint' to primary color for backward compatibility
-}; 
+};

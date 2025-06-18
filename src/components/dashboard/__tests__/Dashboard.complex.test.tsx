@@ -124,10 +124,7 @@ describe('Dashboard Complex Interactions', () => {
         '@plantai:dashboard_sort',
         expect.stringContaining('moisture')
       );
-      expect(AsyncStorage.setItem).toHaveBeenCalledWith(
-        '@plantai:filter_preference',
-        'indoor'
-      );
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith('@plantai:filter_preference', 'indoor');
 
       // Simulate app restart
       unmount();
@@ -135,10 +132,13 @@ describe('Dashboard Complex Interactions', () => {
       // Mock saved preferences for second session
       const savedPreferences = [
         ['@plantai:filter_preference', 'indoor'],
-        ['@plantai:dashboard_sort', JSON.stringify({
-          primary: { criteria: 'moisture', direction: 'asc' },
-          secondary: { criteria: 'name', direction: 'desc' },
-        })],
+        [
+          '@plantai:dashboard_sort',
+          JSON.stringify({
+            primary: { criteria: 'moisture', direction: 'asc' },
+            secondary: { criteria: 'name', direction: 'desc' },
+          }),
+        ],
       ];
       (AsyncStorage.multiGet as jest.Mock).mockResolvedValue(savedPreferences);
 
@@ -203,9 +203,7 @@ describe('Dashboard Complex Interactions', () => {
 
   describe('Accessibility Consistency', () => {
     it('should maintain accessibility through RTL transitions', async () => {
-      const { getByTestId, rerender } = render(
-        <Dashboard plants={mockPlants} isRTL={false} />
-      );
+      const { getByTestId, rerender } = render(<Dashboard plants={mockPlants} isRTL={false} />);
 
       // Set up initial state
       await act(async () => {
@@ -223,9 +221,7 @@ describe('Dashboard Complex Interactions', () => {
       });
 
       // Verify accessibility state maintained
-      expect(getByTestId('sort-button')).toHaveAccessibilityHint(
-        expect.any(String)
-      );
+      expect(getByTestId('sort-button')).toHaveAccessibilityHint(expect.any(String));
 
       // Test keyboard navigation
       await act(async () => {
@@ -255,9 +251,7 @@ describe('Dashboard Complex Interactions', () => {
       expect(getByTestId('empty-state')).toBeTruthy();
 
       // Simulate error state
-      (PlantService.getPlants as jest.Mock).mockRejectedValueOnce(
-        new Error('Network error')
-      );
+      (PlantService.getPlants as jest.Mock).mockRejectedValueOnce(new Error('Network error'));
 
       await act(async () => {
         fireEvent.press(getByTestId('refresh-button'));
@@ -288,4 +282,4 @@ describe('Dashboard Complex Interactions', () => {
       expect(getByTestId('plant-list')).toBeTruthy();
     });
   });
-}); 
+});

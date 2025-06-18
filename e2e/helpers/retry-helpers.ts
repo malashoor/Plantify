@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export const NetworkControl = {
   async goOffline() {
     await device.setStatusBar({
-      networkConnection: 'none'
+      networkConnection: 'none',
     });
     // Wait for offline state to be detected
     await waitFor(element(by.id('offline-indicator')))
@@ -17,7 +17,7 @@ export const NetworkControl = {
 
   async goOnline() {
     await device.setStatusBar({
-      networkConnection: 'wifi'
+      networkConnection: 'wifi',
     });
     // Wait for online state to be detected
     await waitFor(element(by.id('offline-indicator')))
@@ -37,7 +37,7 @@ export const NetworkControl = {
     await new Promise(resolve => setTimeout(resolve, duration));
     clearInterval(interval);
     await this.goOnline(); // Ensure we end in online state
-  }
+  },
 };
 
 /**
@@ -75,7 +75,7 @@ export const QueueInspector = {
       await new Promise(resolve => setTimeout(resolve, 100));
     }
     throw new Error(`Operation ${operationKey} did not complete within ${timeout}ms`);
-  }
+  },
 };
 
 /**
@@ -102,14 +102,12 @@ export const RetryUI = {
   },
 
   async waitForOperationState(operationKey: string, state: 'queued' | 'processing' | 'completed') {
-    const matcher = state === 'completed' 
-      ? not.toBeVisible()
-      : toHaveText(state);
+    const matcher = state === 'completed' ? not.toBeVisible() : toHaveText(state);
 
     await waitFor(element(by.id(`operation-${operationKey}-status`)))
       [matcher]()
       .withTimeout(5000);
-  }
+  },
 };
 
 /**
@@ -131,33 +129,45 @@ export const AppControl = {
 
   async seedTestData() {
     // Add any test data seeding here
-    await AsyncStorage.setItem('test-plants', JSON.stringify([
-      { id: 'test-plant-1', name: 'Test Plant 1' },
-      { id: 'test-plant-2', name: 'Test Plant 2' }
-    ]));
-  }
+    await AsyncStorage.setItem(
+      'test-plants',
+      JSON.stringify([
+        { id: 'test-plant-1', name: 'Test Plant 1' },
+        { id: 'test-plant-2', name: 'Test Plant 2' },
+      ])
+    );
+  },
 };
 
 /**
  * Mock server control helpers
  */
 export const MockServer = {
-  async configureEndpoint(endpoint: string, options: {
-    failureRate?: number;
-    delay?: number;
-    errorMessage?: string;
-  }) {
-    await device.executeScript(`
+  async configureEndpoint(
+    endpoint: string,
+    options: {
+      failureRate?: number;
+      delay?: number;
+      errorMessage?: string;
+    }
+  ) {
+    await device.executeScript(
+      `
       window.mockServerConfig = {
         ...window.mockServerConfig,
         ${endpoint}: ${JSON.stringify(options)}
       }
-    `, 'setting mock server config');
+    `,
+      'setting mock server config'
+    );
   },
 
   async resetMockServer() {
-    await device.executeScript(`
+    await device.executeScript(
+      `
       window.mockServerConfig = {}
-    `, 'resetting mock server');
-  }
-}; 
+    `,
+      'resetting mock server'
+    );
+  },
+};

@@ -8,7 +8,7 @@ import {
   useColorScheme,
   ScrollView,
   ActivityIndicator,
-  Platform
+  Platform,
 } from 'react-native';
 import { Text } from '../components/themed/Text';
 import { useTranslation } from 'react-i18next';
@@ -39,10 +39,7 @@ export default function SettingsScreen() {
       setPreferences(prefs);
     } catch (error) {
       console.error('Error loading preferences:', error);
-      Alert.alert(
-        t('settings.error.title'),
-        t('settings.error.load_failed')
-      );
+      Alert.alert(t('settings.error.title'), t('settings.error.load_failed'));
     } finally {
       setIsLoading(false);
     }
@@ -84,10 +81,7 @@ export default function SettingsScreen() {
       Alert.alert(message);
     } catch (error) {
       console.error('Error updating location preference:', error);
-      Alert.alert(
-        t('settings.error.title'),
-        t('settings.error.update_failed')
-      );
+      Alert.alert(t('settings.error.title'), t('settings.error.update_failed'));
     }
   };
 
@@ -125,11 +119,7 @@ export default function SettingsScreen() {
         <View style={styles.setting}>
           <View style={styles.settingInfo}>
             <View style={styles.settingHeader}>
-              <Ionicons
-                name="location"
-                size={20}
-                color={isDark ? '#22C55E' : '#16A34A'}
-              />
+              <Ionicons name="location" size={20} color={isDark ? '#22C55E' : '#16A34A'} />
               <Text style={[styles.settingTitle, isDark && styles.settingTitleDark]}>
                 {t('settings.location.use_location')}
               </Text>
@@ -150,7 +140,9 @@ export default function SettingsScreen() {
         {preferences.useLocation && (
           <TouchableOpacity
             style={styles.privacyLink}
-            onPress={() => {/* Navigate to privacy policy */}}
+            onPress={() => {
+              /* Navigate to privacy policy */
+            }}
             accessibilityRole="link"
             accessibilityHint={t('settings.location.privacy_hint')}
           >
@@ -168,7 +160,7 @@ export default function SettingsScreen() {
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Privacy</Text>
-        
+
         <View style={styles.row}>
           <Text style={styles.label}>Allow Analytics</Text>
           <Switch
@@ -178,7 +170,7 @@ export default function SettingsScreen() {
             thumbColor={enabled ? '#2196F3' : '#f4f3f4'}
           />
         </View>
-        
+
         <Text style={styles.description}>
           Help us improve by allowing anonymous usage data collection.
         </Text>
@@ -186,7 +178,7 @@ export default function SettingsScreen() {
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Account</Text>
-        
+
         <View style={styles.settingRow}>
           <View style={styles.settingInfo}>
             <Text style={styles.settingTitle}>Email</Text>
@@ -194,10 +186,7 @@ export default function SettingsScreen() {
           </View>
         </View>
 
-        <TouchableOpacity
-          style={styles.signOutButton}
-          onPress={handleSignOut}
-        >
+        <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
           <Text style={styles.signOutText}>Sign Out</Text>
         </TouchableOpacity>
       </View>
@@ -279,7 +268,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 12
+    paddingVertical: 12,
   },
   signOutButton: {
     backgroundColor: '#ff3b30',
@@ -287,12 +276,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     borderRadius: 8,
     marginTop: 16,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   signOutText: {
     color: '#ffffff',
     fontSize: 16,
-    fontWeight: '600'
+    fontWeight: '600',
   },
   row: {
     flexDirection: 'row',
@@ -308,4 +297,4 @@ const styles = StyleSheet.create({
     color: '#666',
     marginTop: 8,
   },
-}); 
+});

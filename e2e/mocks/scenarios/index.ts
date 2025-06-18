@@ -73,11 +73,14 @@ export class ScenarioManager {
     weatherScenarios.simulateGradualChange(10000, 1000);
 
     // Configure journal batch operations
-    journalScenarios.simulateBatchPartialSuccess([
-      { note: 'Test 1', mood: 'happy' },
-      { note: 'Test 2', mood: 'sad' },
-      { note: 'Test 3', mood: 'neutral' }
-    ], 0.3);
+    journalScenarios.simulateBatchPartialSuccess(
+      [
+        { note: 'Test 1', mood: 'happy' },
+        { note: 'Test 2', mood: 'sad' },
+        { note: 'Test 3', mood: 'neutral' },
+      ],
+      0.3
+    );
   }
 
   /**
@@ -108,4 +111,4 @@ export class ScenarioManager {
   }
 }
 
-export const scenarioManager = ScenarioManager.getInstance(); 
+export const scenarioManager = ScenarioManager.getInstance();

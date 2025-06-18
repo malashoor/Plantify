@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  useColorScheme,
-  ScrollView,
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, useColorScheme, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 interface Measurement {
@@ -43,23 +36,25 @@ const createTheme = (colorScheme: 'light' | 'dark' | null) => ({
     error: '#F44336',
     success: '#4CAF50',
     border: colorScheme === 'dark' ? '#444444' : '#E0E0E0',
-  }
+  },
 });
 
-const Card: React.FC<{ 
-  children: React.ReactNode; 
-  style?: any; 
+const Card: React.FC<{
+  children: React.ReactNode;
+  style?: any;
   title?: string;
   theme: any;
 }> = ({ children, style, title, theme }) => (
-  <View style={[
-    styles.card, 
-    { 
-      backgroundColor: theme.colors.surface, 
-      borderColor: theme.colors.border 
-    }, 
-    style
-  ]}>
+  <View
+    style={[
+      styles.card,
+      {
+        backgroundColor: theme.colors.surface,
+        borderColor: theme.colors.border,
+      },
+      style,
+    ]}
+  >
     {title && (
       <>
         <Text style={[styles.cardTitle, { color: theme.colors.text }]}>{title}</Text>
@@ -84,7 +79,12 @@ const MetricCard: React.FC<{
   };
 
   return (
-    <View style={[styles.metricCard, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
+    <View
+      style={[
+        styles.metricCard,
+        { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+      ]}
+    >
       <View style={styles.metricHeader}>
         <Ionicons name={icon as any} size={20} color={statusColors[status]} />
         <Text style={[styles.metricLabel, { color: theme.colors.textSecondary }]}>{label}</Text>
@@ -104,7 +104,7 @@ export const HydroponicSystemHealth: React.FC<HydroponicSystemHealthProps> = ({
 
   const getLatestMeasurement = (): Measurement | null => {
     if (system.measurements.length === 0) return null;
-    return system.measurements.reduce((latest, current) => 
+    return system.measurements.reduce((latest, current) =>
       new Date(current.measured_at) > new Date(latest.measured_at) ? current : latest
     );
   };
@@ -113,7 +113,7 @@ export const HydroponicSystemHealth: React.FC<HydroponicSystemHealthProps> = ({
     if (!measurement) return { status: 'error', message: 'No measurements available' };
 
     const { ph_level, ec_level, water_temperature } = measurement;
-    
+
     // Ideal ranges for most hydroponic plants
     const phGood = ph_level >= 5.5 && ph_level <= 6.5;
     const ecGood = ec_level >= 1.2 && ec_level <= 2.0;
@@ -128,9 +128,14 @@ export const HydroponicSystemHealth: React.FC<HydroponicSystemHealthProps> = ({
     }
   };
 
-  const getMetricStatus = (value: number, min: number, max: number): 'good' | 'warning' | 'error' => {
+  const getMetricStatus = (
+    value: number,
+    min: number,
+    max: number
+  ): 'good' | 'warning' | 'error' => {
     if (value >= min && value <= max) return 'good';
-    if ((value >= min - 0.5 && value < min) || (value > max && value <= max + 0.5)) return 'warning';
+    if ((value >= min - 0.5 && value < min) || (value > max && value <= max + 0.5))
+      return 'warning';
     return 'error';
   };
 
@@ -161,24 +166,40 @@ export const HydroponicSystemHealth: React.FC<HydroponicSystemHealthProps> = ({
         <View style={styles.statusContainer}>
           <View style={styles.statusInfo}>
             <Text style={[styles.systemName, { color: theme.colors.text }]}>{system.name}</Text>
-            <Text style={[styles.systemType, { color: theme.colors.textSecondary }]}>{system.type}</Text>
+            <Text style={[styles.systemType, { color: theme.colors.textSecondary }]}>
+              {system.type}
+            </Text>
             <View style={styles.healthIndicator}>
-              <Ionicons 
-                name={healthStatus.status === 'good' ? 'checkmark-circle' : 
-                      healthStatus.status === 'warning' ? 'warning' : 'alert-circle'} 
-                size={16} 
-                color={
-                  healthStatus.status === 'good' ? theme.colors.success :
-                  healthStatus.status === 'warning' ? theme.colors.warning : theme.colors.error
-                } 
-              />
-              <Text style={[
-                styles.healthMessage, 
-                { 
-                  color: healthStatus.status === 'good' ? theme.colors.success :
-                         healthStatus.status === 'warning' ? theme.colors.warning : theme.colors.error
+              <Ionicons
+                name={
+                  healthStatus.status === 'good'
+                    ? 'checkmark-circle'
+                    : healthStatus.status === 'warning'
+                      ? 'warning'
+                      : 'alert-circle'
                 }
-              ]}>
+                size={16}
+                color={
+                  healthStatus.status === 'good'
+                    ? theme.colors.success
+                    : healthStatus.status === 'warning'
+                      ? theme.colors.warning
+                      : theme.colors.error
+                }
+              />
+              <Text
+                style={[
+                  styles.healthMessage,
+                  {
+                    color:
+                      healthStatus.status === 'good'
+                        ? theme.colors.success
+                        : healthStatus.status === 'warning'
+                          ? theme.colors.warning
+                          : theme.colors.error,
+                  },
+                ]}
+              >
                 {healthStatus.message}
               </Text>
             </View>
@@ -192,7 +213,7 @@ export const HydroponicSystemHealth: React.FC<HydroponicSystemHealthProps> = ({
           <Text style={[styles.lastUpdated, { color: theme.colors.textSecondary }]}>
             Last updated: {formatTimeSince(latestMeasurement.measured_at)}
           </Text>
-          
+
           <View style={styles.metricsGrid}>
             <MetricCard
               icon="water"
@@ -222,7 +243,8 @@ export const HydroponicSystemHealth: React.FC<HydroponicSystemHealthProps> = ({
           <View style={styles.noDataContainer}>
             <Ionicons name="bar-chart-outline" size={48} color={theme.colors.textSecondary} />
             <Text style={[styles.noDataText, { color: theme.colors.textSecondary }]}>
-              No measurements recorded yet. Add your first measurement to start monitoring system health.
+              No measurements recorded yet. Add your first measurement to start monitoring system
+              health.
             </Text>
           </View>
         </Card>
@@ -238,7 +260,7 @@ export const HydroponicSystemHealth: React.FC<HydroponicSystemHealthProps> = ({
             <Ionicons name="add" size={20} color="white" />
             <Text style={styles.actionButtonText}>Add Measurement</Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity
             style={[styles.actionButton, { backgroundColor: theme.colors.warning }]}
             onPress={onCreateReminder}
@@ -252,7 +274,9 @@ export const HydroponicSystemHealth: React.FC<HydroponicSystemHealthProps> = ({
       {/* System Information */}
       <Card title="System Information" theme={theme}>
         <View style={styles.infoRow}>
-          <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>System Type:</Text>
+          <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
+            System Type:
+          </Text>
           <Text style={[styles.infoValue, { color: theme.colors.text }]}>{system.type}</Text>
         </View>
         <View style={styles.infoRow}>
@@ -266,8 +290,12 @@ export const HydroponicSystemHealth: React.FC<HydroponicSystemHealthProps> = ({
           </Text>
         </View>
         <View style={styles.infoRow}>
-          <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>Total Measurements:</Text>
-          <Text style={[styles.infoValue, { color: theme.colors.text }]}>{system.measurements.length}</Text>
+          <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
+            Total Measurements:
+          </Text>
+          <Text style={[styles.infoValue, { color: theme.colors.text }]}>
+            {system.measurements.length}
+          </Text>
         </View>
       </Card>
     </ScrollView>
@@ -398,4 +426,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
   },
-}); 
+});

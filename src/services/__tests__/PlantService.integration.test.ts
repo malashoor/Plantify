@@ -6,7 +6,7 @@ import {
   StorageSimulator,
   QueueEventTracker,
   TestRetryQueue,
-  waitForQueueEvent
+  waitForQueueEvent,
 } from '../../utils/__tests__/testUtils';
 
 describe('PlantService Integration Tests', () => {
@@ -23,7 +23,7 @@ describe('PlantService Integration Tests', () => {
     const testPlant = {
       name: 'Test Plant',
       species: 'Test Species',
-      location: 'Living Room'
+      location: 'Living Room',
     };
 
     it('should save plant with retry support', async () => {
@@ -34,7 +34,7 @@ describe('PlantService Integration Tests', () => {
         id: 'save-test-plant',
         operationKey: RetryOperationKeys.SAVE_PLANT,
         operationData: JSON.stringify([testPlant]),
-        maxRetries: 3
+        maxRetries: 3,
       });
 
       // Wait for retry and eventual success
@@ -53,7 +53,7 @@ describe('PlantService Integration Tests', () => {
         id: 'save-test-plant',
         operationKey: RetryOperationKeys.SAVE_PLANT,
         operationData: JSON.stringify([testPlant]),
-        maxRetries: 2
+        maxRetries: 2,
       });
 
       // Wait for final error
@@ -68,7 +68,7 @@ describe('PlantService Integration Tests', () => {
         id: 'save-test-plant',
         operationKey: RetryOperationKeys.SAVE_PLANT,
         operationData: JSON.stringify([testPlant]),
-        maxRetries: 3
+        maxRetries: 3,
       });
 
       // Check storage state
@@ -76,7 +76,7 @@ describe('PlantService Integration Tests', () => {
       expect(state.operations).toContainEqual(
         expect.objectContaining({
           id: operation.id,
-          operationKey: RetryOperationKeys.SAVE_PLANT
+          operationKey: RetryOperationKeys.SAVE_PLANT,
         })
       );
     });
@@ -85,7 +85,7 @@ describe('PlantService Integration Tests', () => {
   describe('updatePlant', () => {
     const testUpdate = {
       id: 'test-id',
-      updates: { name: 'Updated Name' }
+      updates: { name: 'Updated Name' },
     };
 
     it('should handle dependent operations', async () => {
@@ -95,7 +95,7 @@ describe('PlantService Integration Tests', () => {
         operationKey: RetryOperationKeys.UPDATE_PLANT,
         operationData: JSON.stringify([testUpdate.id, testUpdate.updates]),
         dependencies: ['save-test-plant'],
-        maxRetries: 2
+        maxRetries: 2,
       });
 
       // Operation should not start until dependency is met
@@ -105,7 +105,7 @@ describe('PlantService Integration Tests', () => {
       await queue.enqueue({
         id: 'save-test-plant',
         operationKey: RetryOperationKeys.SAVE_PLANT,
-        operationData: JSON.stringify([{ name: 'Original Plant' }])
+        operationData: JSON.stringify([{ name: 'Original Plant' }]),
       });
 
       // Wait for update to process after dependency
@@ -120,7 +120,7 @@ describe('PlantService Integration Tests', () => {
         id: 'low-priority-update',
         operationKey: RetryOperationKeys.UPDATE_PLANT,
         operationData: JSON.stringify(['id-1', { name: 'Low Priority' }]),
-        priority: 'low'
+        priority: 'low',
       });
 
       // Add high priority operation
@@ -128,13 +128,11 @@ describe('PlantService Integration Tests', () => {
         id: 'high-priority-update',
         operationKey: RetryOperationKeys.UPDATE_PLANT,
         operationData: JSON.stringify(['id-2', { name: 'High Priority' }]),
-        priority: 'high'
+        priority: 'high',
       });
 
       const events = QueueEventTracker.getEvents();
-      const processOrder = events
-        .filter(e => e.type === 'enqueue')
-        .map(e => e.data.priority);
+      const processOrder = events.filter(e => e.type === 'enqueue').map(e => e.data.priority);
 
       expect(processOrder).toEqual(['low', 'high']);
     });
@@ -147,7 +145,7 @@ describe('PlantService Integration Tests', () => {
         id: 'delete-test-plant',
         operationKey: RetryOperationKeys.DELETE_PLANT,
         operationData: JSON.stringify(['test-id']),
-        maxRetries: 2
+        maxRetries: 2,
       });
 
       // Add dependent operation
@@ -155,7 +153,7 @@ describe('PlantService Integration Tests', () => {
         id: 'update-deleted-plant',
         operationKey: RetryOperationKeys.UPDATE_PLANT,
         operationData: JSON.stringify(['test-id', { name: 'Updated' }]),
-        dependencies: ['delete-test-plant']
+        dependencies: ['delete-test-plant'],
       });
 
       // Wait for delete success
@@ -172,14 +170,14 @@ describe('PlantService Integration Tests', () => {
         id: 'volatile-delete',
         operationKey: RetryOperationKeys.DELETE_PLANT,
         operationData: JSON.stringify(['test-id']),
-        isVolatile: true
+        isVolatile: true,
       });
 
       // Check storage
       const state = await StorageSimulator.getQueueState();
       expect(state.volatileOperations).toContainEqual(
         expect.objectContaining({
-          id: 'volatile-delete'
+          id: 'volatile-delete',
         })
       );
     });
@@ -193,7 +191,7 @@ describe('PlantService Integration Tests', () => {
         id: 'network-error-test',
         operationKey: RetryOperationKeys.SAVE_PLANT,
         operationData: JSON.stringify([{ name: 'Test Plant' }]),
-        maxRetries: 1
+        maxRetries: 1,
       });
 
       await waitForQueueEvent('error');
@@ -206,7 +204,7 @@ describe('PlantService Integration Tests', () => {
       const operation = await queue.enqueue({
         id: 'storage-error-test',
         operationKey: RetryOperationKeys.SAVE_PLANT,
-        operationData: JSON.stringify([{ name: 'Test Plant' }])
+        operationData: JSON.stringify([{ name: 'Test Plant' }]),
       });
 
       expect(operation).toBeTruthy();
@@ -219,11 +217,11 @@ describe('PlantService Integration Tests', () => {
         id: 'malformed-data-test',
         operationKey: RetryOperationKeys.SAVE_PLANT,
         operationData: 'invalid-json',
-        maxRetries: 1
+        maxRetries: 1,
       });
 
       await waitForQueueEvent('error');
       expect(operation.error.message).toContain('Invalid operation data');
     });
   });
-}); 
+});

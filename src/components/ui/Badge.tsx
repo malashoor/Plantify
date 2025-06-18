@@ -9,12 +9,7 @@ interface BadgeProps {
   style?: ViewStyle;
 }
 
-export function Badge({ 
-  label,
-  color = '#9E9E9E',
-  size = 'medium',
-  style,
-}: BadgeProps) {
+export function Badge({ label, color = '#9E9E9E', size = 'medium', style }: BadgeProps) {
   const sizeStyles = {
     small: {
       paddingVertical: 4,
@@ -48,14 +43,7 @@ export function Badge({
         style,
       ]}
     >
-      <Text
-        style={[
-          styles.text,
-          { color, fontSize: sizeStyles[size].fontSize },
-        ]}
-      >
-        {label}
-      </Text>
+      <Text style={[styles.text, { color, fontSize: sizeStyles[size].fontSize }]}>{label}</Text>
     </View>
   );
 }
@@ -70,4 +58,4 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textTransform: 'capitalize',
   },
-}); 
+});

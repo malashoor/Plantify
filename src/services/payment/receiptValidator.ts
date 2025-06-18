@@ -20,7 +20,10 @@ interface ReceiptValidationRequest {
 }
 
 export class ReceiptValidationError extends Error {
-  constructor(message: string, public code: string) {
+  constructor(
+    message: string,
+    public code: string
+  ) {
     super(message);
     this.name = 'ReceiptValidationError';
   }
@@ -33,25 +36,27 @@ export async function validateReceipt(
     // Log validation attempt
     await analytics().logEvent('receipt_validation_attempt', {
       platform: request.platform,
-      productId: request.productId
+      productId: request.productId,
     });
 
     const response = await fetch(`${API_BASE_URL}/validate-receipt`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         ...request,
         // Add additional platform-specific data
-        ...(Platform.OS === 'android' ? {
-          packageName: request.packageName,
-          purchaseToken: request.purchaseToken
-        } : {
-          transactionId: request.transactionId,
-          originalTransactionId: request.originalTransactionId
-        })
-      })
+        ...(Platform.OS === 'android'
+          ? {
+              packageName: request.packageName,
+              purchaseToken: request.purchaseToken,
+            }
+          : {
+              transactionId: request.transactionId,
+              originalTransactionId: request.originalTransactionId,
+            }),
+      }),
     });
 
     if (!response.ok) {
@@ -63,25 +68,22 @@ export async function validateReceipt(
     }
 
     const result = await response.json();
-    
+
     if (!result.isValid) {
       // Log validation failure
       await analytics().logEvent('receipt_validation_failed', {
         platform: request.platform,
         productId: request.productId,
-        error: result.error
+        error: result.error,
       });
 
-      throw new ReceiptValidationError(
-        result.error || 'Invalid receipt',
-        'INVALID_RECEIPT'
-      );
+      throw new ReceiptValidationError(result.error || 'Invalid receipt', 'INVALID_RECEIPT');
     }
 
     // Log successful validation
     await analytics().logEvent('receipt_validation_success', {
       platform: request.platform,
-      productId: request.productId
+      productId: request.productId,
     });
 
     return result;
@@ -91,18 +93,15 @@ export async function validateReceipt(
       extra: {
         platform: request.platform,
         productId: request.productId,
-        userId: request.userId
-      }
+        userId: request.userId,
+      },
     });
 
     if (error instanceof ReceiptValidationError) {
       throw error;
     }
-    
-    throw new ReceiptValidationError(
-      'Failed to validate receipt with server',
-      'SERVER_ERROR'
-    );
+
+    throw new ReceiptValidationError('Failed to validate receipt with server', 'SERVER_ERROR');
   }
 }
 
@@ -115,20 +114,20 @@ export function prepareReceiptData(
     platform: Platform.OS,
     receipt: purchase.transactionReceipt,
     productId: metadata.productId,
-    userId: metadata.userId
+    userId: metadata.userId,
   };
 
   if (Platform.OS === 'android') {
     return {
       ...baseData,
       packageName: purchase.packageNameAndroid,
-      purchaseToken: purchase.purchaseToken
+      purchaseToken: purchase.purchaseToken,
     };
   }
 
   return {
     ...baseData,
     transactionId: purchase.transactionId,
-    originalTransactionId: purchase.originalTransactionIdentifierIOS
+    originalTransactionId: purchase.originalTransactionIdentifierIOS,
   };
-} 
+}

@@ -38,7 +38,7 @@ export default function Plants() {
     <View style={styles.container}>
       <FlatList
         data={PLANTS}
-        keyExtractor={(item) => item.id}
+        keyExtractor={item => item.id}
         renderItem={({ item }) => (
           <Link key={item.id} href={`/plants/${item.id}`} asChild>
             <View style={styles.card}>
@@ -72,4 +72,4 @@ const styles = StyleSheet.create({
   description: { marginTop: 4, fontSize: 14, color: '#555' },
   careLabel: { marginTop: 8, fontSize: 12, fontWeight: '600' },
   care: { fontSize: 12, color: '#333' },
-}); 
+});

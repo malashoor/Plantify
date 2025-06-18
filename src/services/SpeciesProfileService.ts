@@ -33,9 +33,7 @@ export class SpeciesProfileService {
 
   static async getAllProfiles(): Promise<SpeciesProfile[]> {
     try {
-      const { data, error } = await supabase
-        .from(this.TABLE_NAME)
-        .select('*');
+      const { data, error } = await supabase.from(this.TABLE_NAME).select('*');
 
       if (error) throw error;
       if (!data) return [];
@@ -121,10 +119,7 @@ export class SpeciesProfileService {
           'Maintain consistent moisture levels',
           'Avoid extreme temperature fluctuations',
         ],
-        seasonal: [
-          'Reduce watering in winter',
-          'Monitor more frequently during hot summer months',
-        ],
+        seasonal: ['Reduce watering in winter', 'Monitor more frequently during hot summer months'],
       },
     };
   }
@@ -136,10 +131,7 @@ export class SpeciesProfileService {
 
   // Helper method to determine if a plant is moisture-loving
   static isMoistureLovingPlant(profile: SpeciesProfile): boolean {
-    return (
-      profile.moisture.humidityPreference >= 0.7 &&
-      profile.moisture.droughtTolerance <= 0.3
-    );
+    return profile.moisture.humidityPreference >= 0.7 && profile.moisture.droughtTolerance <= 0.3;
   }
 
   // Calculate optimal watering interval based on current conditions
@@ -186,4 +178,4 @@ export class SpeciesProfileService {
       ? profile.moisture.wateringInterval.summer
       : profile.moisture.wateringInterval.winter;
   }
-} 
+}

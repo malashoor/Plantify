@@ -1,7 +1,7 @@
 import { formatDistanceToNow } from 'date-fns';
 import { useRouter } from 'expo-router';
 import React, { useState, useCallback } from 'react';
-import { 
+import {
   View,
   Text,
   StyleSheet,
@@ -15,7 +15,12 @@ import {
   ScrollView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useSeedRecommendations, Seed, SeedQualityTier, CropType } from '../hooks/useSeedRecommendations';
+import {
+  useSeedRecommendations,
+  Seed,
+  SeedQualityTier,
+  CropType,
+} from '../hooks/useSeedRecommendations';
 import placeholderSeedImage from '../assets/images/placeholder-seed.png';
 
 // Simple theme helper
@@ -28,7 +33,7 @@ const createTheme = (colorScheme: 'light' | 'dark' | null) => ({
     textSecondary: colorScheme === 'dark' ? '#BBBBBB' : '#666666',
     border: colorScheme === 'dark' ? '#444444' : '#E0E0E0',
     error: '#F44336',
-  }
+  },
 });
 
 const QUALITY_TIERS: { label: string; value: SeedQualityTier }[] = [
@@ -53,55 +58,77 @@ const SORT_OPTIONS = [
 ];
 
 // Custom Button Component
-const Button = ({ 
-  title, 
-  onPress, 
-  iconName, 
+const Button = ({
+  title,
+  onPress,
+  iconName,
   style,
   textStyle,
-  theme 
-}: { 
-  title: string; 
-  onPress: () => void; 
+  theme,
+}: {
+  title: string;
+  onPress: () => void;
   iconName?: keyof typeof Ionicons.glyphMap;
   style?: any;
   textStyle?: any;
   theme: any;
 }) => (
-  <TouchableOpacity 
-    style={[styles.button, { backgroundColor: theme.colors.primary }, style]} 
+  <TouchableOpacity
+    style={[styles.button, { backgroundColor: theme.colors.primary }, style]}
     onPress={onPress}
   >
     <View style={styles.buttonContent}>
-      {iconName && (
-        <Ionicons name={iconName} size={20} color="white" style={styles.buttonIcon} />
-      )}
+      {iconName && <Ionicons name={iconName} size={20} color="white" style={styles.buttonIcon} />}
       <Text style={[styles.buttonText, textStyle]}>{title}</Text>
     </View>
   </TouchableOpacity>
 );
 
 // Custom Card Component
-const Card = ({ children, style, theme }: { children: React.ReactNode; style?: any; theme: any }) => (
-  <View style={[styles.card, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }, style]}>
+const Card = ({
+  children,
+  style,
+  theme,
+}: {
+  children: React.ReactNode;
+  style?: any;
+  theme: any;
+}) => (
+  <View
+    style={[
+      styles.card,
+      { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+      style,
+    ]}
+  >
     {children}
   </View>
 );
 
 // Custom SearchBar Component
-const SearchBar = ({ 
-  placeholder, 
-  value, 
-  onChangeText, 
-  theme 
-}: { 
-  placeholder: string; 
-  value: string; 
+const SearchBar = ({
+  placeholder,
+  value,
+  onChangeText,
+  theme,
+}: {
+  placeholder: string;
+  value: string;
   onChangeText: (text: string) => void;
   theme: any;
 }) => (
-  <View style={[styles.searchContainer, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
-    <Ionicons name="search" size={20} color={theme.colors.textSecondary} style={styles.searchIcon} />
+  <View
+    style={[
+      styles.searchContainer,
+      { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+    ]}
+  >
+    <Ionicons
+      name="search"
+      size={20}
+      color={theme.colors.textSecondary}
+      style={styles.searchIcon}
+    />
     <TextInput
       style={[styles.searchInput, { color: theme.colors.text }]}
       placeholder={placeholder}
@@ -129,7 +156,10 @@ function Dropdown({ label, value, options, onChange, theme }: DropdownProps) {
     <View style={styles.filterSelect}>
       <Text style={[styles.filterLabel, { color: theme.colors.textSecondary }]}>{label}</Text>
       <TouchableOpacity
-        style={[styles.dropdownButton, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}
+        style={[
+          styles.dropdownButton,
+          { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+        ]}
         onPress={() => setIsOpen(true)}
       >
         <Text style={[styles.dropdownButtonText, { color: theme.colors.text }]}>
@@ -137,33 +167,35 @@ function Dropdown({ label, value, options, onChange, theme }: DropdownProps) {
         </Text>
         <Ionicons name="chevron-down" size={16} color={theme.colors.textSecondary} />
       </TouchableOpacity>
-      
+
       <Modal visible={isOpen} transparent animationType="fade">
-        <TouchableOpacity 
-          style={styles.modalOverlay} 
+        <TouchableOpacity
+          style={styles.modalOverlay}
           activeOpacity={1}
           onPress={() => setIsOpen(false)}
         >
           <View style={[styles.dropdownModal, { backgroundColor: theme.colors.surface }]}>
             <ScrollView>
-              {options.map((option) => (
+              {options.map(option => (
                 <TouchableOpacity
                   key={option.value}
                   style={[
                     styles.dropdownItem,
                     { borderBottomColor: theme.colors.border },
-                    option.value === value && { backgroundColor: theme.colors.primary + '20' }
+                    option.value === value && { backgroundColor: theme.colors.primary + '20' },
                   ]}
                   onPress={() => {
                     onChange(option.value);
                     setIsOpen(false);
                   }}
                 >
-                  <Text style={[
-                    styles.dropdownItemText,
-                    { color: theme.colors.text },
-                    option.value === value && { fontWeight: 'bold', color: theme.colors.primary }
-                  ]}>
+                  <Text
+                    style={[
+                      styles.dropdownItemText,
+                      { color: theme.colors.text },
+                      option.value === value && { fontWeight: 'bold', color: theme.colors.primary },
+                    ]}
+                  >
                     {option.label}
                   </Text>
                   {option.value === value && (
@@ -192,10 +224,7 @@ function SeedCard({ seed, theme }: { seed: Seed; theme: any }) {
   const router = useRouter();
 
   return (
-    <TouchableOpacity
-      onPress={() => router.push(`/seeds/${seed.id}`)}
-      style={styles.cardTouchable}
-    >
+    <TouchableOpacity onPress={() => router.push(`/seeds/${seed.id}`)} style={styles.cardTouchable}>
       <Card theme={theme}>
         <Text style={[styles.seedName, { color: theme.colors.text }]}>{seed.name}</Text>
         <Image
@@ -203,7 +232,9 @@ function SeedCard({ seed, theme }: { seed: Seed; theme: any }) {
           style={styles.image}
         />
         <View style={styles.cardContent}>
-          <Text style={[styles.variety, { color: theme.colors.textSecondary }]}>{seed.variety}</Text>
+          <Text style={[styles.variety, { color: theme.colors.textSecondary }]}>
+            {seed.variety}
+          </Text>
           <View style={styles.ratingContainer}>
             <Text style={[styles.ratingLabel, { color: theme.colors.text }]}>Rating:</Text>
             <Text style={[styles.rating, { color: theme.colors.primary }]}>
@@ -245,17 +276,24 @@ export default function SeedsScreen() {
   const router = useRouter();
   const colorScheme = useColorScheme();
   const theme = createTheme(colorScheme);
-  const { seeds, isLoading, isError, refetch, loadMore, hasMore, filters, setFilters } = useSeedRecommendations();
+  const { seeds, isLoading, isError, refetch, loadMore, hasMore, filters, setFilters } =
+    useSeedRecommendations();
   const [searchText, setSearchText] = useState('');
 
-  const handleSearch = useCallback((text: string) => {
-    setSearchText(text);
-    setFilters({ ...filters, searchText: text });
-  }, [filters, setFilters]);
+  const handleSearch = useCallback(
+    (text: string) => {
+      setSearchText(text);
+      setFilters({ ...filters, searchText: text });
+    },
+    [filters, setFilters]
+  );
 
-  const handleSort = useCallback((value: string) => {
-    setFilters({ ...filters, sortBy: value as 'rating' | 'localFavorites' | 'newest' });
-  }, [filters, setFilters]);
+  const handleSort = useCallback(
+    (value: string) => {
+      setFilters({ ...filters, sortBy: value as 'rating' | 'localFavorites' | 'newest' });
+    },
+    [filters, setFilters]
+  );
 
   if (isLoading && seeds.length === 0) {
     return (
@@ -309,14 +347,14 @@ export default function SeedsScreen() {
           label="Quality Tier"
           value={filters.qualityTier || ''}
           options={QUALITY_TIERS}
-          onChange={(value) => setFilters({ ...filters, qualityTier: value as SeedQualityTier })}
+          onChange={value => setFilters({ ...filters, qualityTier: value as SeedQualityTier })}
           theme={theme}
         />
         <Dropdown
           label="Crop Type"
           value={filters.cropType || ''}
           options={CROP_TYPES}
-          onChange={(value) => setFilters({ ...filters, cropType: value as CropType })}
+          onChange={value => setFilters({ ...filters, cropType: value as CropType })}
           theme={theme}
         />
       </View>
@@ -335,7 +373,10 @@ export default function SeedsScreen() {
         onEndReached={loadMore}
         onEndReachedThreshold={0.5}
         ListEmptyComponent={
-          <EmptyState message="No seed recommendations found. Try adjusting your filters." theme={theme} />
+          <EmptyState
+            message="No seed recommendations found. Try adjusting your filters."
+            theme={theme}
+          />
         }
         refreshControl={
           <RefreshControl
@@ -551,4 +592,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
   },
-}); 
+});

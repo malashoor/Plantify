@@ -23,7 +23,7 @@ describe('RetryQueueStatus', () => {
       await queue.enqueue({
         id: 'test-1',
         operationKey: RetryOperationKeys.SAVE_PLANT,
-        operationData: JSON.stringify([{ name: 'Test Plant' }])
+        operationData: JSON.stringify([{ name: 'Test Plant' }]),
       });
     });
 
@@ -38,7 +38,7 @@ describe('RetryQueueStatus', () => {
       await queue.enqueue({
         id: 'test-1',
         operationKey: RetryOperationKeys.SAVE_PLANT,
-        operationData: JSON.stringify([{ name: 'Test Plant' }])
+        operationData: JSON.stringify([{ name: 'Test Plant' }]),
       });
     });
 
@@ -54,7 +54,7 @@ describe('RetryQueueStatus', () => {
       const operation = await queue.enqueue({
         id: 'test-1',
         operationKey: RetryOperationKeys.SAVE_PLANT,
-        operationData: JSON.stringify([{ name: 'Test Plant' }])
+        operationData: JSON.stringify([{ name: 'Test Plant' }]),
       });
 
       // Simulate processing start
@@ -74,7 +74,7 @@ describe('RetryQueueStatus', () => {
         id: 'test-1',
         operationKey: RetryOperationKeys.SAVE_PLANT,
         operationData: JSON.stringify([{ name: 'Test Plant' }]),
-        maxRetries: 3
+        maxRetries: 3,
       });
 
       // Simulate retry
@@ -94,7 +94,7 @@ describe('RetryQueueStatus', () => {
       await queue.enqueue({
         id: 'test-1',
         operationKey: RetryOperationKeys.SAVE_PLANT,
-        operationData: JSON.stringify([{ name: 'Test Plant' }])
+        operationData: JSON.stringify([{ name: 'Test Plant' }]),
       });
     });
 
@@ -113,7 +113,7 @@ describe('RetryQueueStatus', () => {
         operationKey: RetryOperationKeys.SAVE_PLANT,
         operationData: JSON.stringify([{ name: 'Test Plant' }]),
         maxRetries: 3,
-        attempt: 1
+        attempt: 1,
       });
     });
 
@@ -131,7 +131,7 @@ describe('RetryQueueStatus', () => {
       await queue.enqueue({
         id: 'test-1',
         operationKey: RetryOperationKeys.SAVE_PLANT,
-        operationData: JSON.stringify([{ name: 'Test Plant' }])
+        operationData: JSON.stringify([{ name: 'Test Plant' }]),
       });
       rerender(<RetryQueueStatus />);
     });
@@ -142,9 +142,9 @@ describe('RetryQueueStatus', () => {
         opacity: expect.any(Object), // Animated.Value
         transform: expect.arrayContaining([
           expect.objectContaining({
-            translateY: expect.any(Object) // Animated.Value
-          })
-        ])
+            translateY: expect.any(Object), // Animated.Value
+          }),
+        ]),
       })
     );
   });
@@ -158,19 +158,19 @@ describe('RetryQueueStatus', () => {
       await queue.enqueue({
         id: 'test-1',
         operationKey: RetryOperationKeys.SAVE_PLANT,
-        operationData: JSON.stringify([{ name: 'Plant 1' }])
+        operationData: JSON.stringify([{ name: 'Plant 1' }]),
       });
 
       await queue.enqueue({
         id: 'test-2',
         operationKey: RetryOperationKeys.UPDATE_WEATHER_CACHE,
-        operationData: JSON.stringify([{ temperature: 25 }])
+        operationData: JSON.stringify([{ temperature: 25 }]),
       });
 
       await queue.enqueue({
         id: 'test-3',
         operationKey: RetryOperationKeys.LOG_PLANT_MOOD,
-        operationData: JSON.stringify([1, 5])
+        operationData: JSON.stringify([1, 5]),
       });
     });
 
@@ -179,4 +179,4 @@ describe('RetryQueueStatus', () => {
     expect(getByText(RetryOperationKeys.UPDATE_WEATHER_CACHE)).toBeTruthy();
     expect(getByText(RetryOperationKeys.LOG_PLANT_MOOD)).toBeTruthy();
   });
-}); 
+});

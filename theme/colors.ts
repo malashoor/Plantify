@@ -20,4 +20,4 @@ export const colors = {
 } as const;
 
 // For backward compatibility
-export const Colors = colors; 
+export const Colors = colors;

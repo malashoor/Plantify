@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, useColorScheme, Platform, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  useColorScheme,
+  Platform,
+  Alert,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack, router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -41,7 +50,7 @@ export default function OnboardingScreen() {
       const { status } = await Location.getForegroundPermissionsAsync();
       setState(prev => ({
         ...prev,
-        locationPermission: status === 'granted'
+        locationPermission: status === 'granted',
       }));
     } catch (error) {
       console.error('Error checking location permission:', error);
@@ -139,10 +148,7 @@ export default function OnboardingScreen() {
       title: t('onboarding.role.title'),
       subtitle: t('onboarding.role.subtitle'),
       component: (
-        <RoleSelector
-          value={state.role}
-          onChange={(role) => setState(prev => ({ ...prev, role }))}
-        />
+        <RoleSelector value={state.role} onChange={role => setState(prev => ({ ...prev, role }))} />
       ),
     },
     {
@@ -151,7 +157,7 @@ export default function OnboardingScreen() {
       component: (
         <EnvironmentSelector
           value={state.environment}
-          onChange={(environment) => setState(prev => ({ ...prev, environment }))}
+          onChange={environment => setState(prev => ({ ...prev, environment }))}
         />
       ),
     },
@@ -161,7 +167,7 @@ export default function OnboardingScreen() {
       component: (
         <PlantInterestSelector
           selectedInterests={state.interests}
-          onInterestsChange={(interests) => setState(prev => ({ ...prev, interests }))}
+          onInterestsChange={interests => setState(prev => ({ ...prev, interests }))}
         />
       ),
     },
@@ -170,15 +176,17 @@ export default function OnboardingScreen() {
       subtitle: t('onboarding.location.subtitle'),
       component: (
         <View style={styles.locationContainer}>
-          <View style={[
-            styles.locationIconContainer,
-            isDark && styles.locationIconContainerDark,
-            state.locationPermission && styles.locationIconContainerSuccess,
-          ]}>
+          <View
+            style={[
+              styles.locationIconContainer,
+              isDark && styles.locationIconContainerDark,
+              state.locationPermission && styles.locationIconContainerSuccess,
+            ]}
+          >
             <Ionicons
-              name={state.locationPermission ? "checkmark" : "location"}
+              name={state.locationPermission ? 'checkmark' : 'location'}
               size={48}
-              color={state.locationPermission ? "#16A34A" : (isDark ? "#9CA3AF" : "#6B7280")}
+              color={state.locationPermission ? '#16A34A' : isDark ? '#9CA3AF' : '#6B7280'}
             />
           </View>
           <Text style={[styles.locationText, isDark && styles.locationTextDark]}>
@@ -205,7 +213,7 @@ export default function OnboardingScreen() {
       component: (
         <View style={styles.summaryContainer}>
           <View style={[styles.summaryItem, isDark && styles.summaryItemDark]}>
-            <Ionicons name="person" size={24} color={isDark ? "#9CA3AF" : "#6B7280"} />
+            <Ionicons name="person" size={24} color={isDark ? '#9CA3AF' : '#6B7280'} />
             <View style={styles.summaryContent}>
               <Text style={[styles.summaryLabel, isDark && styles.summaryLabelDark]}>
                 {t('onboarding.summary.role')}
@@ -216,10 +224,16 @@ export default function OnboardingScreen() {
             </View>
           </View>
           <View style={[styles.summaryItem, isDark && styles.summaryItemDark]}>
-            <Ionicons 
-              name={state.environment === 'indoor' ? 'home' : state.environment === 'outdoor' ? 'sunny' : 'water'}
+            <Ionicons
+              name={
+                state.environment === 'indoor'
+                  ? 'home'
+                  : state.environment === 'outdoor'
+                    ? 'sunny'
+                    : 'water'
+              }
               size={24}
-              color={isDark ? "#9CA3AF" : "#6B7280"}
+              color={isDark ? '#9CA3AF' : '#6B7280'}
             />
             <View style={styles.summaryContent}>
               <Text style={[styles.summaryLabel, isDark && styles.summaryLabelDark]}>
@@ -231,7 +245,7 @@ export default function OnboardingScreen() {
             </View>
           </View>
           <View style={[styles.summaryItem, isDark && styles.summaryItemDark]}>
-            <Ionicons name="leaf" size={24} color={isDark ? "#9CA3AF" : "#6B7280"} />
+            <Ionicons name="leaf" size={24} color={isDark ? '#9CA3AF' : '#6B7280'} />
             <View style={styles.summaryContent}>
               <Text style={[styles.summaryLabel, isDark && styles.summaryLabelDark]}>
                 {t('onboarding.summary.interests')}
@@ -244,7 +258,7 @@ export default function OnboardingScreen() {
             </View>
           </View>
           <View style={[styles.summaryItem, isDark && styles.summaryItemDark]}>
-            <Ionicons name="location" size={24} color={isDark ? "#9CA3AF" : "#6B7280"} />
+            <Ionicons name="location" size={24} color={isDark ? '#9CA3AF' : '#6B7280'} />
             <View style={styles.summaryContent}>
               <Text style={[styles.summaryLabel, isDark && styles.summaryLabelDark]}>
                 {t('onboarding.summary.location')}
@@ -290,11 +304,7 @@ export default function OnboardingScreen() {
                 accessibilityLabel={t('common.previous')}
                 testID="prevButton"
               >
-                <Ionicons
-                  name="arrow-back"
-                  size={24}
-                  color={isDark ? '#9CA3AF' : '#6B7280'}
-                />
+                <Ionicons name="arrow-back" size={24} color={isDark ? '#9CA3AF' : '#6B7280'} />
               </TouchableOpacity>
             )}
 
@@ -306,15 +316,19 @@ export default function OnboardingScreen() {
                 currentStep === steps.length - 1 && isDark && styles.getStartedButtonDark,
               ]}
               onPress={handleNext}
-              accessibilityLabel={currentStep === steps.length - 1 ? t('common.getStarted') : t('common.next')}
+              accessibilityLabel={
+                currentStep === steps.length - 1 ? t('common.getStarted') : t('common.next')
+              }
               testID={currentStep === steps.length - 1 ? 'getStartedButton' : 'nextButton'}
             >
-              <Text style={[
-                styles.nextButtonText,
-                isDark && styles.nextButtonTextDark,
-                currentStep === steps.length - 1 && styles.getStartedButtonText,
-                currentStep === steps.length - 1 && isDark && styles.getStartedButtonTextDark,
-              ]}>
+              <Text
+                style={[
+                  styles.nextButtonText,
+                  isDark && styles.nextButtonTextDark,
+                  currentStep === steps.length - 1 && styles.getStartedButtonText,
+                  currentStep === steps.length - 1 && isDark && styles.getStartedButtonTextDark,
+                ]}
+              >
                 {currentStep === steps.length - 1 ? t('common.getStarted') : t('common.next')}
               </Text>
             </TouchableOpacity>
@@ -473,4 +487,4 @@ const styles = StyleSheet.create({
   getStartedButtonText: {
     color: '#FFFFFF',
   },
-}); 
+});

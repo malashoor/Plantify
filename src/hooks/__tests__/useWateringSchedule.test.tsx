@@ -18,14 +18,14 @@ describe('useWateringSchedule', () => {
     description: 'clear sky',
     feelsLike: 26,
     windSpeed: 5,
-    timestamp: Date.now()
+    timestamp: Date.now(),
   };
 
   const mockEnvironmentFactors: EnvironmentFactors = {
     evaporationRate: 0.5,
     temperatureSensitivity: 0.7,
     windSensitivity: 0.3,
-    humidityDependence: 0.6
+    humidityDependence: 0.6,
   };
 
   const mockProfile: SpeciesProfile = {
@@ -38,27 +38,29 @@ describe('useWateringSchedule', () => {
       moistureThresholds: {
         min: 0.2,
         optimal: 0.5,
-        max: 0.8
+        max: 0.8,
       },
       wateringAmount: 250, // ml per watering
       sensitivities: {
         overwatering: false,
-        underwatering: false
+        underwatering: false,
       },
       environmentFactors: {
         indoor: mockEnvironmentFactors,
-        outdoor: mockEnvironmentFactors
-      }
+        outdoor: mockEnvironmentFactors,
+      },
     },
-    growingMethods: [{
-      type: 'soil'
-    }],
+    growingMethods: [
+      {
+        type: 'soil',
+      },
+    ],
     recommendedEnvironments: ['indoor', 'outdoor'],
     careNotes: {
       watering: ['Test watering note'],
       environment: ['Test environment note'],
-      seasonal: ['Test seasonal note']
-    }
+      seasonal: ['Test seasonal note'],
+    },
   };
 
   const mockBaseInterval = 7;
@@ -67,15 +69,17 @@ describe('useWateringSchedule', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Mock service implementations
-    (SpeciesProfileService.calculateWateringInterval as jest.Mock).mockReturnValue(mockBaseInterval);
+    (SpeciesProfileService.calculateWateringInterval as jest.Mock).mockReturnValue(
+      mockBaseInterval
+    );
     (SmartWateringService.evaluateWatering as jest.Mock).mockResolvedValue({
       shouldSkip: false,
       shouldIncrease: false,
       nextWateringDate: mockNextWatering,
       recommendation: 'Normal watering schedule',
-      reason: 'Conditions are optimal'
+      reason: 'Conditions are optimal',
     });
   });
 
@@ -85,7 +89,7 @@ describe('useWateringSchedule', () => {
         weather: mockWeather,
         profile: mockProfile,
         isIndoor: true,
-        lastWatered: mockLastWatered
+        lastWatered: mockLastWatered,
       })
     );
 
@@ -109,7 +113,7 @@ describe('useWateringSchedule', () => {
         weather: null,
         profile: mockProfile,
         isIndoor: true,
-        lastWatered: mockLastWatered
+        lastWatered: mockLastWatered,
       })
     );
 
@@ -124,7 +128,7 @@ describe('useWateringSchedule', () => {
         weather: mockWeather,
         profile: null,
         isIndoor: true,
-        lastWatered: mockLastWatered
+        lastWatered: mockLastWatered,
       })
     );
 
@@ -137,7 +141,7 @@ describe('useWateringSchedule', () => {
     const hotWeather: WeatherData = {
       ...mockWeather,
       temperature: 35,
-      humidity: 30
+      humidity: 30,
     };
 
     (SmartWateringService.evaluateWatering as jest.Mock).mockResolvedValue({
@@ -145,7 +149,7 @@ describe('useWateringSchedule', () => {
       shouldIncrease: true,
       nextWateringDate: new Date('2024-03-15T12:00:00Z'), // Earlier watering
       recommendation: 'Increase watering frequency',
-      reason: 'High temperature and low humidity'
+      reason: 'High temperature and low humidity',
     });
 
     const { result, waitForNextUpdate } = renderHook(() =>
@@ -153,7 +157,7 @@ describe('useWateringSchedule', () => {
         weather: hotWeather,
         profile: mockProfile,
         isIndoor: false,
-        lastWatered: mockLastWatered
+        lastWatered: mockLastWatered,
       })
     );
 
@@ -170,7 +174,7 @@ describe('useWateringSchedule', () => {
       shouldIncrease: false,
       nextWateringDate: new Date('2024-03-18T12:00:00Z'), // Delayed watering
       recommendation: 'Skip watering',
-      reason: 'Rain expected'
+      reason: 'Rain expected',
     });
 
     const { result, waitForNextUpdate } = renderHook(() =>
@@ -178,7 +182,7 @@ describe('useWateringSchedule', () => {
         weather: mockWeather,
         profile: mockProfile,
         isIndoor: false,
-        lastWatered: mockLastWatered
+        lastWatered: mockLastWatered,
       })
     );
 
@@ -200,7 +204,7 @@ describe('useWateringSchedule', () => {
         weather: mockWeather,
         profile: mockProfile,
         isIndoor: true,
-        lastWatered: mockLastWatered
+        lastWatered: mockLastWatered,
       })
     );
 
@@ -227,8 +231,8 @@ describe('useWateringSchedule', () => {
           weather: mockWeather,
           profile: mockProfile,
           isIndoor: true,
-          lastWatered: mockLastWatered
-        }
+          lastWatered: mockLastWatered,
+        },
       }
     );
 
@@ -239,7 +243,7 @@ describe('useWateringSchedule', () => {
       weather: updatedWeather,
       profile: mockProfile,
       isIndoor: true,
-      lastWatered: mockLastWatered
+      lastWatered: mockLastWatered,
     });
 
     await waitForNextUpdate();
@@ -254,7 +258,7 @@ describe('useWateringSchedule', () => {
         weather: mockWeather,
         profile: mockProfile,
         isIndoor: true,
-        lastWatered: mockLastWatered
+        lastWatered: mockLastWatered,
       })
     );
 
@@ -267,9 +271,9 @@ describe('useWateringSchedule', () => {
       shouldIncrease: false,
       nextWateringDate: new Date(),
       recommendation: 'Test',
-      reason: 'Test'
+      reason: 'Test',
     });
 
     expect(result.current.schedule.nextWateringDate).toEqual(mockNextWatering);
   });
-}); 
+});

@@ -34,9 +34,7 @@ export interface PlantDetails {
 }
 
 // Identify plant from image
-export async function identifyPlant(
-  imageUri: string,
-): Promise<IdentificationResult> {
+export async function identifyPlant(imageUri: string): Promise<IdentificationResult> {
   // Simulated identification result
   return {
     id: `plant-${Date.now()}`,
@@ -57,8 +55,7 @@ export async function getPlantDetails(plantId: string): Promise<PlantDetails> {
     scientificName: 'Monstera deliciosa',
     commonName: 'Swiss Cheese Plant',
     family: 'Araceae',
-    description:
-      'A popular tropical plant known for its large, perforated leaves.',
+    description: 'A popular tropical plant known for its large, perforated leaves.',
     careInstructions: {
       watering: 'Water when top soil is dry',
       sunlight: 'Bright indirect light',

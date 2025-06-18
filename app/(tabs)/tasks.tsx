@@ -31,19 +31,89 @@ export default function TasksScreen() {
     try {
       // In a real app, this would be an API call
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       // Sample data
       setTasks([
-        { id: '1', title: 'Water Snake Plant', dueDate: '2023-05-15', plantName: 'Snake Plant', isCompleted: false, priority: 'high' },
-        { id: '2', title: 'Fertilize Monstera', dueDate: '2023-05-16', plantName: 'Monstera', isCompleted: false, priority: 'medium' },
-        { id: '3', title: 'Prune Basil', dueDate: '2023-05-17', plantName: 'Basil', isCompleted: true, priority: 'low' },
-        { id: '4', title: 'Check soil moisture', dueDate: '2023-05-18', plantName: 'Fiddle Leaf Fig', isCompleted: false, priority: 'medium' },
-        { id: '5', title: 'Repot Aloe Vera', dueDate: '2023-05-19', plantName: 'Aloe Vera', isCompleted: false, priority: 'high' },
-        { id: '6', title: 'Mist Orchid', dueDate: '2023-05-20', plantName: 'Orchid', isCompleted: false, priority: 'low' },
-        { id: '7', title: 'Rotate plants', dueDate: '2023-05-21', plantName: 'All Plants', isCompleted: false, priority: 'medium' },
-        { id: '8', title: 'Check for pests', dueDate: '2023-05-22', plantName: 'All Plants', isCompleted: false, priority: 'high' },
-        { id: '9', title: 'Take progress photos', dueDate: '2023-05-23', plantName: 'All Plants', isCompleted: false, priority: 'low' },
-        { id: '10', title: 'Clean plant leaves', dueDate: '2023-05-24', plantName: 'Rubber Plant', isCompleted: false, priority: 'medium' },
+        {
+          id: '1',
+          title: 'Water Snake Plant',
+          dueDate: '2023-05-15',
+          plantName: 'Snake Plant',
+          isCompleted: false,
+          priority: 'high',
+        },
+        {
+          id: '2',
+          title: 'Fertilize Monstera',
+          dueDate: '2023-05-16',
+          plantName: 'Monstera',
+          isCompleted: false,
+          priority: 'medium',
+        },
+        {
+          id: '3',
+          title: 'Prune Basil',
+          dueDate: '2023-05-17',
+          plantName: 'Basil',
+          isCompleted: true,
+          priority: 'low',
+        },
+        {
+          id: '4',
+          title: 'Check soil moisture',
+          dueDate: '2023-05-18',
+          plantName: 'Fiddle Leaf Fig',
+          isCompleted: false,
+          priority: 'medium',
+        },
+        {
+          id: '5',
+          title: 'Repot Aloe Vera',
+          dueDate: '2023-05-19',
+          plantName: 'Aloe Vera',
+          isCompleted: false,
+          priority: 'high',
+        },
+        {
+          id: '6',
+          title: 'Mist Orchid',
+          dueDate: '2023-05-20',
+          plantName: 'Orchid',
+          isCompleted: false,
+          priority: 'low',
+        },
+        {
+          id: '7',
+          title: 'Rotate plants',
+          dueDate: '2023-05-21',
+          plantName: 'All Plants',
+          isCompleted: false,
+          priority: 'medium',
+        },
+        {
+          id: '8',
+          title: 'Check for pests',
+          dueDate: '2023-05-22',
+          plantName: 'All Plants',
+          isCompleted: false,
+          priority: 'high',
+        },
+        {
+          id: '9',
+          title: 'Take progress photos',
+          dueDate: '2023-05-23',
+          plantName: 'All Plants',
+          isCompleted: false,
+          priority: 'low',
+        },
+        {
+          id: '10',
+          title: 'Clean plant leaves',
+          dueDate: '2023-05-24',
+          plantName: 'Rubber Plant',
+          isCompleted: false,
+          priority: 'medium',
+        },
       ]);
     } catch (error) {
       console.error('Error loading tasks:', error);
@@ -63,11 +133,9 @@ export default function TasksScreen() {
   }, [loadTasks]);
 
   const markTaskComplete = useCallback((taskId: string) => {
-    setTasks(currentTasks => 
-      currentTasks.map(task => 
-        task.id === taskId 
-          ? { ...task, isCompleted: !task.isCompleted } 
-          : task
+    setTasks(currentTasks =>
+      currentTasks.map(task =>
+        task.id === taskId ? { ...task, isCompleted: !task.isCompleted } : task
       )
     );
   }, []);
@@ -76,140 +144,131 @@ export default function TasksScreen() {
     router.push('/add-task');
   };
 
-  const renderTaskItem = useCallback(({ item }: { item: TaskItem }) => (
-    <View 
-      style={[
-        styles.taskItem, 
-        isDark && styles.taskItemDark,
-        item.isCompleted && styles.taskCompleted,
-      ]}
-      testID={`task-item-${item.id}`}
-    >
-      <TouchableOpacity 
+  const renderTaskItem = useCallback(
+    ({ item }: { item: TaskItem }) => (
+      <View
         style={[
-          styles.checkboxContainer,
-          item.isCompleted && styles.checkboxChecked,
-          !item.isCompleted && {
-            borderColor: 
-              item.priority === 'high' 
-                ? '#E53935' 
-                : item.priority === 'medium' 
-                  ? '#FB8C00' 
-                  : '#7CB342'
-          }
+          styles.taskItem,
+          isDark && styles.taskItemDark,
+          item.isCompleted && styles.taskCompleted,
         ]}
-        onPress={() => markTaskComplete(item.id)}
-        accessibilityLabel={
-          item.isCompleted 
-            ? t('accessibility.markTaskIncomplete', 'Mark task as incomplete') 
-            : t('accessibility.markTaskComplete', 'Mark task as complete')
-        }
-        accessibilityRole="checkbox"
-        accessibilityState={{ checked: item.isCompleted }}
+        testID={`task-item-${item.id}`}
       >
-        {item.isCompleted && <Check size={16} color="#fff" />}
-      </TouchableOpacity>
-      
-      <View style={styles.taskContent}>
-        <Text 
+        <TouchableOpacity
           style={[
-            styles.taskTitle, 
-            isDark && styles.textDark,
-            item.isCompleted && styles.taskCompletedText
+            styles.checkboxContainer,
+            item.isCompleted && styles.checkboxChecked,
+            !item.isCompleted && {
+              borderColor:
+                item.priority === 'high'
+                  ? '#E53935'
+                  : item.priority === 'medium'
+                    ? '#FB8C00'
+                    : '#7CB342',
+            },
           ]}
-          numberOfLines={1}
-          accessibilityLabel={item.title}
+          onPress={() => markTaskComplete(item.id)}
+          accessibilityLabel={
+            item.isCompleted
+              ? t('accessibility.markTaskIncomplete', 'Mark task as incomplete')
+              : t('accessibility.markTaskComplete', 'Mark task as complete')
+          }
+          accessibilityRole="checkbox"
+          accessibilityState={{ checked: item.isCompleted }}
         >
-          {item.title}
-        </Text>
-        <Text 
-          style={[
-            styles.taskSubtitle, 
-            isDark && styles.textLightDark
-          ]}
-          accessibilityLabel={`For ${item.plantName}`}
-        >
-          {item.plantName}
-        </Text>
-      </View>
-      
-      <View style={styles.taskMeta}>
-        <View style={styles.dueDateContainer}>
-          <Clock size={14} color={isDark ? '#AAAAAA' : '#666666'} />
-          <Text 
-            style={[styles.dueDate, isDark && styles.textLightDark]}
-            accessibilityLabel={`Due on ${item.dueDate}`}
+          {item.isCompleted && <Check size={16} color="#fff" />}
+        </TouchableOpacity>
+
+        <View style={styles.taskContent}>
+          <Text
+            style={[
+              styles.taskTitle,
+              isDark && styles.textDark,
+              item.isCompleted && styles.taskCompletedText,
+            ]}
+            numberOfLines={1}
+            accessibilityLabel={item.title}
           >
-            {item.dueDate}
+            {item.title}
+          </Text>
+          <Text
+            style={[styles.taskSubtitle, isDark && styles.textLightDark]}
+            accessibilityLabel={`For ${item.plantName}`}
+          >
+            {item.plantName}
           </Text>
         </View>
-        
-        <TouchableOpacity
-          style={[styles.detailsButton, isDark && styles.detailsButtonDark]}
-          onPress={() => router.push(`/tasks/${item.id}`)}
-          accessibilityLabel={t('accessibility.viewTaskDetails', 'View task details')}
-          accessibilityRole="button"
-        >
-          <ChevronRight size={16} color={isDark ? '#FFFFFF' : '#333333'} />
-        </TouchableOpacity>
+
+        <View style={styles.taskMeta}>
+          <View style={styles.dueDateContainer}>
+            <Clock size={14} color={isDark ? '#AAAAAA' : '#666666'} />
+            <Text
+              style={[styles.dueDate, isDark && styles.textLightDark]}
+              accessibilityLabel={`Due on ${item.dueDate}`}
+            >
+              {item.dueDate}
+            </Text>
+          </View>
+
+          <TouchableOpacity
+            style={[styles.detailsButton, isDark && styles.detailsButtonDark]}
+            onPress={() => router.push(`/tasks/${item.id}`)}
+            accessibilityLabel={t('accessibility.viewTaskDetails', 'View task details')}
+            accessibilityRole="button"
+          >
+            <ChevronRight size={16} color={isDark ? '#FFFFFF' : '#333333'} />
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
-  ), [isDark, markTaskComplete, router, t]);
+    ),
+    [isDark, markTaskComplete, router, t]
+  );
 
   return (
-    <SafeAreaView 
+    <SafeAreaView
       style={[styles.container, isDark && styles.containerDark]}
       edges={['top', 'left', 'right']}
     >
       <OfflineNotice />
-      
+
       <View style={styles.header}>
         <View>
-          <Text 
-            style={[styles.screenTitle, isDark && styles.textDark]}
-            accessibilityRole="header"
-          >
+          <Text style={[styles.screenTitle, isDark && styles.textDark]} accessibilityRole="header">
             {t('tasks.title', 'My Tasks')}
           </Text>
-          <Text 
+          <Text
             style={[styles.taskCount, isDark && styles.textLightDark]}
             accessibilityLabel={t(
               'tasks.countDescription',
               `${tasks.filter(t => !t.isCompleted).length} tasks remaining`
             )}
           >
-            {t(
-              'tasks.count',
-              '{{count}} remaining',
-              { count: tasks.filter(t => !t.isCompleted).length }
-            )}
+            {t('tasks.count', '{{count}} remaining', {
+              count: tasks.filter(t => !t.isCompleted).length,
+            })}
           </Text>
         </View>
-        
-        <TouchableOpacity 
+
+        <TouchableOpacity
           style={[styles.addButton, isDark && styles.addButtonDark]}
           onPress={handleAddTask}
           accessibilityLabel={t('accessibility.addNewTask', 'Add new task')}
           accessibilityRole="button"
         >
-          <Text style={styles.addButtonText}>
-            {t('tasks.addNew', 'Add Task')}
-          </Text>
+          <Text style={styles.addButtonText}>{t('tasks.addNew', 'Add Task')}</Text>
         </TouchableOpacity>
       </View>
-      
+
       <View style={styles.filterContainer}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[styles.filterButton, styles.activeFilter]}
           accessibilityRole="button"
           accessibilityState={{ selected: true }}
         >
-          <Text style={styles.activeFilterText}>
-            {t('tasks.filters.all', 'All')}
-          </Text>
+          <Text style={styles.activeFilterText}>{t('tasks.filters.all', 'All')}</Text>
         </TouchableOpacity>
-        
-        <TouchableOpacity 
+
+        <TouchableOpacity
           style={styles.filterButton}
           accessibilityRole="button"
           accessibilityState={{ selected: false }}
@@ -218,8 +277,8 @@ export default function TasksScreen() {
             {t('tasks.filters.today', 'Today')}
           </Text>
         </TouchableOpacity>
-        
-        <TouchableOpacity 
+
+        <TouchableOpacity
           style={styles.filterButton}
           accessibilityRole="button"
           accessibilityState={{ selected: false }}
@@ -228,8 +287,8 @@ export default function TasksScreen() {
             {t('tasks.filters.upcoming', 'Upcoming')}
           </Text>
         </TouchableOpacity>
-        
-        <TouchableOpacity 
+
+        <TouchableOpacity
           style={styles.filterButton}
           accessibilityRole="button"
           accessibilityState={{ selected: false }}
@@ -239,7 +298,7 @@ export default function TasksScreen() {
           </Text>
         </TouchableOpacity>
       </View>
-      
+
       <FlashList
         data={tasks}
         renderItem={renderTaskItem}
@@ -261,9 +320,12 @@ export default function TasksScreen() {
               {t('tasks.empty.title', 'No Tasks Yet')}
             </Text>
             <Text style={[styles.emptyDescription, isDark && styles.textLightDark]}>
-              {t('tasks.empty.description', 'Add your first task to start tracking your plant care routine')}
+              {t(
+                'tasks.empty.description',
+                'Add your first task to start tracking your plant care routine'
+              )}
             </Text>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.emptyButton}
               onPress={handleAddTask}
               accessibilityLabel={t('accessibility.addFirstTask', 'Add your first task')}
@@ -467,4 +529,4 @@ const styles = StyleSheet.create({
   textLightDark: {
     color: '#AAAAAA',
   },
-}); 
+});

@@ -5,7 +5,7 @@ import { UserRole } from 'types/supabase';
 interface PermissionOptions {
   // For operations that require ownership of the resource
   ownerId?: string;
-  
+
   // Custom roles that can perform specific actions
   createRoles?: UserRole[];
   readRoles?: UserRole[];
@@ -28,15 +28,17 @@ interface Permissions {
  * @param options Configuration options for permissions
  * @returns Object with permission check results
  */
-export function useRolePermissions(options: PermissionOptions = {}): Permissions & { canEdit: boolean; canView: boolean } {
-  const { 
+export function useRolePermissions(
+  options: PermissionOptions = {}
+): Permissions & { canEdit: boolean; canView: boolean } {
+  const {
     ownerId,
     createRoles = ['admin', 'grower'],
     readRoles = ['admin', 'grower', 'child'],
     updateRoles = ['admin', 'grower'],
     deleteRoles = ['admin', 'grower'],
   } = options;
-  
+
   // For now, return simple permissions until auth is properly integrated
   const canCreate = true;
   const canRead = true;
@@ -45,16 +47,16 @@ export function useRolePermissions(options: PermissionOptions = {}): Permissions
   const isViewOnly = false;
   const isAdmin = true;
   const userRole: UserRole = 'admin';
-  
+
   return {
     canCreate,
     canRead,
     canUpdate,
     canDelete,
     canEdit: canUpdate, // Alias for component compatibility
-    canView: canRead,   // Alias for component compatibility
+    canView: canRead, // Alias for component compatibility
     isViewOnly,
     isAdmin,
     userRole,
   };
-} 
+}

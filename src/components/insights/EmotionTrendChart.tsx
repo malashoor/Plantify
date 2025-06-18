@@ -69,16 +69,18 @@ export function EmotionTrendChart({ emotions, days = 7 }: EmotionTrendChartProps
       const avgIntensity = scores.reduce((sum, s) => sum + s.intensity, 0) / scores.length;
 
       // Find dominant emotion
-      const emotionCounts = group.emotions.reduce((acc, e) => {
-        acc[e.type] = (acc[e.type] || 0) + 1;
-        return acc;
-      }, {} as Record<Emotion['type'], number>);
+      const emotionCounts = group.emotions.reduce(
+        (acc, e) => {
+          acc[e.type] = (acc[e.type] || 0) + 1;
+          return acc;
+        },
+        {} as Record<Emotion['type'], number>
+      );
 
-      const dominantEmotion = Object.entries(emotionCounts)
-        .reduce((max, [type, count]) => 
-          count > (max.count || 0) ? { type, count } : max,
-          { type: 'neutral' as Emotion['type'], count: 0 }
-        ).type;
+      const dominantEmotion = Object.entries(emotionCounts).reduce(
+        (max, [type, count]) => (count > (max.count || 0) ? { type, count } : max),
+        { type: 'neutral' as Emotion['type'], count: 0 }
+      ).type;
 
       return {
         date: group.date,
@@ -90,36 +92,40 @@ export function EmotionTrendChart({ emotions, days = 7 }: EmotionTrendChartProps
 
     return {
       labels: data.map(d => format(d.date, 'EEE')),
-      datasets: [{
-        data: data.map(d => d.score),
-        color: (opacity = 1) => {
-          const colors = data.map(d => EMOTION_COLORS[d.dominantEmotion]);
-          return opacity === 0 ? colors[0] : colors[data.length - 1];
+      datasets: [
+        {
+          data: data.map(d => d.score),
+          color: (opacity = 1) => {
+            const colors = data.map(d => EMOTION_COLORS[d.dominantEmotion]);
+            return opacity === 0 ? colors[0] : colors[data.length - 1];
+          },
         },
-      }],
+      ],
       emotions: data,
     };
   }, [emotions, days]);
 
   const dominantEmotion = useMemo(() => {
     const recentEmotions = chartData.emotions.slice(-3);
-    const emotionCounts = recentEmotions.reduce((acc, e) => {
-      acc[e.dominantEmotion] = (acc[e.dominantEmotion] || 0) + 1;
-      return acc;
-    }, {} as Record<Emotion['type'], number>);
+    const emotionCounts = recentEmotions.reduce(
+      (acc, e) => {
+        acc[e.dominantEmotion] = (acc[e.dominantEmotion] || 0) + 1;
+        return acc;
+      },
+      {} as Record<Emotion['type'], number>
+    );
 
-    return Object.entries(emotionCounts)
-      .reduce((max, [type, count]) => 
-        count > (max.count || 0) ? { type, count } : max,
-        { type: 'neutral' as Emotion['type'], count: 0 }
-      ).type;
+    return Object.entries(emotionCounts).reduce(
+      (max, [type, count]) => (count > (max.count || 0) ? { type, count } : max),
+      { type: 'neutral' as Emotion['type'], count: 0 }
+    ).type;
   }, [chartData]);
 
   const trend = useMemo(() => {
     const scores = chartData.emotions.map(e => e.score);
     const recentAvg = scores.slice(-2).reduce((a, b) => a + b, 0) / 2;
     const olderAvg = scores.slice(0, 2).reduce((a, b) => a + b, 0) / 2;
-    
+
     if (recentAvg > olderAvg + 0.1) return 'improving';
     if (recentAvg < olderAvg - 0.1) return 'declining';
     return 'stable';
@@ -128,13 +134,17 @@ export function EmotionTrendChart({ emotions, days = 7 }: EmotionTrendChartProps
   return (
     <Card style={styles.container}>
       <View style={styles.header}>
-        <Text variant="h2" style={styles.title}>Emotional Journey</Text>
+        <Text variant="h2" style={styles.title}>
+          Emotional Journey
+        </Text>
         <Badge
           label={trend}
           color={
-            trend === 'improving' ? EMOTION_COLORS.joy :
-            trend === 'declining' ? EMOTION_COLORS.concern :
-            EMOTION_COLORS.neutral
+            trend === 'improving'
+              ? EMOTION_COLORS.joy
+              : trend === 'declining'
+                ? EMOTION_COLORS.concern
+                : EMOTION_COLORS.neutral
           }
         />
       </View>
@@ -166,21 +176,12 @@ export function EmotionTrendChart({ emotions, days = 7 }: EmotionTrendChartProps
       <View style={styles.summary}>
         <Text style={styles.summaryText}>
           Your plants seem to make you feel{' '}
-          <Text style={{ color: EMOTION_COLORS[dominantEmotion] }}>
-            {dominantEmotion}
-          </Text>
-          {' '}lately
+          <Text style={{ color: EMOTION_COLORS[dominantEmotion] }}>{dominantEmotion}</Text> lately
         </Text>
-        
+
         <View style={styles.badges}>
           {Object.entries(EMOTION_COLORS).map(([emotion, color]) => (
-            <Badge
-              key={emotion}
-              label={emotion}
-              color={color}
-              size="small"
-              style={styles.badge}
-            />
+            <Badge key={emotion} label={emotion} color={color} size="small" style={styles.badge} />
           ))}
         </View>
       </View>
@@ -225,4 +226,4 @@ const styles = StyleSheet.create({
   badge: {
     marginHorizontal: 4,
   },
-}); 
+});

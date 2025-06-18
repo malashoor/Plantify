@@ -17,7 +17,7 @@ describe('LoginScreen', () => {
 
   it('renders login form correctly', () => {
     const { getByPlaceholderText, getByText } = render(<LoginScreen />);
-    
+
     expect(getByPlaceholderText('Email')).toBeTruthy();
     expect(getByPlaceholderText('Password')).toBeTruthy();
     expect(getByText('Sign In')).toBeTruthy();
@@ -25,13 +25,13 @@ describe('LoginScreen', () => {
 
   it('shows error message for invalid email', async () => {
     const { getByPlaceholderText, getByText } = render(<LoginScreen />);
-    
+
     const emailInput = getByPlaceholderText('Email');
     fireEvent.changeText(emailInput, 'invalid-email');
-    
+
     const signInButton = getByText('Sign In');
     fireEvent.press(signInButton);
-    
+
     await waitFor(() => {
       expect(getByText('Please enter a valid email')).toBeTruthy();
     });
@@ -42,20 +42,20 @@ describe('LoginScreen', () => {
       data: { user: { id: '123' } },
       error: null,
     });
-    
+
     (supabase.auth.signIn as jest.Mock).mockImplementation(mockSignIn);
-    
+
     const { getByPlaceholderText, getByText } = render(<LoginScreen />);
-    
+
     const emailInput = getByPlaceholderText('Email');
     const passwordInput = getByPlaceholderText('Password');
-    
+
     fireEvent.changeText(emailInput, 'test@example.com');
     fireEvent.changeText(passwordInput, 'password123');
-    
+
     const signInButton = getByText('Sign In');
     fireEvent.press(signInButton);
-    
+
     await waitFor(() => {
       expect(mockSignIn).toHaveBeenCalledWith({
         email: 'test@example.com',
@@ -69,22 +69,22 @@ describe('LoginScreen', () => {
       data: { user: null },
       error: { message: 'Invalid credentials' },
     });
-    
+
     (supabase.auth.signIn as jest.Mock).mockImplementation(mockSignIn);
-    
+
     const { getByPlaceholderText, getByText } = render(<LoginScreen />);
-    
+
     const emailInput = getByPlaceholderText('Email');
     const passwordInput = getByPlaceholderText('Password');
-    
+
     fireEvent.changeText(emailInput, 'test@example.com');
     fireEvent.changeText(passwordInput, 'wrongpassword');
-    
+
     const signInButton = getByText('Sign In');
     fireEvent.press(signInButton);
-    
+
     await waitFor(() => {
       expect(getByText('Invalid credentials')).toBeTruthy();
     });
   });
-}); 
+});

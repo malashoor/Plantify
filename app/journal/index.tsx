@@ -16,7 +16,7 @@ const createTheme = (colorScheme: 'light' | 'dark' | null) => ({
     textSecondary: colorScheme === 'dark' ? '#BBBBBB' : '#666666',
     primary: '#45B36B',
     surface: colorScheme === 'dark' ? '#2A2A2A' : '#f8f9fa',
-  }
+  },
 });
 
 export default function JournalScreen() {
@@ -48,7 +48,7 @@ export default function JournalScreen() {
   if (isLoading) {
     return (
       <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-        <Stack.Screen 
+        <Stack.Screen
           options={{
             title: 'Plant Journal',
             headerLargeTitle: true,
@@ -57,11 +57,13 @@ export default function JournalScreen() {
                 <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
               </TouchableOpacity>
             ),
-          }} 
+          }}
         />
         <View style={styles.centerContainer}>
           <LoadingSpinner />
-          <Text style={[styles.loadingText, { color: theme.colors.text }]}>Loading journal entries...</Text>
+          <Text style={[styles.loadingText, { color: theme.colors.text }]}>
+            Loading journal entries...
+          </Text>
         </View>
       </View>
     );
@@ -70,7 +72,7 @@ export default function JournalScreen() {
   if (error) {
     return (
       <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-        <Stack.Screen 
+        <Stack.Screen
           options={{
             title: 'Plant Journal',
             headerLargeTitle: true,
@@ -79,7 +81,7 @@ export default function JournalScreen() {
                 <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
               </TouchableOpacity>
             ),
-          }} 
+          }}
         />
         <ErrorMessage message={error} />
       </View>
@@ -88,7 +90,7 @@ export default function JournalScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.surface }]}>
-      <Stack.Screen 
+      <Stack.Screen
         options={{
           title: 'Plant Journal',
           headerLargeTitle: true,
@@ -97,19 +99,22 @@ export default function JournalScreen() {
               <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
             </TouchableOpacity>
           ),
-        }} 
+        }}
       />
-      
+
       {entries.length === 0 ? (
         <View style={styles.emptyState}>
-          <View style={[styles.emptyIconContainer, { backgroundColor: theme.colors.primary + '20' }]}>
+          <View
+            style={[styles.emptyIconContainer, { backgroundColor: theme.colors.primary + '20' }]}
+          >
             <Ionicons name="journal-outline" size={64} color={theme.colors.primary} />
           </View>
           <Text style={[styles.emptyTitle, { color: theme.colors.text }]}>
             No journal entries yet
           </Text>
           <Text style={[styles.emptyDescription, { color: theme.colors.textSecondary }]}>
-            Start documenting your plant's journey! Add photos, notes, and track your plant's growth over time.
+            Start documenting your plant's journey! Add photos, notes, and track your plant's growth
+            over time.
           </Text>
           <TouchableOpacity
             style={[styles.startButton, { backgroundColor: theme.colors.primary }]}
@@ -124,10 +129,10 @@ export default function JournalScreen() {
         <>
           <FlatList
             data={entries}
-            keyExtractor={(item) => item.id}
+            keyExtractor={item => item.id}
             renderItem={({ item }) => (
-              <JournalCard 
-                entry={item} 
+              <JournalCard
+                entry={item}
                 onPress={() => handleEntryPress(item.id)}
                 onDelete={handleDeleteEntry}
               />
@@ -137,7 +142,7 @@ export default function JournalScreen() {
             accessibilityLabel="Plant journal entries"
             showsVerticalScrollIndicator={false}
           />
-          
+
           {/* Floating Action Button */}
           <TouchableOpacity
             style={[styles.fab, { backgroundColor: theme.colors.primary }]}
@@ -238,4 +243,4 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 6,
   },
-}); 
+});

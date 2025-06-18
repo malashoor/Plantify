@@ -21,9 +21,7 @@ export interface HydroponicData {
 }
 
 // Get hydroponic data
-export async function getHydroponicData(
-  systemId: string,
-): Promise<HydroponicData> {
+export async function getHydroponicData(systemId: string): Promise<HydroponicData> {
   // Simulated data for testing
   return {
     systemId,

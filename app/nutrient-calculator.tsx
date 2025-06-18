@@ -11,9 +11,9 @@ interface Styles {
 export default function NutrientCalculator() {
   return (
     <>
-      <Stack.Screen 
+      <Stack.Screen
         options={{
-          headerShown: false
+          headerShown: false,
         }}
       />
       <View style={styles.container}>
@@ -27,4 +27,4 @@ const styles = StyleSheet.create<Styles>({
   container: {
     flex: 1,
   },
-}); 
+});

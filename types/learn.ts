@@ -337,7 +337,7 @@ export const LEARNING_MODULES: LearningModule[] = [
     color: '#10B981',
     isUnlocked: true,
     titleAr: 'أساسيات الزراعة المائية',
-    descriptionAr: 'أتقن المبادئ الأساسية لأنظمة النمو بدون تربة'
+    descriptionAr: 'أتقن المبادئ الأساسية لأنظمة النمو بدون تربة',
   },
   {
     id: 'water_nutrient_science',
@@ -352,7 +352,7 @@ export const LEARNING_MODULES: LearningModule[] = [
     color: '#3B82F6',
     isUnlocked: false,
     titleAr: 'علم الماء والمغذيات',
-    descriptionAr: 'غوص عميق في EC وpH وTDS وخلط المغذيات'
+    descriptionAr: 'غوص عميق في EC وpH وTDS وخلط المغذيات',
   },
   {
     id: 'climate_lighting_control',
@@ -367,7 +367,7 @@ export const LEARNING_MODULES: LearningModule[] = [
     color: '#F59E0B',
     isUnlocked: false,
     titleAr: 'التحكم في المناخ والإضاءة',
-    descriptionAr: 'تحسين البيئة للحصول على أقصى إنتاجية'
+    descriptionAr: 'تحسين البيئة للحصول على أقصى إنتاجية',
   },
   {
     id: 'pest_disease_prevention',
@@ -382,7 +382,7 @@ export const LEARNING_MODULES: LearningModule[] = [
     color: '#EF4444',
     isUnlocked: false,
     titleAr: 'إدارة الآفات والأمراض',
-    descriptionAr: 'تحديد ومنع وعلاج مشاكل الزراعة المائية الشائعة'
+    descriptionAr: 'تحديد ومنع وعلاج مشاكل الزراعة المائية الشائعة',
   },
   {
     id: 'system_maintenance',
@@ -397,8 +397,8 @@ export const LEARNING_MODULES: LearningModule[] = [
     color: '#8B5CF6',
     isUnlocked: false,
     titleAr: 'صيانة النظام واستكشاف الأخطاء',
-    descriptionAr: 'حافظ على تشغيل أنظمتك بأقصى أداء'
-  }
+    descriptionAr: 'حافظ على تشغيل أنظمتك بأقصى أداء',
+  },
 ];
 
 // Sample lesson structure for Hydroponics Fundamentals
@@ -411,16 +411,16 @@ export const SAMPLE_LESSONS = {
       learningObjectives: [
         'Define hydroponics and its core principles',
         'Compare soil vs soilless growing advantages',
-        'Identify the 6 essential elements plants need'
+        'Identify the 6 essential elements plants need',
       ],
       practiceLinks: [
         {
           id: 'practice_systems',
           type: 'diy_builder',
           title: 'Explore System Types',
-          description: 'See different hydroponic systems you can build'
-        }
-      ]
+          description: 'See different hydroponic systems you can build',
+        },
+      ],
     },
     {
       id: 'hydroponic_systems_overview',
@@ -429,7 +429,7 @@ export const SAMPLE_LESSONS = {
       learningObjectives: [
         'Compare different hydroponic system types',
         'Understand water flow patterns and oxygenation',
-        'Match system types to crop requirements'
+        'Match system types to crop requirements',
       ],
       practiceLinks: [
         {
@@ -437,9 +437,9 @@ export const SAMPLE_LESSONS = {
           type: 'diy_builder',
           title: 'Build an NFT System',
           description: 'Practice building a Nutrient Film Technique system',
-          parameters: { systemType: 'nft' }
-        }
-      ]
+          parameters: { systemType: 'nft' },
+        },
+      ],
     },
     {
       id: 'growing_media',
@@ -448,10 +448,10 @@ export const SAMPLE_LESSONS = {
       learningObjectives: [
         'Compare different growing media properties',
         'Understand drainage and aeration requirements',
-        'Select media based on crop and system type'
-      ]
-    }
-  ]
+        'Select media based on crop and system type',
+      ],
+    },
+  ],
 };
 
 // Common quiz question types for reuse
@@ -459,16 +459,16 @@ export const QUIZ_TEMPLATES = {
   multiple_choice: {
     type: 'multiple_choice' as const,
     points: 10,
-    showCorrectAnswers: true
+    showCorrectAnswers: true,
   },
   true_false: {
     type: 'true_false' as const,
     points: 5,
-    showCorrectAnswers: true
+    showCorrectAnswers: true,
   },
   calculation: {
     type: 'calculation' as const,
     points: 15,
-    showCorrectAnswers: true
-  }
-}; 
+    showCorrectAnswers: true,
+  },
+};

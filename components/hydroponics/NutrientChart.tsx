@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  useColorScheme,
-  ScrollView,
-  Dimensions,
-} from 'react-native';
+import { View, Text, StyleSheet, useColorScheme, ScrollView, Dimensions } from 'react-native';
 
 interface Measurement {
   id: string;
@@ -32,18 +25,14 @@ const createTheme = (colorScheme: 'light' | 'dark' | null) => ({
     border: colorScheme === 'dark' ? '#444444' : '#E0E0E0',
     chartLine: '#4CAF50',
     chartDot: '#2196F3',
-  }
+  },
 });
 
 const { width: screenWidth } = Dimensions.get('window');
 const chartWidth = screenWidth - 64; // Account for padding
 const chartHeight = 200;
 
-export const NutrientChart: React.FC<NutrientChartProps> = ({
-  measurements,
-  type,
-  title,
-}) => {
+export const NutrientChart: React.FC<NutrientChartProps> = ({ measurements, type, title }) => {
   const colorScheme = useColorScheme();
   const theme = createTheme(colorScheme);
 
@@ -94,7 +83,12 @@ export const NutrientChart: React.FC<NutrientChartProps> = ({
 
   if (measurements.length === 0) {
     return (
-      <View style={[styles.container, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
+      <View
+        style={[
+          styles.container,
+          { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+        ]}
+      >
         <Text style={[styles.title, { color: theme.colors.text }]}>{title}</Text>
         <View style={styles.noDataContainer}>
           <Text style={[styles.noDataText, { color: theme.colors.textSecondary }]}>
@@ -119,7 +113,7 @@ export const NutrientChart: React.FC<NutrientChartProps> = ({
       const value = getValue(measurement);
       const x = (index / (recentMeasurements.length - 1)) * chartWidth;
       const y = chartHeight - ((value - minValue) / range) * chartHeight;
-      
+
       return { x, y, value, date: measurement.measured_at };
     });
 
@@ -135,7 +129,7 @@ export const NutrientChart: React.FC<NutrientChartProps> = ({
                 {
                   top: (i / 4) * chartHeight,
                   backgroundColor: theme.colors.border,
-                }
+                },
               ]}
             />
           ))}
@@ -150,7 +144,7 @@ export const NutrientChart: React.FC<NutrientChartProps> = ({
                 top: Math.max(0, chartHeight - ((idealRange.max - minValue) / range) * chartHeight),
                 height: Math.abs(((idealRange.max - idealRange.min) / range) * chartHeight),
                 backgroundColor: idealRange.color + '20',
-              }
+              },
             ]}
           />
         )}
@@ -169,20 +163,22 @@ export const NutrientChart: React.FC<NutrientChartProps> = ({
                       top: point.y,
                       width: Math.sqrt(
                         Math.pow(points[index + 1].x - point.x, 2) +
-                        Math.pow(points[index + 1].y - point.y, 2)
+                          Math.pow(points[index + 1].y - point.y, 2)
                       ),
-                      transform: [{
-                        rotate: `${Math.atan2(
-                          points[index + 1].y - point.y,
-                          points[index + 1].x - point.x
-                        )}rad`
-                      }],
+                      transform: [
+                        {
+                          rotate: `${Math.atan2(
+                            points[index + 1].y - point.y,
+                            points[index + 1].x - point.x
+                          )}rad`,
+                        },
+                      ],
                       backgroundColor: theme.colors.chartLine,
-                    }
+                    },
                   ]}
                 />
               )}
-              
+
               {/* Data point */}
               <View
                 style={[
@@ -191,7 +187,7 @@ export const NutrientChart: React.FC<NutrientChartProps> = ({
                     left: point.x - 3,
                     top: point.y - 3,
                     backgroundColor: theme.colors.chartDot,
-                  }
+                  },
                 ]}
               />
             </React.Fragment>
@@ -208,7 +204,7 @@ export const NutrientChart: React.FC<NutrientChartProps> = ({
                 {
                   color: theme.colors.textSecondary,
                   top: (index / 2) * chartHeight - 8,
-                }
+                },
               ]}
             >
               {value.toFixed(1)}
@@ -223,11 +219,18 @@ export const NutrientChart: React.FC<NutrientChartProps> = ({
   const isInRange = latestValue >= idealRange.min && latestValue <= idealRange.max;
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+      ]}
+    >
       <View style={styles.header}>
         <Text style={[styles.title, { color: theme.colors.text }]}>{title}</Text>
         <View style={styles.currentValue}>
-          <Text style={[styles.valueText, { color: isInRange ? idealRange.color : theme.colors.text }]}>
+          <Text
+            style={[styles.valueText, { color: isInRange ? idealRange.color : theme.colors.text }]}
+          >
             {latestValue.toFixed(1)} {getUnit()}
           </Text>
           <Text style={[styles.statusText, { color: isInRange ? idealRange.color : '#FF5722' }]}>
@@ -359,4 +362,4 @@ const styles = StyleSheet.create({
   noDataText: {
     fontSize: 14,
   },
-}); 
+});

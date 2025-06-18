@@ -38,4 +38,4 @@ export function withPremiumAccess<P extends object>(
 // const ProtectedFeature = withPremiumAccess(YourComponent, {
 //   featureId: 'advancedCalculator',
 //   variant: 'overlay',
-// }); 
+// });

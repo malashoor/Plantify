@@ -22,5 +22,5 @@ export default function Index() {
   };
 
   // If user is logged in, go to tabs, otherwise go to landing
-  return <Redirect href={user ? "/(tabs)" : "/landing"} />;
+  return <Redirect href={user ? '/(tabs)' : '/landing'} />;
 }

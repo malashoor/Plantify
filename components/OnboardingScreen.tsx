@@ -27,36 +27,36 @@ export default function OnboardingScreen() {
     {
       title: {
         en: 'Welcome to Plantify',
-        ar: 'مرحباً بك في بلانتيفاي'
+        ar: 'مرحباً بك في بلانتيفاي',
       },
       subtitle: {
         en: 'Your AI-powered plant care companion',
-        ar: 'رفيقك في العناية بالنباتات بالذكاء الاصطناعي'
+        ar: 'رفيقك في العناية بالنباتات بالذكاء الاصطناعي',
       },
-      icon: '🌱'
+      icon: '🌱',
     },
     {
       title: {
         en: 'Smart Plant Care',
-        ar: 'العناية الذكية بالنباتات'
+        ar: 'العناية الذكية بالنباتات',
       },
       subtitle: {
         en: 'Get personalized care recommendations for your plants',
-        ar: 'احصل على توصيات شخصية للعناية بنباتاتك'
+        ar: 'احصل على توصيات شخصية للعناية بنباتاتك',
       },
-      icon: '🤖'
+      icon: '🤖',
     },
     {
       title: {
         en: 'Track & Monitor',
-        ar: 'تتبع ومراقبة'
+        ar: 'تتبع ومراقبة',
       },
       subtitle: {
         en: 'Monitor soil moisture, light levels, and plant health',
-        ar: 'راقب رطوبة التربة ومستويات الضوء وصحة النبات'
+        ar: 'راقب رطوبة التربة ومستويات الضوء وصحة النبات',
       },
-      icon: '📊'
-    }
+      icon: '📊',
+    },
   ];
 
   useEffect(() => {
@@ -108,10 +108,7 @@ export default function OnboardingScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <LinearGradient
-        colors={['#4CAF50', '#8BC34A', '#CDDC39']}
-        style={styles.gradient}
-      >
+      <LinearGradient colors={['#4CAF50', '#8BC34A', '#CDDC39']} style={styles.gradient}>
         {/* Language Toggle */}
         <View style={[styles.header, isRTL && styles.headerRTL]}>
           <TouchableOpacity
@@ -119,9 +116,7 @@ export default function OnboardingScreen() {
             style={styles.languageButton}
             accessibilityLabel={language === 'en' ? 'Switch to Arabic' : 'التبديل إلى الإنجليزية'}
           >
-            <Text style={styles.languageText}>
-              {language === 'en' ? 'عربي' : 'EN'}
-            </Text>
+            <Text style={styles.languageText}>{language === 'en' ? 'عربي' : 'EN'}</Text>
           </TouchableOpacity>
         </View>
 
@@ -150,23 +145,12 @@ export default function OnboardingScreen() {
             <Text style={styles.icon}>{currentSlideData.icon}</Text>
 
             {/* Title */}
-            <Text
-              style={[
-                styles.title,
-                isRTL && styles.titleRTL,
-              ]}
-              accessibilityRole="header"
-            >
+            <Text style={[styles.title, isRTL && styles.titleRTL]} accessibilityRole="header">
               {currentSlideData.title[language]}
             </Text>
 
             {/* Subtitle */}
-            <Text
-              style={[
-                styles.subtitle,
-                isRTL && styles.subtitleRTL,
-              ]}
-            >
+            <Text style={[styles.subtitle, isRTL && styles.subtitleRTL]}>
               {currentSlideData.subtitle[language]}
             </Text>
           </Animated.View>
@@ -176,10 +160,7 @@ export default function OnboardingScreen() {
             {slides.map((_, index) => (
               <View
                 key={index}
-                style={[
-                  styles.indicator,
-                  index === currentSlide && styles.activeIndicator,
-                ]}
+                style={[styles.indicator, index === currentSlide && styles.activeIndicator]}
               />
             ))}
           </View>
@@ -193,9 +174,7 @@ export default function OnboardingScreen() {
               style={[styles.navButton, styles.prevButton]}
               accessibilityLabel={language === 'en' ? 'Previous' : 'السابق'}
             >
-              <Text style={styles.navButtonText}>
-                {isRTL ? '→' : '←'}
-              </Text>
+              <Text style={styles.navButtonText}>{isRTL ? '→' : '←'}</Text>
             </TouchableOpacity>
           )}
 
@@ -207,9 +186,7 @@ export default function OnboardingScreen() {
               style={[styles.navButton, styles.nextButton]}
               accessibilityLabel={language === 'en' ? 'Next' : 'التالي'}
             >
-              <Text style={styles.navButtonText}>
-                {isRTL ? '←' : '→'}
-              </Text>
+              <Text style={styles.navButtonText}>{isRTL ? '←' : '→'}</Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
@@ -355,4 +332,4 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
-}); 
+});

@@ -64,8 +64,8 @@ describe('Analytics Integration Tests', () => {
     it('should reflect current analytics state', async () => {
       await analyticsService.setOptOut(true);
       const { getByTestId } = render(<SettingsScreen />);
-      
+
       expect(getByTestId('analytics-toggle').props.value).toBe(false);
     });
   });
-}); 
+});

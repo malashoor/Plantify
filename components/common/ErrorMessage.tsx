@@ -15,13 +15,13 @@ const createTheme = (colorScheme: 'light' | 'dark' | null) => ({
     textSecondary: colorScheme === 'dark' ? '#BBBBBB' : '#666666',
     error: '#F44336',
     primary: '#4CAF50',
-  }
+  },
 });
 
-export const ErrorMessage: React.FC<ErrorMessageProps> = ({ 
-  message, 
-  onRetry, 
-  retryText = 'Try Again' 
+export const ErrorMessage: React.FC<ErrorMessageProps> = ({
+  message,
+  onRetry,
+  retryText = 'Try Again',
 }) => {
   const colorScheme = useColorScheme();
   const theme = createTheme(colorScheme);
@@ -31,15 +31,11 @@ export const ErrorMessage: React.FC<ErrorMessageProps> = ({
       <View style={[styles.iconContainer, { backgroundColor: theme.colors.error + '20' }]}>
         <Ionicons name="alert-circle-outline" size={48} color={theme.colors.error} />
       </View>
-      
-      <Text style={[styles.title, { color: theme.colors.text }]}>
-        Something went wrong
-      </Text>
-      
-      <Text style={[styles.message, { color: theme.colors.textSecondary }]}>
-        {message}
-      </Text>
-      
+
+      <Text style={[styles.title, { color: theme.colors.text }]}>Something went wrong</Text>
+
+      <Text style={[styles.message, { color: theme.colors.textSecondary }]}>{message}</Text>
+
       {onRetry && (
         <TouchableOpacity
           style={[styles.retryButton, { backgroundColor: theme.colors.primary }]}
@@ -103,4 +99,4 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginLeft: 8,
   },
-}); 
+});

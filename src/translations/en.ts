@@ -55,12 +55,13 @@ export const en = {
       granted: 'Location access granted',
       allow: 'Allow Location Access',
       denied: 'Location access denied',
-      denied_message: 'Without location access, we\'ll provide general recommendations based on your selected environment. You can enable location access later in your device settings.',
+      denied_message:
+        "Without location access, we'll provide general recommendations based on your selected environment. You can enable location access later in your device settings.",
       skip: 'Continue without Location',
     },
     summary: {
       title: 'All Set!',
-      subtitle: 'Here\'s a summary of your preferences',
+      subtitle: "Here's a summary of your preferences",
       role: 'Your Role',
       environment: 'Growing Environment',
       interests: 'Plant Interests',
@@ -82,4 +83,4 @@ export const en = {
     getStarted: 'Get Started',
     error: 'Error',
   },
-}; 
+};

@@ -11,7 +11,7 @@ interface PhotoPickerProps {
 export function PhotoPicker({ onImageSelected, initialImage, disabled = false }: PhotoPickerProps) {
   const handlePickImage = () => {
     if (disabled) return;
-    
+
     // Mock image selection - in a real app this would use expo-image-picker
     const mockImageUri = 'https://example.com/mock-plant-image.jpg';
     onImageSelected(mockImageUri);
@@ -19,8 +19,8 @@ export function PhotoPicker({ onImageSelected, initialImage, disabled = false }:
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity 
-        style={[styles.picker, disabled && styles.pickerDisabled]} 
+      <TouchableOpacity
+        style={[styles.picker, disabled && styles.pickerDisabled]}
         onPress={handlePickImage}
         disabled={disabled}
       >
@@ -71,4 +71,4 @@ const styles = StyleSheet.create({
     color: '#999',
     textAlign: 'center',
   },
-}); 
+});

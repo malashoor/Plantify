@@ -31,8 +31,8 @@ export function useIdentifyPlant() {
         careInstructions: [
           'Water when soil feels dry',
           'Provide bright, indirect light',
-          'Maintain temperature between 65-75°F'
-        ]
+          'Maintain temperature between 65-75°F',
+        ],
       };
 
       setIsLoading(false);
@@ -47,6 +47,6 @@ export function useIdentifyPlant() {
   return {
     identifyPlant,
     isLoading,
-    error
+    error,
   };
-} 
+}

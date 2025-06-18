@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ActivityIndicator
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Modal from 'react-native/Libraries/Modal/Modal';
 import { useAnalytics } from '../hooks/useAnalytics';
 import { ImageProcessingError } from '../utils/imageProcessing';
@@ -28,7 +22,7 @@ export const ImageProcessingProgress = ({
   onRetry,
   error,
   progress = 0,
-  status
+  status,
 }: ImageProcessingProgressProps): JSX.Element => {
   const { trackEvent } = useAnalytics();
   const [retryCount, setRetryCount] = React.useState(0);
@@ -39,7 +33,7 @@ export const ImageProcessingProgress = ({
       trackEvent(AnalyticsEvent.ERROR_OCCURRED, {
         error_type: error instanceof ImageProcessingError ? error.code : 'UNKNOWN',
         error_message: error.message,
-        retry_count: retryCount
+        retry_count: retryCount,
       });
     }
   }, [error, retryCount, status, trackEvent]);
@@ -78,16 +72,11 @@ export const ImageProcessingProgress = ({
   };
 
   return (
-    <Modal
-      visible={visible}
-      transparent
-      animationType="fade"
-      onRequestClose={onClose}
-    >
+    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
       <View style={styles.container}>
         <View style={styles.content}>
           <Text style={styles.title}>Image Processing</Text>
-          
+
           <Text style={styles.message}>{getStatusMessage()}</Text>
 
           {status === 'processing' && (
@@ -119,52 +108,52 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   content: {
     backgroundColor: 'white',
     borderRadius: 12,
     padding: 20,
     width: '80%',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 16
+    marginBottom: 16,
   },
   message: {
     fontSize: 16,
     textAlign: 'center',
     marginBottom: 20,
-    color: '#666'
+    color: '#666',
   },
   progressContainer: {
     alignItems: 'center',
-    marginVertical: 20
+    marginVertical: 20,
   },
   progressText: {
     marginTop: 10,
     fontSize: 16,
-    color: '#666'
+    color: '#666',
   },
   retryButton: {
     backgroundColor: '#007AFF',
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 8,
-    marginTop: 16
+    marginTop: 16,
   },
   closeButton: {
     backgroundColor: '#666',
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 8,
-    marginTop: 16
+    marginTop: 16,
   },
   buttonText: {
     color: 'white',
     fontSize: 16,
-    fontWeight: '600'
-  }
-}); 
+    fontWeight: '600',
+  },
+});

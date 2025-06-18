@@ -56,13 +56,8 @@ export const AnimatedPlantList: React.FC<AnimatedPlantListProps> = ({
   return (
     <FlatList
       data={plants}
-      renderItem={({ item }) => (
-        <PlantCard
-          plant={item}
-          onPress={() => onPlantPress(item.id)}
-        />
-      )}
-      keyExtractor={(item) => `${item.id}-${sortKey}`}
+      renderItem={({ item }) => <PlantCard plant={item} onPress={() => onPlantPress(item.id)} />}
+      keyExtractor={item => `${item.id}-${sortKey}`}
       contentContainerStyle={styles.listContent}
       ListEmptyComponent={renderEmptyState}
       removeClippedSubviews={false} // Important for smooth animations
@@ -90,4 +85,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 32,
   },
-}); 
+});

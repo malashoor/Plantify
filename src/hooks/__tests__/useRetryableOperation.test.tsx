@@ -7,7 +7,7 @@ import {
   StorageSimulator,
   QueueEventTracker,
   TestRetryQueue,
-  waitForQueueEvent
+  waitForQueueEvent,
 } from '../../utils/__tests__/testUtils';
 
 describe('useRetryableOperation', () => {
@@ -24,7 +24,7 @@ describe('useRetryableOperation', () => {
     const { result } = renderHook(() =>
       useRetryableOperation(RetryOperationKeys.SAVE_PLANT, 'test-id', {
         onSuccess,
-        showFeedback: false
+        showFeedback: false,
       })
     );
 
@@ -44,7 +44,7 @@ describe('useRetryableOperation', () => {
   it('should handle operation failure and retry', async () => {
     const onError = jest.fn();
     const onRetry = jest.fn();
-    
+
     // Set 50% failure rate
     NetworkSimulator.setFailureRate(0.5);
 
@@ -53,7 +53,7 @@ describe('useRetryableOperation', () => {
         maxRetries: 3,
         onError,
         onRetry,
-        showFeedback: false
+        showFeedback: false,
       })
     );
 
@@ -71,7 +71,7 @@ describe('useRetryableOperation', () => {
 
   it('should respect maxRetries limit', async () => {
     const onError = jest.fn();
-    
+
     // Force all requests to fail
     NetworkSimulator.setFailureRate(1);
 
@@ -79,7 +79,7 @@ describe('useRetryableOperation', () => {
       useRetryableOperation(RetryOperationKeys.SAVE_PLANT, 'test-id', {
         maxRetries: 2,
         onError,
-        showFeedback: false
+        showFeedback: false,
       })
     );
 
@@ -101,7 +101,7 @@ describe('useRetryableOperation', () => {
     const { result } = renderHook(() =>
       useRetryableOperation(RetryOperationKeys.SAVE_PLANT, 'test-id', {
         onSuccess,
-        showFeedback: false
+        showFeedback: false,
       })
     );
 
@@ -119,7 +119,7 @@ describe('useRetryableOperation', () => {
     const { result } = renderHook(() =>
       useRetryableOperation(RetryOperationKeys.UPDATE_WEATHER_CACHE, 'test-id', {
         isVolatile: true,
-        showFeedback: false
+        showFeedback: false,
       })
     );
 
@@ -137,7 +137,7 @@ describe('useRetryableOperation', () => {
     const { result } = renderHook(() =>
       useRetryableOperation(RetryOperationKeys.LOG_PLANT_MOOD, 'test-id', {
         dependencies: ['save-plant'],
-        showFeedback: false
+        showFeedback: false,
       })
     );
 
@@ -154,7 +154,7 @@ describe('useRetryableOperation', () => {
   it('should update state correctly during operation lifecycle', async () => {
     const { result } = renderHook(() =>
       useRetryableOperation(RetryOperationKeys.SAVE_PLANT, 'test-id', {
-        showFeedback: false
+        showFeedback: false,
       })
     );
 
@@ -188,7 +188,7 @@ describe('useRetryableOperation', () => {
     const { result } = renderHook(() =>
       useRetryableOperation(RetryOperationKeys.SAVE_PLANT, 'test-id', {
         onSuccess,
-        showFeedback: false
+        showFeedback: false,
       })
     );
 
@@ -208,7 +208,7 @@ describe('useRetryableOperation', () => {
   it('should cleanup on unmount', async () => {
     const { result, unmount } = renderHook(() =>
       useRetryableOperation(RetryOperationKeys.SAVE_PLANT, 'test-id', {
-        showFeedback: false
+        showFeedback: false,
       })
     );
 
@@ -223,4 +223,4 @@ describe('useRetryableOperation', () => {
     // Operation should be cancelled
     expect(result.current.isProcessing).toBe(false);
   });
-}); 
+});

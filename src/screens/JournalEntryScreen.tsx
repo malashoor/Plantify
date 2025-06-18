@@ -18,34 +18,28 @@ interface JournalEntryScreenProps {
 export function JournalEntryScreen({ entry, isNew = false }: JournalEntryScreenProps) {
   const router = useRouter();
   const { colors } = useTheme();
-  const [formData, setFormData] = useState<Partial<JournalEntry>>(entry || {
-    mood: 3,
-    note: '',
-    plantId: null,
-    images: []
-  });
-
-  // Add journal entry with retry support
-  const addEntry = useRetryableOperation(
-    RetryOperationKeys.ADD_JOURNAL_ENTRY,
-    'new-entry',
-    {
-      priority: 'high',
-      maxRetries: 3,
-      showFeedback: true,
-      onSuccess: (savedEntry) => {
-        // After saving the entry, log the plant mood if a plant was selected
-        if (savedEntry.plantId && savedEntry.mood) {
-          logPlantMood.execute(
-            savedEntry.plantId,
-            savedEntry.mood,
-            savedEntry.note
-          );
-        }
-        router.back();
-      }
+  const [formData, setFormData] = useState<Partial<JournalEntry>>(
+    entry || {
+      mood: 3,
+      note: '',
+      plantId: null,
+      images: [],
     }
   );
+
+  // Add journal entry with retry support
+  const addEntry = useRetryableOperation(RetryOperationKeys.ADD_JOURNAL_ENTRY, 'new-entry', {
+    priority: 'high',
+    maxRetries: 3,
+    showFeedback: true,
+    onSuccess: savedEntry => {
+      // After saving the entry, log the plant mood if a plant was selected
+      if (savedEntry.plantId && savedEntry.mood) {
+        logPlantMood.execute(savedEntry.plantId, savedEntry.mood, savedEntry.note);
+      }
+      router.back();
+    },
+  });
 
   // Update journal entry with retry support
   const updateEntry = useRetryableOperation(
@@ -55,21 +49,13 @@ export function JournalEntryScreen({ entry, isNew = false }: JournalEntryScreenP
       priority: 'medium',
       maxRetries: 3,
       showFeedback: true,
-      onSuccess: (updatedEntry) => {
+      onSuccess: updatedEntry => {
         // After updating the entry, log the plant mood if it changed
-        if (
-          updatedEntry.plantId &&
-          updatedEntry.mood &&
-          updatedEntry.mood !== entry?.mood
-        ) {
-          logPlantMood.execute(
-            updatedEntry.plantId,
-            updatedEntry.mood,
-            updatedEntry.note
-          );
+        if (updatedEntry.plantId && updatedEntry.mood && updatedEntry.mood !== entry?.mood) {
+          logPlantMood.execute(updatedEntry.plantId, updatedEntry.mood, updatedEntry.note);
         }
         router.back();
-      }
+      },
     }
   );
 
@@ -82,7 +68,7 @@ export function JournalEntryScreen({ entry, isNew = false }: JournalEntryScreenP
       maxRetries: 2,
       showFeedback: false,
       // This operation depends on the entry being saved first
-      dependencies: isNew ? ['new-entry'] : undefined
+      dependencies: isNew ? ['new-entry'] : undefined,
     }
   );
 
@@ -99,35 +85,30 @@ export function JournalEntryScreen({ entry, isNew = false }: JournalEntryScreenP
     }
   };
 
-  const isProcessing = 
-    addEntry.isProcessing || 
-    updateEntry.isProcessing ||
-    logPlantMood.isProcessing;
+  const isProcessing =
+    addEntry.isProcessing || updateEntry.isProcessing || logPlantMood.isProcessing;
 
-  const hasError = 
-    addEntry.error || 
-    updateEntry.error ||
-    logPlantMood.error;
+  const hasError = addEntry.error || updateEntry.error || logPlantMood.error;
 
   return (
     <View style={styles.container}>
       <ScrollView style={styles.content}>
         <MoodSelector
           value={formData.mood}
-          onChange={(mood) => setFormData(prev => ({ ...prev, mood }))}
+          onChange={mood => setFormData(prev => ({ ...prev, mood }))}
           disabled={isProcessing}
         />
 
         <PlantSelector
           value={formData.plantId}
-          onChange={(plantId) => setFormData(prev => ({ ...prev, plantId }))}
+          onChange={plantId => setFormData(prev => ({ ...prev, plantId }))}
           disabled={isProcessing}
         />
 
         <TextInput
           label="Note"
           value={formData.note}
-          onChangeText={(note) => setFormData(prev => ({ ...prev, note }))}
+          onChangeText={note => setFormData(prev => ({ ...prev, note }))}
           placeholder="How are you and your plants feeling today?"
           multiline
           numberOfLines={4}
@@ -138,7 +119,7 @@ export function JournalEntryScreen({ entry, isNew = false }: JournalEntryScreenP
 
         <View style={styles.buttonContainer}>
           <Button
-            title={isNew ? "Add Entry" : "Save Changes"}
+            title={isNew ? 'Add Entry' : 'Save Changes'}
             onPress={handleSave}
             disabled={isProcessing || !formData.note?.trim()}
             loading={addEntry.isProcessing || updateEntry.isProcessing}
@@ -147,9 +128,7 @@ export function JournalEntryScreen({ entry, isNew = false }: JournalEntryScreenP
 
         {hasError && (
           <View style={[styles.errorContainer, { backgroundColor: colors.errorLight }]}>
-            <Text style={[styles.errorText, { color: colors.error }]}>
-              {hasError.message}
-            </Text>
+            <Text style={[styles.errorText, { color: colors.error }]}>{hasError.message}</Text>
             <Button
               title="Retry"
               onPress={handleSave}
@@ -187,5 +166,5 @@ const styles = StyleSheet.create({
   errorText: {
     marginBottom: 12,
     textAlign: 'center',
-  }
-}); 
+  },
+});

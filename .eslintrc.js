@@ -6,48 +6,47 @@ module.exports = {
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
     'plugin:react-native/all',
-    'prettier'
+    'plugin:prettier/recommended',
   ],
   parser: '@typescript-eslint/parser',
-  plugins: [
-    '@typescript-eslint',
-    'react',
-    'react-native',
-    'react-hooks',
-    'import'
-  ],
+  plugins: ['@typescript-eslint', 'react', 'react-hooks', 'react-native', 'prettier'],
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
+    },
+    project: './tsconfig.json',
+  },
   settings: {
     react: {
-      version: 'detect'
-    }
+      version: 'detect',
+    },
+  },
+  rules: {
+    'react/react-in-jsx-scope': 'off',
+    'react/prop-types': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/no-explicit-any': 'warn',
+    'react-native/no-inline-styles': 'warn',
+    'react-native/no-color-literals': 'warn',
+    'prettier/prettier': [
+      'error',
+      {
+        singleQuote: true,
+        trailingComma: 'es5',
+        printWidth: 100,
+      },
+    ],
   },
   env: {
     'react-native/react-native': true,
-    jest: true,
-    'jest/globals': true,
-    node: true
   },
-  rules: {
-    'no-console': ['warn', { allow: ['warn', 'error', 'info'] }],
-    'react/react-in-jsx-scope': 'off',
-    'react/prop-types': 'off',
-    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-    'react-native/no-inline-styles': 'warn',
-    'react-native/no-raw-text': 'off',
-    'react-hooks/rules-of-hooks': 'error',
-    'react-hooks/exhaustive-deps': 'warn',
-    'import/no-unresolved': 'error',
-    'import/named': 'error',
-    'import/default': 'error',
-    'import/namespace': 'error'
-  },
-  overrides: [
-    {
-      files: ['*.ts', '*.tsx'],
-      rules: {
-        '@typescript-eslint/explicit-function-return-type': 'off',
-        '@typescript-eslint/no-explicit-any': 'warn'
-      }
-    }
-  ]
-}; 
+  ignorePatterns: [
+    'node_modules/',
+    'ios/',
+    'android/',
+    'build/',
+    'dist/',
+    '*.config.js',
+    '*.setup.js',
+  ],
+};

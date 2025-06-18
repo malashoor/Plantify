@@ -34,99 +34,75 @@ export function useAIAssistant(options: UseAIAssistantOptions = {}) {
     }
   }, [options.currentSeedId, options.onError]);
 
-  const processUserMessage = useCallback(async (
-    message: string,
-    userId: string
-  ) => {
-    try {
-      // Detect and save emotion
-      const emotion = EmotionService.detectEmotion(message);
-      await EmotionService.saveEmotion(userId, emotion);
+  const processUserMessage = useCallback(
+    async (message: string, userId: string) => {
+      try {
+        // Detect and save emotion
+        const emotion = EmotionService.detectEmotion(message);
+        await EmotionService.saveEmotion(userId, emotion);
 
-      // Save conversation memory
-      await MemoryService.saveConversationMemory(
-        userId,
-        message,
-        'user',
-        {
+        // Save conversation memory
+        await MemoryService.saveConversationMemory(userId, message, 'user', {
           emotion,
           seedId: options.currentSeedId,
-        }
-      );
+        });
 
-      // Refresh context to include new emotional state and memory
-      await refreshContext();
+        // Refresh context to include new emotional state and memory
+        await refreshContext();
 
-      return emotion;
-    } catch (error) {
-      const err = error instanceof Error ? error : new Error('Failed to process user message');
-      options.onError?.(err);
-      throw err;
-    }
-  }, [options.currentSeedId, options.onError, refreshContext]);
+        return emotion;
+      } catch (error) {
+        const err = error instanceof Error ? error : new Error('Failed to process user message');
+        options.onError?.(err);
+        throw err;
+      }
+    },
+    [options.currentSeedId, options.onError, refreshContext]
+  );
 
-  const processAssistantResponse = useCallback(async (
-    response: string,
-    userId: string
-  ) => {
-    try {
-      // Save conversation memory
-      await MemoryService.saveConversationMemory(
-        userId,
-        response,
-        'assistant',
-        {
+  const processAssistantResponse = useCallback(
+    async (response: string, userId: string) => {
+      try {
+        // Save conversation memory
+        await MemoryService.saveConversationMemory(userId, response, 'assistant', {
           seedId: options.currentSeedId,
+        });
+
+        // Extract and save insights
+        const insights = extractInsights(response);
+        for (const insight of insights) {
+          await MemoryService.saveInsight(userId, insight.content, insight.category, {
+            seedId: options.currentSeedId,
+          });
         }
-      );
 
-      // Extract and save insights
-      const insights = extractInsights(response);
-      for (const insight of insights) {
-        await MemoryService.saveInsight(
-          userId,
-          insight.content,
-          insight.category,
-          {
+        // Extract and save actions
+        const actions = extractActions(response);
+        for (const action of actions) {
+          await MemoryService.saveAction(userId, action.content, action.status, {
             seedId: options.currentSeedId,
-          }
-        );
-      }
+          });
+        }
 
-      // Extract and save actions
-      const actions = extractActions(response);
-      for (const action of actions) {
-        await MemoryService.saveAction(
-          userId,
-          action.content,
-          action.status,
-          {
+        // Extract and save preferences
+        const preferences = extractPreferences(response);
+        for (const pref of preferences) {
+          await MemoryService.savePreference(userId, pref.content, pref.category, {
             seedId: options.currentSeedId,
-          }
-        );
-      }
+          });
+        }
 
-      // Extract and save preferences
-      const preferences = extractPreferences(response);
-      for (const pref of preferences) {
-        await MemoryService.savePreference(
-          userId,
-          pref.content,
-          pref.category,
-          {
-            seedId: options.currentSeedId,
-          }
-        );
+        // Refresh context to include new memories
+        await refreshContext();
+      } catch (error) {
+        const err =
+          error instanceof Error ? error : new Error('Failed to process assistant response');
+        options.onError?.(err);
+        throw err;
       }
-
-      // Refresh context to include new memories
-      await refreshContext();
-    } catch (error) {
-      const err = error instanceof Error ? error : new Error('Failed to process assistant response');
-      options.onError?.(err);
-      throw err;
-    }
-  }, [options.currentSeedId, options.onError, refreshContext]);
+    },
+    [options.currentSeedId, options.onError, refreshContext]
+  );
 
   const generatePromptContext = useCallback(() => {
     return AIContextService.generatePromptContext(state.context);
@@ -311,4 +287,4 @@ function extractPreferences(response: string): Array<{
   });
 
   return preferences;
-} 
+}

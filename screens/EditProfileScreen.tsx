@@ -29,20 +29,20 @@ const createTheme = (colorScheme: 'light' | 'dark' | null) => ({
     border: colorScheme === 'dark' ? '#333333' : '#E0E0E0',
     error: '#F44336',
     success: '#4CAF50',
-  }
+  },
 });
 
 export default function EditProfileScreen() {
   const router = useRouter();
   const colorScheme = useColorScheme();
   const theme = createTheme(colorScheme);
-  
+
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [profileImage, setProfileImage] = useState<string | null>(null);
-  
+
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -51,7 +51,7 @@ export default function EditProfileScreen() {
     location: '',
     website: '',
   });
-  
+
   const [errors, setErrors] = useState<any>({});
 
   useEffect(() => {
@@ -61,8 +61,10 @@ export default function EditProfileScreen() {
   const loadUserProfile = async () => {
     try {
       setIsLoading(true);
-      const { data: { user } } = await supabase.auth.getUser();
-      
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
       if (user) {
         setUser(user);
         setFormData({
@@ -87,7 +89,7 @@ export default function EditProfileScreen() {
     try {
       const { status: cameraStatus } = await ImagePicker.requestCameraPermissionsAsync();
       const { status: libraryStatus } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      
+
       if (cameraStatus !== 'granted' || libraryStatus !== 'granted') {
         Alert.alert(
           'Permissions Required',
@@ -107,15 +109,11 @@ export default function EditProfileScreen() {
     const hasPermission = await requestImagePermissions();
     if (!hasPermission) return;
 
-    Alert.alert(
-      'Profile Picture',
-      'Choose how you want to update your profile picture',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Camera', onPress: takePhoto },
-        { text: 'Photo Library', onPress: pickFromLibrary },
-      ]
-    );
+    Alert.alert('Profile Picture', 'Choose how you want to update your profile picture', [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Camera', onPress: takePhoto },
+      { text: 'Photo Library', onPress: pickFromLibrary },
+    ]);
   };
 
   const takePhoto = async () => {
@@ -157,7 +155,7 @@ export default function EditProfileScreen() {
   const uploadProfileImage = async (imageUri: string) => {
     try {
       setIsUploadingImage(true);
-      
+
       if (!user) {
         throw new Error('No user found');
       }
@@ -165,7 +163,7 @@ export default function EditProfileScreen() {
       // Create filename with user ID and timestamp
       const fileExt = imageUri.split('.').pop();
       const fileName = `avatar_${user.id}_${Date.now()}.${fileExt}`;
-      
+
       try {
         // Try to upload to Supabase Storage (if configured)
         const formData = new FormData();
@@ -180,12 +178,12 @@ export default function EditProfileScreen() {
         // const { data, error: uploadError } = await supabase.storage
         //   .from('avatars')
         //   .upload(fileName, formData);
-        
+
         const { error } = await supabase.auth.updateUser({
-          data: { 
+          data: {
             avatar_url: imageUri,
-            avatar_updated_at: new Date().toISOString()
-          }
+            avatar_updated_at: new Date().toISOString(),
+          },
         });
 
         if (error) {
@@ -194,20 +192,20 @@ export default function EditProfileScreen() {
 
         // Update local state to trigger re-render
         setProfileImage(imageUri);
-        
+
         // Reload user data to ensure consistency
         await loadUserProfile();
-        
+
         Alert.alert('Success! ✅', 'Profile picture updated successfully!');
       } catch (storageError) {
         console.log('Storage upload failed, using local URI:', storageError);
-        
+
         // Fallback: store local URI in user metadata
         const { error } = await supabase.auth.updateUser({
-          data: { 
+          data: {
             avatar_url: imageUri,
-            avatar_updated_at: new Date().toISOString()
-          }
+            avatar_updated_at: new Date().toISOString(),
+          },
         });
 
         if (error) {
@@ -236,19 +234,19 @@ export default function EditProfileScreen() {
 
   const validateForm = () => {
     const newErrors: any = {};
-    
+
     if (!formData.fullName.trim()) {
       newErrors.fullName = 'Full name is required';
     } else if (formData.fullName.trim().length < 2) {
       newErrors.fullName = 'Name must be at least 2 characters';
     }
-    
+
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Please enter a valid email address';
     }
-    
+
     if (formData.phone) {
       const cleanPhone = formData.phone.replace(/\s/g, '');
       if (!/^\+?[1-9]\d{6,14}$/.test(cleanPhone)) {
@@ -265,11 +263,14 @@ export default function EditProfileScreen() {
         }
       }
     }
-    
-    if (formData.website && !formData.website.match(/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/)) {
+
+    if (
+      formData.website &&
+      !formData.website.match(/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/)
+    ) {
       newErrors.website = 'Please enter a valid website URL';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -282,7 +283,7 @@ export default function EditProfileScreen() {
 
     try {
       setIsSaving(true);
-      
+
       const updateData = {
         full_name: formData.fullName.trim(),
         phone: formData.phone.trim(),
@@ -293,34 +294,30 @@ export default function EditProfileScreen() {
       };
 
       const { error } = await supabase.auth.updateUser({
-        data: updateData
+        data: updateData,
       });
 
       if (error) {
         throw error;
       }
 
-      Alert.alert(
-        'Profile Updated! ✅',
-        'Your profile has been successfully updated.',
-        [
-          {
-            text: 'OK',
-            onPress: () => {
-              try {
-                if (router.canGoBack()) {
-                  router.back();
-                } else {
-                  router.push('/account');
-                }
-              } catch (error) {
-                console.error('Navigation error:', error);
+      Alert.alert('Profile Updated! ✅', 'Your profile has been successfully updated.', [
+        {
+          text: 'OK',
+          onPress: () => {
+            try {
+              if (router.canGoBack()) {
+                router.back();
+              } else {
                 router.push('/account');
               }
+            } catch (error) {
+              console.error('Navigation error:', error);
+              router.push('/account');
             }
-          }
-        ]
-      );
+          },
+        },
+      ]);
     } catch (error: any) {
       console.error('Error updating profile:', error);
       Alert.alert('Update Failed', error.message || 'Failed to update profile');
@@ -393,9 +390,14 @@ export default function EditProfileScreen() {
           showsVerticalScrollIndicator={false}
         >
           {/* Profile Picture Section */}
-          <View style={[styles.profilePictureSection, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
+          <View
+            style={[
+              styles.profilePictureSection,
+              { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+            ]}
+          >
             <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>Profile Picture</Text>
-            
+
             <View style={styles.profilePictureContainer}>
               <View style={[styles.avatarContainer, { backgroundColor: theme.colors.primary }]}>
                 {profileImage ? (
@@ -411,7 +413,7 @@ export default function EditProfileScreen() {
                   </View>
                 )}
               </View>
-              
+
               <TouchableOpacity
                 style={[styles.changePhotoButton, { backgroundColor: theme.colors.primary }]}
                 onPress={pickImage}
@@ -427,23 +429,30 @@ export default function EditProfileScreen() {
           </View>
 
           {/* Profile Info Section */}
-          <View style={[styles.section, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
-            <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>Basic Information</Text>
-            
+          <View
+            style={[
+              styles.section,
+              { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+            ]}
+          >
+            <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>
+              Basic Information
+            </Text>
+
             {/* Full Name */}
             <View style={styles.inputGroup}>
               <Text style={[styles.label, { color: theme.colors.text }]}>Full Name *</Text>
               <TextInput
                 style={[
                   styles.input,
-                  { 
+                  {
                     backgroundColor: theme.colors.background,
                     borderColor: errors.fullName ? theme.colors.error : theme.colors.border,
-                    color: theme.colors.text
-                  }
+                    color: theme.colors.text,
+                  },
                 ]}
                 value={formData.fullName}
-                onChangeText={(text) => updateField('fullName', text)}
+                onChangeText={text => updateField('fullName', text)}
                 placeholder="Enter your full name"
                 placeholderTextColor={theme.colors.textSecondary}
                 autoCapitalize="words"
@@ -466,11 +475,11 @@ export default function EditProfileScreen() {
                 style={[
                   styles.input,
                   styles.inputDisabled,
-                  { 
+                  {
                     backgroundColor: theme.colors.border + '30',
                     borderColor: theme.colors.border,
-                    color: theme.colors.textSecondary
-                  }
+                    color: theme.colors.textSecondary,
+                  },
                 ]}
                 value={formData.email}
                 editable={false}
@@ -488,14 +497,14 @@ export default function EditProfileScreen() {
               <TextInput
                 style={[
                   styles.input,
-                  { 
+                  {
                     backgroundColor: theme.colors.background,
                     borderColor: errors.phone ? theme.colors.error : theme.colors.border,
-                    color: theme.colors.text
-                  }
+                    color: theme.colors.text,
+                  },
                 ]}
                 value={formData.phone}
-                onChangeText={(text) => updateField('phone', text)}
+                onChangeText={text => updateField('phone', text)}
                 placeholder="+966512345678"
                 placeholderTextColor={theme.colors.textSecondary}
                 keyboardType="phone-pad"
@@ -511,9 +520,16 @@ export default function EditProfileScreen() {
           </View>
 
           {/* Additional Info Section */}
-          <View style={[styles.section, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
-            <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>Additional Information</Text>
-            
+          <View
+            style={[
+              styles.section,
+              { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+            ]}
+          >
+            <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>
+              Additional Information
+            </Text>
+
             {/* Bio */}
             <View style={styles.inputGroup}>
               <Text style={[styles.label, { color: theme.colors.text }]}>Bio</Text>
@@ -524,14 +540,14 @@ export default function EditProfileScreen() {
                 style={[
                   styles.input,
                   styles.textArea,
-                  { 
+                  {
                     backgroundColor: theme.colors.background,
                     borderColor: theme.colors.border,
-                    color: theme.colors.text
-                  }
+                    color: theme.colors.text,
+                  },
                 ]}
                 value={formData.bio}
-                onChangeText={(text) => updateField('bio', text)}
+                onChangeText={text => updateField('bio', text)}
                 placeholder="Write a short bio about yourself..."
                 placeholderTextColor={theme.colors.textSecondary}
                 multiline
@@ -549,14 +565,14 @@ export default function EditProfileScreen() {
               <TextInput
                 style={[
                   styles.input,
-                  { 
+                  {
                     backgroundColor: theme.colors.background,
                     borderColor: theme.colors.border,
-                    color: theme.colors.text
-                  }
+                    color: theme.colors.text,
+                  },
                 ]}
                 value={formData.location}
-                onChangeText={(text) => updateField('location', text)}
+                onChangeText={text => updateField('location', text)}
                 placeholder="City, Country"
                 placeholderTextColor={theme.colors.textSecondary}
                 autoCapitalize="words"
@@ -570,14 +586,14 @@ export default function EditProfileScreen() {
               <TextInput
                 style={[
                   styles.input,
-                  { 
+                  {
                     backgroundColor: theme.colors.background,
                     borderColor: errors.website ? theme.colors.error : theme.colors.border,
-                    color: theme.colors.text
-                  }
+                    color: theme.colors.text,
+                  },
                 ]}
                 value={formData.website}
-                onChangeText={(text) => updateField('website', text)}
+                onChangeText={text => updateField('website', text)}
                 placeholder="https://yourwebsite.com"
                 placeholderTextColor={theme.colors.textSecondary}
                 keyboardType="url"
@@ -597,7 +613,7 @@ export default function EditProfileScreen() {
             style={[
               styles.saveButtonLarge,
               { backgroundColor: theme.colors.primary },
-              isSaving && styles.buttonDisabled
+              isSaving && styles.buttonDisabled,
             ]}
             onPress={handleSave}
             disabled={isSaving}
@@ -788,4 +804,4 @@ const styles = StyleSheet.create({
   buttonDisabled: {
     opacity: 0.6,
   },
-}); 
+});

@@ -21,14 +21,14 @@ const createTheme = (colorScheme: 'light' | 'dark' | null) => ({
     text: colorScheme === 'dark' ? '#FFFFFF' : '#212121',
     textSecondary: colorScheme === 'dark' ? '#AAAAAA' : '#757575',
     border: colorScheme === 'dark' ? '#333333' : '#E0E0E0',
-  }
+  },
 });
 
 export default function NotificationsScreen() {
   const router = useRouter();
   const colorScheme = useColorScheme();
   const theme = createTheme(colorScheme);
-  
+
   // Independent state for each notification setting
   const [plantCareReminders, setPlantCareReminders] = useState(true);
   const [wateringAlerts, setWateringAlerts] = useState(true);
@@ -51,26 +51,34 @@ export default function NotificationsScreen() {
 
   const getToggleFunction = (settingKey: string) => {
     switch (settingKey) {
-      case 'plantCareReminders': return setPlantCareReminders;
-      case 'wateringAlerts': return setWateringAlerts;
-      case 'diseaseAlerts': return setDiseaseAlerts;
-      case 'growthUpdates': return setGrowthUpdates;
-      case 'weeklyReports': return setWeeklyReports;
-      case 'emailNotifications': return setEmailNotifications;
-      case 'marketingEmails': return setMarketingEmails;
-      default: return () => {};
+      case 'plantCareReminders':
+        return setPlantCareReminders;
+      case 'wateringAlerts':
+        return setWateringAlerts;
+      case 'diseaseAlerts':
+        return setDiseaseAlerts;
+      case 'growthUpdates':
+        return setGrowthUpdates;
+      case 'weeklyReports':
+        return setWeeklyReports;
+      case 'emailNotifications':
+        return setEmailNotifications;
+      case 'marketingEmails':
+        return setMarketingEmails;
+      default:
+        return () => {};
     }
   };
 
-  const NotificationOption = ({ 
-    title, 
-    description, 
-    settingKey, 
-    icon 
-  }: { 
-    title: string; 
-    description: string; 
-    settingKey: string; 
+  const NotificationOption = ({
+    title,
+    description,
+    settingKey,
+    icon,
+  }: {
+    title: string;
+    description: string;
+    settingKey: string;
     icon: string;
   }) => (
     <View style={[styles.optionItem, { borderBottomColor: theme.colors.border }]}>
@@ -85,7 +93,7 @@ export default function NotificationsScreen() {
       </View>
       <Switch
         value={settings[settingKey]}
-        onValueChange={(value) => {
+        onValueChange={value => {
           console.log(`🔔 Toggling ${settingKey}:`, value);
           const toggleFunction = getToggleFunction(settingKey);
           toggleFunction(value);
@@ -100,10 +108,7 @@ export default function NotificationsScreen() {
     <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
       {/* Header */}
       <View style={[styles.header, { borderBottomColor: theme.colors.border }]}>
-        <TouchableOpacity
-          onPress={() => router.back()}
-          style={styles.backButton}
-        >
+        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: theme.colors.text }]}>Notifications</Text>
@@ -112,30 +117,37 @@ export default function NotificationsScreen() {
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         {/* Push Notifications Section */}
-        <View style={[styles.section, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>Push Notifications</Text>
-          
+        <View
+          style={[
+            styles.section,
+            { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+          ]}
+        >
+          <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>
+            Push Notifications
+          </Text>
+
           <NotificationOption
             title="Plant Care Reminders"
             description="Get reminded when your plants need care"
             settingKey="plantCareReminders"
             icon="leaf"
           />
-          
+
           <NotificationOption
             title="Watering Alerts"
             description="Notifications when it's time to water your plants"
             settingKey="wateringAlerts"
             icon="water"
           />
-          
+
           <NotificationOption
             title="Disease Alerts"
             description="Get notified about potential plant health issues"
             settingKey="diseaseAlerts"
             icon="warning"
           />
-          
+
           <NotificationOption
             title="Growth Updates"
             description="Weekly updates on your plants' progress"
@@ -145,9 +157,14 @@ export default function NotificationsScreen() {
         </View>
 
         {/* App Notifications Section */}
-        <View style={[styles.section, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
+        <View
+          style={[
+            styles.section,
+            { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+          ]}
+        >
           <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>App Notifications</Text>
-          
+
           <NotificationOption
             title="Weekly Reports"
             description="Summary of your garden's activity"
@@ -157,16 +174,23 @@ export default function NotificationsScreen() {
         </View>
 
         {/* Email Notifications Section */}
-        <View style={[styles.section, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>Email Notifications</Text>
-          
+        <View
+          style={[
+            styles.section,
+            { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+          ]}
+        >
+          <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>
+            Email Notifications
+          </Text>
+
           <NotificationOption
             title="Email Notifications"
             description="Receive important updates via email"
             settingKey="emailNotifications"
             icon="mail"
           />
-          
+
           <NotificationOption
             title="Marketing Emails"
             description="Tips, promotions, and new features"
@@ -176,10 +200,16 @@ export default function NotificationsScreen() {
         </View>
 
         {/* Note */}
-        <View style={[styles.noteCard, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
+        <View
+          style={[
+            styles.noteCard,
+            { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+          ]}
+        >
           <Ionicons name="information-circle" size={20} color={theme.colors.primary} />
           <Text style={[styles.noteText, { color: theme.colors.textSecondary }]}>
-            Changes to notification settings take effect immediately. You can modify these settings anytime.
+            Changes to notification settings take effect immediately. You can modify these settings
+            anytime.
           </Text>
         </View>
       </ScrollView>
@@ -264,4 +294,4 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     flex: 1,
   },
-}); 
+});

@@ -23,7 +23,7 @@ mockAccessibilityInfo();
 mockAccessibilityHooks();
 
 describe('NutrientCalculatorScreen Accessibility', () => {
-  const mockT = jest.fn((key) => key);
+  const mockT = jest.fn(key => key);
   const mockI18n = { language: 'en' };
   const mockCalculator = {
     selectedCrop: null,
@@ -94,7 +94,7 @@ describe('NutrientCalculatorScreen Accessibility', () => {
 
   it('announces crop selection via screen reader', async () => {
     const { getAllByA11yRole } = render(<NutrientCalculatorScreen />);
-    
+
     const cropButtons = getAllByA11yRole('radio');
     await act(async () => {
       fireEvent.press(cropButtons[0]);
@@ -107,7 +107,7 @@ describe('NutrientCalculatorScreen Accessibility', () => {
 
   it('provides accessible numeric input for water volume', () => {
     const { getByA11yLabel } = render(<NutrientCalculatorScreen />);
-    
+
     const input = getByA11yLabel('nutrients.accessibility.water_volume_input');
     expect(input).toBeTruthy();
     expect(input.props.accessibilityRole).toBe('spinbutton');
@@ -116,7 +116,7 @@ describe('NutrientCalculatorScreen Accessibility', () => {
 
   it('announces calculation results to screen reader', async () => {
     const { getByA11yLabel } = render(<NutrientCalculatorScreen />);
-    
+
     // Mock measurements result
     const mockResults = {
       nitrogen: 20,
@@ -125,7 +125,7 @@ describe('NutrientCalculatorScreen Accessibility', () => {
       calcium: 15,
       magnesium: 5,
     };
-    
+
     (useNutrientCalculator as jest.Mock).mockReturnValue({
       ...mockCalculator,
       measurements: mockResults,
@@ -148,7 +148,7 @@ describe('NutrientCalculatorScreen Accessibility', () => {
     });
 
     const { getByA11yLabel } = render(<NutrientCalculatorScreen />);
-    
+
     await waitFor(() => {
       expect(AccessibilityInfo.announceForAccessibility).toHaveBeenCalledWith(
         expect.stringContaining('Test error message')
@@ -158,7 +158,7 @@ describe('NutrientCalculatorScreen Accessibility', () => {
 
   it('announces recipe selection with nutrient details', async () => {
     const { getAllByA11yRole } = render(<NutrientCalculatorScreen />);
-    
+
     const recipeButtons = getAllByA11yRole('radio').filter(
       button => button.props.accessibilityHint === 'nutrients.accessibility.recipe_hint'
     );
@@ -185,10 +185,10 @@ describe('NutrientCalculatorScreen Accessibility', () => {
     });
 
     const { getAllByA11yLabel } = render(<NutrientCalculatorScreen />);
-    
+
     const results = getAllByA11yLabel(/nutrients\.accessibility\.measurement_/);
     expect(results).toHaveLength(5); // One for each nutrient
-    
+
     results.forEach(result => {
       expect(result.props.accessibilityLabel).toMatch(/\d+\s*(ml|g)/);
     });
@@ -196,7 +196,7 @@ describe('NutrientCalculatorScreen Accessibility', () => {
 
   it('announces saved nutrient setups', async () => {
     const { getByA11yLabel } = render(<NutrientCalculatorScreen />);
-    
+
     const saveButton = getByA11yLabel('nutrients.accessibility.save_button');
     await act(async () => {
       fireEvent.press(saveButton);
@@ -206,4 +206,4 @@ describe('NutrientCalculatorScreen Accessibility', () => {
       expect.stringContaining('nutrients.accessibility.setup_saved')
     );
   });
-}); 
+});

@@ -71,7 +71,7 @@ export function AppNavigator() {
           component={() => <></>} // Replace with your Profile component
           options={{ title: 'Profile' }}
         />
-        
+
         {isAdmin && (
           <Tab.Screen
             name="Admin"
@@ -85,4 +85,4 @@ export function AppNavigator() {
       </Tab.Navigator>
     </NavigationContainer>
   );
-} 
+}

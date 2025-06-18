@@ -73,43 +73,38 @@ export const usePlantSort = (plants: Plant[]) => {
       // Primary sort
       const primaryA = getPlantValue(a, currentSort.primary.criteria);
       const primaryB = getPlantValue(b, currentSort.primary.criteria);
-      const primaryResult = compareValues(
-        primaryA,
-        primaryB,
-        currentSort.primary.direction
-      );
+      const primaryResult = compareValues(primaryA, primaryB, currentSort.primary.direction);
 
       // If primary values are equal and we have a secondary sort, use it
       if (primaryResult === 0 && currentSort.secondary) {
         const secondaryA = getPlantValue(a, currentSort.secondary.criteria);
         const secondaryB = getPlantValue(b, currentSort.secondary.criteria);
-        return compareValues(
-          secondaryA,
-          secondaryB,
-          currentSort.secondary.direction
-        );
+        return compareValues(secondaryA, secondaryB, currentSort.secondary.direction);
       }
 
       return primaryResult;
     });
   }, [plants, currentSort, getPlantValue, compareValues]);
 
-  const handleSortChange = useCallback(async (config: SortConfig) => {
-    setCurrentSort(config);
-    
-    // Persist sort change
-    try {
-      await storageService.setDashboardSort(config);
-      // Announce sort change for accessibility
-      AccessibilityInfo.announceForAccessibility(
-        t('sorting.accessibility.changed', {
-          criteria: getSortDescription(config, t),
-        })
-      );
-    } catch (error) {
-      console.error('Failed to save sort:', error);
-    }
-  }, [t]);
+  const handleSortChange = useCallback(
+    async (config: SortConfig) => {
+      setCurrentSort(config);
+
+      // Persist sort change
+      try {
+        await storageService.setDashboardSort(config);
+        // Announce sort change for accessibility
+        AccessibilityInfo.announceForAccessibility(
+          t('sorting.accessibility.changed', {
+            criteria: getSortDescription(config, t),
+          })
+        );
+      } catch (error) {
+        console.error('Failed to save sort:', error);
+      }
+    },
+    [t]
+  );
 
   return {
     currentSort,
@@ -123,11 +118,11 @@ export const usePlantSort = (plants: Plant[]) => {
 function getSortDescription(config: SortConfig, t: (key: string, params?: any) => string): string {
   const primary = t(`sorting.criteria.${config.primary.criteria}`);
   const primaryDir = t(`sorting.direction.${config.primary.direction}`);
-  
+
   if (!config.secondary) {
     return t('sorting.descriptionSingle', { criteria: primary, direction: primaryDir });
   }
-  
+
   const secondary = t(`sorting.criteria.${config.secondary.criteria}`);
   const secondaryDir = t(`sorting.direction.${config.secondary.direction}`);
   return t('sorting.descriptionCombined', {
@@ -136,4 +131,4 @@ function getSortDescription(config: SortConfig, t: (key: string, params?: any) =
     secondary,
     secondaryDir,
   });
-} 
+}

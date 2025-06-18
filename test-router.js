@@ -5,27 +5,27 @@ console.log('🧪 Testing Expo Router resolution...');
 
 const testCommand = spawn('npx', ['expo', 'export', '--platform', 'web', '--dev'], {
   stdio: 'pipe',
-  timeout: 15000
+  timeout: 15000,
 });
 
 let output = '';
 let hasError = false;
 
-testCommand.stdout.on('data', (data) => {
+testCommand.stdout.on('data', data => {
   output += data.toString();
 });
 
-testCommand.stderr.on('data', (data) => {
+testCommand.stderr.on('data', data => {
   const error = data.toString();
   output += error;
-  
+
   if (error.includes('useScreens')) {
     console.log('❌ useScreens error still exists!');
     hasError = true;
   }
 });
 
-testCommand.on('close', (code) => {
+testCommand.on('close', code => {
   if (hasError) {
     console.log('❌ Router resolution failed');
     process.exit(1);
@@ -35,7 +35,7 @@ testCommand.on('close', (code) => {
   } else {
     console.log('⚠️  Test inconclusive, but no useScreens errors detected');
   }
-  
+
   // Cleanup
   process.exit(0);
 });
@@ -47,4 +47,4 @@ setTimeout(() => {
     console.log('✅ Fix appears successful!');
   }
   process.exit(0);
-}, 15000); 
+}, 15000);

@@ -16,9 +16,9 @@ export function RetryQueueStatus({ showDetails = false }: RetryQueueStatusProps)
   const slideAnim = useRef(new Animated.Value(50)).current;
 
   useEffect(() => {
-    const unsubscribe = retryQueue.subscribe((state) => {
+    const unsubscribe = retryQueue.subscribe(state => {
       const hasOperations = state.queuedOperations.length > 0;
-      
+
       Animated.parallel([
         Animated.timing(fadeAnim, {
           toValue: hasOperations ? 1 : 0,
@@ -29,17 +29,17 @@ export function RetryQueueStatus({ showDetails = false }: RetryQueueStatusProps)
           toValue: hasOperations ? 0 : 50,
           duration: 300,
           useNativeDriver: true,
-        })
+        }),
       ]).start();
 
       // Announce queue status changes for accessibility
       if (hasOperations) {
         const pendingCount = state.queuedOperations.length;
         const processingCount = state.queuedOperations.filter(op => op.isProcessing).length;
-        
+
         announceQueue([
           `${pendingCount} operations in queue.`,
-          processingCount > 0 ? `${processingCount} currently processing.` : ''
+          processingCount > 0 ? `${processingCount} currently processing.` : '',
         ]);
       }
     });
@@ -57,9 +57,9 @@ export function RetryQueueStatus({ showDetails = false }: RetryQueueStatusProps)
 
     return (
       <View style={styles.details}>
-        {queuedOperations.map((op) => (
-          <View 
-            key={op.id} 
+        {queuedOperations.map(op => (
+          <View
+            key={op.id}
             style={styles.operationItem}
             accessible={true}
             accessibilityRole="text"
@@ -67,15 +67,13 @@ export function RetryQueueStatus({ showDetails = false }: RetryQueueStatusProps)
               op.isProcessing ? 'processing' : 'queued'
             }, attempt ${op.attempt} of ${op.maxRetries}`}
           >
-            <Text style={[styles.operationText, { color: colors.text }]}>
-              {op.operationKey}
-            </Text>
+            <Text style={[styles.operationText, { color: colors.text }]}>{op.operationKey}</Text>
             <View style={styles.operationStatus}>
               {op.isProcessing && (
                 <View style={[styles.statusDot, { backgroundColor: colors.primary }]} />
               )}
               <Text style={[styles.statusText, { color: colors.textSecondary }]}>
-                {op.isProcessing ? 'Processing' : 'Queued'} 
+                {op.isProcessing ? 'Processing' : 'Queued'}
                 {op.attempt > 0 && ` (${op.attempt}/${op.maxRetries})`}
               </Text>
             </View>
@@ -86,23 +84,21 @@ export function RetryQueueStatus({ showDetails = false }: RetryQueueStatusProps)
   };
 
   return (
-    <Animated.View 
+    <Animated.View
       style={[
         styles.container,
         {
           opacity: fadeAnim,
           transform: [{ translateY: slideAnim }],
           backgroundColor: colors.card,
-        }
+        },
       ]}
       accessible={true}
       accessibilityRole="alert"
       accessibilityLiveRegion="polite"
     >
       <View style={styles.header}>
-        <Text style={[styles.title, { color: colors.text }]}>
-          Retry Queue Status
-        </Text>
+        <Text style={[styles.title, { color: colors.text }]}>Retry Queue Status</Text>
         <View style={[styles.badge, { backgroundColor: colors.primary }]}>
           <Text style={[styles.badgeText, { color: colors.white }]}>
             {retryQueue.getState().queuedOperations.length}
@@ -176,4 +172,4 @@ const styles = StyleSheet.create({
   statusText: {
     fontSize: 12,
   },
-}); 
+});

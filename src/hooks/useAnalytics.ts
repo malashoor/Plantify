@@ -41,62 +41,51 @@ export const useAnalytics = (): AnalyticsHookReturn => {
   }, [navigation, isOptedOut]);
 
   // Identify user
-  const identifyUser = useCallback(async (
-    userId: string,
-    userProfile: AnalyticsUserProfile
-  ) => {
+  const identifyUser = useCallback(async (userId: string, userProfile: AnalyticsUserProfile) => {
     await analytics.identifyUser(userId, userProfile);
   }, []);
 
   // Update user profile
-  const updateUserProfile = useCallback(async (
-    profile: AnalyticsUserProfile
-  ) => {
+  const updateUserProfile = useCallback(async (profile: AnalyticsUserProfile) => {
     await analytics.updateUserProfile(profile);
   }, []);
 
   // Track events
-  const trackEvent = useCallback(async (
-    event: AnalyticsEvent,
-    properties?: AnalyticsProperties
-  ) => {
-    await analytics.trackEvent(event, properties);
-  }, []);
+  const trackEvent = useCallback(
+    async (event: AnalyticsEvent, properties?: AnalyticsProperties) => {
+      await analytics.trackEvent(event, properties);
+    },
+    []
+  );
 
   // Track feature usage
-  const trackFeature = useCallback(async (
-    featureName: string,
-    properties?: AnalyticsProperties
-  ) => {
-    return analytics.trackFeatureUsage(featureName, properties);
-  }, []);
+  const trackFeature = useCallback(
+    async (featureName: string, properties?: AnalyticsProperties) => {
+      return analytics.trackFeatureUsage(featureName, properties);
+    },
+    []
+  );
 
   // Track errors
-  const trackError = useCallback(async (
-    error: Error,
-    properties?: AnalyticsProperties
-  ) => {
+  const trackError = useCallback(async (error: Error, properties?: AnalyticsProperties) => {
     await analytics.trackEvent(AnalyticsEvent.ERROR_OCCURRED, {
       ...properties,
       error_type: error.name,
       error_message: error.message,
-      error_stack: error.stack
+      error_stack: error.stack,
     });
   }, []);
 
   // Track subscription events
-  const trackSubscription = useCallback(async (
-    event: AnalyticsEvent,
-    properties?: AnalyticsProperties
-  ) => {
-    await analytics.trackSubscriptionEvent(event, properties);
-  }, []);
+  const trackSubscription = useCallback(
+    async (event: AnalyticsEvent, properties?: AnalyticsProperties) => {
+      await analytics.trackSubscriptionEvent(event, properties);
+    },
+    []
+  );
 
   // Track revenue
-  const trackRevenue = useCallback(async (
-    amount: number,
-    properties?: AnalyticsProperties
-  ) => {
+  const trackRevenue = useCallback(async (amount: number, properties?: AnalyticsProperties) => {
     await analytics.trackRevenue(amount, properties);
   }, []);
 
@@ -123,6 +112,6 @@ export const useAnalytics = (): AnalyticsHookReturn => {
     trackError,
     trackSubscription,
     trackRevenue,
-    isEnabled: analytics.isEnabled()
+    isEnabled: analytics.isEnabled(),
   };
-}; 
+};

@@ -92,4 +92,4 @@ const darkTheme: Theme = {
 export const useTheme = (): Theme => {
   const colorScheme = useColorScheme();
   return colorScheme === 'dark' ? darkTheme : lightTheme;
-}; 
+};

@@ -24,16 +24,21 @@ const createTheme = (colorScheme: 'light' | 'dark' | null) => ({
     success: '#4CAF50',
     warning: '#FF9800',
     error: '#F44336',
-  }
+  },
 });
 
 const getHealthColor = (health: string | undefined, theme: any) => {
   switch (health) {
-    case 'excellent': return theme.colors.success;
-    case 'good': return theme.colors.primary;
-    case 'fair': return theme.colors.warning;
-    case 'poor': return theme.colors.error;
-    default: return theme.colors.textSecondary;
+    case 'excellent':
+      return theme.colors.success;
+    case 'good':
+      return theme.colors.primary;
+    case 'fair':
+      return theme.colors.warning;
+    case 'poor':
+      return theme.colors.error;
+    default:
+      return theme.colors.textSecondary;
   }
 };
 
@@ -57,10 +62,8 @@ export const GrowthChart: React.FC<GrowthChartProps> = ({ data, style }) => {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.surface }, style]}>
-      <Text style={[styles.title, { color: theme.colors.text }]}>
-        Growth Progress
-      </Text>
-      
+      <Text style={[styles.title, { color: theme.colors.text }]}>Growth Progress</Text>
+
       <View style={styles.chartContainer}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <View style={styles.chart}>
@@ -84,20 +87,20 @@ export const GrowthChart: React.FC<GrowthChartProps> = ({ data, style }) => {
                 return (
                   <View key={index} style={styles.barColumn}>
                     <View style={styles.barContainer}>
-                      <View 
+                      <View
                         style={[
-                          styles.bar, 
-                          { 
+                          styles.bar,
+                          {
                             height: `${barHeight}%`,
-                            backgroundColor: getHealthColor(point.health, theme)
-                          }
-                        ]} 
+                            backgroundColor: getHealthColor(point.health, theme),
+                          },
+                        ]}
                       />
                     </View>
                     <Text style={[styles.xAxisLabel, { color: theme.colors.textSecondary }]}>
-                      {new Date(point.date).toLocaleDateString('en-US', { 
-                        month: 'short', 
-                        day: 'numeric' 
+                      {new Date(point.date).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
                       })}
                     </Text>
                     <Text style={[styles.heightLabel, { color: theme.colors.text }]}>
@@ -116,7 +119,11 @@ export const GrowthChart: React.FC<GrowthChartProps> = ({ data, style }) => {
         <View style={styles.summary}>
           <Text style={[styles.summaryText, { color: theme.colors.textSecondary }]}>
             Total Growth: {(data[data.length - 1].height - data[0].height).toFixed(1)}cm over{' '}
-            {Math.round((new Date(data[data.length - 1].date).getTime() - new Date(data[0].date).getTime()) / (1000 * 60 * 60 * 24))} days
+            {Math.round(
+              (new Date(data[data.length - 1].date).getTime() - new Date(data[0].date).getTime()) /
+                (1000 * 60 * 60 * 24)
+            )}{' '}
+            days
           </Text>
         </View>
       )}
@@ -127,11 +134,8 @@ export const GrowthChart: React.FC<GrowthChartProps> = ({ data, style }) => {
         <View style={styles.legendItems}>
           {['excellent', 'good', 'fair', 'poor'].map(health => (
             <View key={health} style={styles.legendItem}>
-              <View 
-                style={[
-                  styles.legendColor, 
-                  { backgroundColor: getHealthColor(health, theme) }
-                ]} 
+              <View
+                style={[styles.legendColor, { backgroundColor: getHealthColor(health, theme) }]}
               />
               <Text style={[styles.legendText, { color: theme.colors.textSecondary }]}>
                 {health}
@@ -248,4 +252,4 @@ const styles = StyleSheet.create({
   legendText: {
     fontSize: 10,
   },
-}); 
+});

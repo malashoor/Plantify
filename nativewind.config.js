@@ -4,4 +4,4 @@ module.exports = {
       optimizeNativeStyles: true,
     },
   },
-}; 
+};

@@ -6,9 +6,9 @@ import LightingCalculatorScreen from '@screens/tools/LightingCalculatorScreen';
 export default function LightingCalculator() {
   return (
     <>
-      <Stack.Screen 
+      <Stack.Screen
         options={{
-          headerShown: false
+          headerShown: false,
         }}
       />
       <View style={styles.container}>
@@ -22,4 +22,4 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-}); 
+});

@@ -1,5 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, TextInput, Alert, KeyboardAvoidingView, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+  TextInput,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '../../lib/supabase';
@@ -49,7 +59,7 @@ export default function LoginScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView 
+      <KeyboardAvoidingView
         style={styles.keyboardContainer}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
@@ -98,19 +108,12 @@ export default function LoginScreen() {
                 style={styles.passwordToggle}
                 onPress={() => setShowPassword(!showPassword)}
               >
-                <Ionicons
-                  name={showPassword ? 'eye-off' : 'eye'}
-                  size={20}
-                  color="#666"
-                />
+                <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={20} color="#666" />
               </TouchableOpacity>
             </View>
           </View>
 
-          <TouchableOpacity
-            style={styles.forgotPassword}
-            onPress={handleForgotPassword}
-          >
+          <TouchableOpacity style={styles.forgotPassword} onPress={handleForgotPassword}>
             <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
           </TouchableOpacity>
 
@@ -120,9 +123,7 @@ export default function LoginScreen() {
             disabled={isLoading}
             activeOpacity={0.8}
           >
-            <Text style={styles.loginButtonText}>
-              {isLoading ? 'Signing In...' : 'Sign In'}
-            </Text>
+            <Text style={styles.loginButtonText}>{isLoading ? 'Signing In...' : 'Sign In'}</Text>
           </TouchableOpacity>
         </View>
 
@@ -262,4 +263,4 @@ const styles = StyleSheet.create({
     color: '#45B36B',
     fontWeight: '600',
   },
-}); 
+});

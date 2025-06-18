@@ -10,19 +10,22 @@ interface StatCardProps {
   icon?: React.ReactNode;
 }
 
-export function StatCard({ 
-  title, 
-  value, 
-  subtitle, 
-  change, 
+export function StatCard({
+  title,
+  value,
+  subtitle,
+  change,
   changeType = 'neutral',
-  icon 
+  icon,
 }: StatCardProps) {
   const getChangeColor = () => {
     switch (changeType) {
-      case 'positive': return '#4CAF50';
-      case 'negative': return '#F44336';
-      default: return '#666';
+      case 'positive':
+        return '#4CAF50';
+      case 'negative':
+        return '#F44336';
+      default:
+        return '#666';
     }
   };
 
@@ -37,15 +40,16 @@ export function StatCard({
         <Text style={styles.title}>{title}</Text>
         {icon && <View style={styles.iconContainer}>{icon}</View>}
       </View>
-      
+
       <Text style={styles.value}>{value}</Text>
-      
+
       {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
-      
+
       {change !== undefined && (
         <View style={styles.changeContainer}>
           <Text style={[styles.change, { color: getChangeColor() }]}>
-            {getChangePrefix()}{change}%
+            {getChangePrefix()}
+            {change}%
           </Text>
           <Text style={styles.changeLabel}>vs last period</Text>
         </View>
@@ -109,4 +113,4 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#888',
   },
-}); 
+});

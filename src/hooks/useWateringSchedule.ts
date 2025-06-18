@@ -23,13 +23,13 @@ export function useWateringSchedule({
   weather,
   profile,
   isIndoor,
-  lastWatered = new Date()
+  lastWatered = new Date(),
 }: UseWateringScheduleOptions) {
   const [schedule, setSchedule] = useState<WateringSchedule>({
     nextWateringDate: null,
     daysUntilNextWatering: null,
     adjustment: null,
-    baseInterval: null
+    baseInterval: null,
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -68,7 +68,7 @@ export function useWateringSchedule({
           environment: isIndoor ? 'indoor' : 'outdoor',
           planted_at: lastWatered.toISOString(),
           created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         };
 
         // Get smart watering adjustments
@@ -88,7 +88,7 @@ export function useWateringSchedule({
             nextWateringDate: adjustment.nextWateringDate,
             daysUntilNextWatering: daysUntil,
             adjustment,
-            baseInterval
+            baseInterval,
           });
         }
       } catch (err) {
@@ -113,6 +113,6 @@ export function useWateringSchedule({
     schedule,
     loading,
     error,
-    isAdjusted: schedule.adjustment?.shouldSkip || schedule.adjustment?.shouldIncrease || false
+    isAdjusted: schedule.adjustment?.shouldSkip || schedule.adjustment?.shouldIncrease || false,
   };
-} 
+}

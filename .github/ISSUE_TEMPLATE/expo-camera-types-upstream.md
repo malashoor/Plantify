@@ -7,12 +7,14 @@ assignees: ''
 ---
 
 ## Environment
+
 - Expo SDK Version: 0.22.26
 - expo-camera Version: 16.1.6
 - TypeScript Version: 5.0.0
 - Platform: iOS/Android
 
 ## Current Issues
+
 The current type definitions for expo-camera have several limitations:
 
 1. Camera component type is not properly recognized as a JSX element
@@ -21,6 +23,7 @@ The current type definitions for expo-camera have several limitations:
 4. Camera props interface is incomplete
 
 ## Proposed Solution
+
 We've created a comprehensive type definition file that addresses these issues. Here's the key improvements:
 
 ```typescript
@@ -76,6 +79,7 @@ declare module 'expo-camera' {
 ```
 
 ## Benefits
+
 1. Proper typing for Camera component as a JSX element
 2. Type-safe camera instance methods
 3. Complete props interface
@@ -83,18 +87,22 @@ declare module 'expo-camera' {
 5. Better developer experience with autocomplete and type checking
 
 ## Implementation Notes
+
 1. The type definitions are currently being used in our project at `types/expo-camera.d.ts`
 2. We're temporarily using `any` for the camera ref while waiting for upstream fixes
 3. The definitions have been tested with our plant identification feature
 
 ## Next Steps
+
 1. Review and refine the proposed type definitions
 2. Add tests to verify type correctness
 3. Update documentation to reflect the new type system
 4. Consider adding more specific types for camera features (e.g., barcode scanning)
 
 ## Related Issues
+
 - None found
 
 ## Additional Context
-This improvement would help developers using TypeScript with expo-camera to have better type safety and developer experience. The current workaround of using `any` types is not ideal for production applications. 
+
+This improvement would help developers using TypeScript with expo-camera to have better type safety and developer experience. The current workaround of using `any` types is not ideal for production applications.

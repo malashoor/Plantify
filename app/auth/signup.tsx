@@ -1,5 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, TextInput, Alert, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+  TextInput,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '../../lib/supabase';
@@ -89,7 +100,7 @@ export default function SignUpScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView 
+      <KeyboardAvoidingView
         style={styles.keyboardContainer}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
@@ -113,7 +124,7 @@ export default function SignUpScreen() {
               <TextInput
                 style={styles.input}
                 value={formData.name}
-                onChangeText={(text) => updateField('name', text)}
+                onChangeText={text => updateField('name', text)}
                 placeholder="Enter your full name"
                 placeholderTextColor="#999"
                 autoCapitalize="words"
@@ -126,7 +137,7 @@ export default function SignUpScreen() {
               <TextInput
                 style={styles.input}
                 value={formData.email}
-                onChangeText={(text) => updateField('email', text)}
+                onChangeText={text => updateField('email', text)}
                 placeholder="Enter your email"
                 placeholderTextColor="#999"
                 keyboardType="email-address"
@@ -141,7 +152,7 @@ export default function SignUpScreen() {
                 <TextInput
                   style={styles.passwordInput}
                   value={formData.password}
-                  onChangeText={(text) => updateField('password', text)}
+                  onChangeText={text => updateField('password', text)}
                   placeholder="Create a password (min. 6 characters)"
                   placeholderTextColor="#999"
                   secureTextEntry={!showPassword}
@@ -152,11 +163,7 @@ export default function SignUpScreen() {
                   style={styles.passwordToggle}
                   onPress={() => setShowPassword(!showPassword)}
                 >
-                  <Ionicons
-                    name={showPassword ? 'eye-off' : 'eye'}
-                    size={20}
-                    color="#666"
-                  />
+                  <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={20} color="#666" />
                 </TouchableOpacity>
               </View>
             </View>
@@ -167,7 +174,7 @@ export default function SignUpScreen() {
                 <TextInput
                   style={styles.passwordInput}
                   value={formData.confirmPassword}
-                  onChangeText={(text) => updateField('confirmPassword', text)}
+                  onChangeText={text => updateField('confirmPassword', text)}
                   placeholder="Confirm your password"
                   placeholderTextColor="#999"
                   secureTextEntry={!showConfirmPassword}
@@ -178,11 +185,7 @@ export default function SignUpScreen() {
                   style={styles.passwordToggle}
                   onPress={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
-                  <Ionicons
-                    name={showConfirmPassword ? 'eye-off' : 'eye'}
-                    size={20}
-                    color="#666"
-                  />
+                  <Ionicons name={showConfirmPassword ? 'eye-off' : 'eye'} size={20} color="#666" />
                 </TouchableOpacity>
               </View>
             </View>
@@ -349,4 +352,4 @@ const styles = StyleSheet.create({
     color: '#45B36B',
     fontWeight: '600',
   },
-}); 
+});

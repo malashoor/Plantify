@@ -29,4 +29,4 @@ export const Spacing = {
     ItemSpacing: 16,
     GroupSpacing: 32,
   },
-}; 
+};

@@ -14,7 +14,7 @@ export function useFocusManagement() {
 
     if (elementRef.current) {
       const reactTag = findNodeHandle(elementRef.current);
-      
+
       if (reactTag) {
         if (Platform.OS === 'ios') {
           AccessibilityInfo.setAccessibilityFocus(reactTag);
@@ -35,7 +35,7 @@ export function useFocusManagement() {
   const clearFocus = useCallback(() => {
     if (elementRef.current) {
       const reactTag = findNodeHandle(elementRef.current);
-      
+
       if (reactTag) {
         if (Platform.OS === 'ios') {
           AccessibilityInfo.setAccessibilityFocus(0);
@@ -44,27 +44,30 @@ export function useFocusManagement() {
     }
   }, []);
 
-  const moveFocusToNext = useCallback((nextRef: React.RefObject<any>, options: FocusManagementOptions = {}) => {
-    const { shouldAnnounce = false, announcementMessage } = options;
+  const moveFocusToNext = useCallback(
+    (nextRef: React.RefObject<any>, options: FocusManagementOptions = {}) => {
+      const { shouldAnnounce = false, announcementMessage } = options;
 
-    if (nextRef.current) {
-      const reactTag = findNodeHandle(nextRef.current);
-      
-      if (reactTag) {
-        if (Platform.OS === 'ios') {
-          AccessibilityInfo.setAccessibilityFocus(reactTag);
-        } else if (Platform.OS === 'android') {
-          requestAnimationFrame(() => {
+      if (nextRef.current) {
+        const reactTag = findNodeHandle(nextRef.current);
+
+        if (reactTag) {
+          if (Platform.OS === 'ios') {
             AccessibilityInfo.setAccessibilityFocus(reactTag);
-          });
-        }
+          } else if (Platform.OS === 'android') {
+            requestAnimationFrame(() => {
+              AccessibilityInfo.setAccessibilityFocus(reactTag);
+            });
+          }
 
-        if (shouldAnnounce && announcementMessage) {
-          AccessibilityInfo.announceForAccessibility(announcementMessage);
+          if (shouldAnnounce && announcementMessage) {
+            AccessibilityInfo.announceForAccessibility(announcementMessage);
+          }
         }
       }
-    }
-  }, []);
+    },
+    []
+  );
 
   return {
     elementRef,
@@ -72,4 +75,4 @@ export function useFocusManagement() {
     clearFocus,
     moveFocusToNext,
   };
-} 
+}

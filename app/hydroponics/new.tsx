@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { View, ScrollView, Text, TextInput, TouchableOpacity, StyleSheet, useColorScheme, Alert } from 'react-native';
+import {
+  View,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  useColorScheme,
+  Alert,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -17,7 +26,7 @@ const createTheme = (colorScheme: 'light' | 'dark' | null) => ({
     success: '#4CAF50',
     warning: '#FF9800',
     error: '#F44336',
-  }
+  },
 });
 
 const SYSTEM_TYPES = [
@@ -43,15 +52,15 @@ export default function NewHydroponicScreen() {
   const colorScheme = useColorScheme();
   const theme = createTheme(colorScheme);
   const router = useRouter();
-  
+
   const [name, setName] = useState('');
   const [type, setType] = useState('NFT');
   const [notes, setNotes] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState<{[key: string]: string}>({});
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const validateForm = () => {
-    const newErrors: {[key: string]: string} = {};
+    const newErrors: { [key: string]: string } = {};
 
     if (!name.trim()) {
       newErrors.name = 'System name is required';
@@ -85,7 +94,7 @@ export default function NewHydroponicScreen() {
     }
 
     setIsLoading(true);
-    
+
     try {
       const newSystem: HydroponicSystem = {
         id: Date.now().toString(),
@@ -97,24 +106,22 @@ export default function NewHydroponicScreen() {
       };
 
       await saveSystem(newSystem);
-      
+
       Alert.alert(
         'Success!',
         `Hydroponic system "${newSystem.name}" has been created successfully.`,
         [
           {
             text: 'OK',
-            onPress: () => router.replace('/hydroponics')
-          }
+            onPress: () => router.replace('/hydroponics'),
+          },
         ]
       );
     } catch (error) {
       console.error('Error creating system:', error);
-      Alert.alert(
-        'Error',
-        'Failed to create hydroponic system. Please try again.',
-        [{ text: 'OK' }]
-      );
+      Alert.alert('Error', 'Failed to create hydroponic system. Please try again.', [
+        { text: 'OK' },
+      ]);
     } finally {
       setIsLoading(false);
     }
@@ -129,10 +136,7 @@ export default function NewHydroponicScreen() {
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       {/* Header */}
       <View style={[styles.header, { borderBottomColor: theme.colors.border }]}>
-        <TouchableOpacity
-          onPress={() => router.back()}
-          style={styles.backButton}
-        >
+        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: theme.colors.text }]}>New System</Text>
@@ -141,7 +145,12 @@ export default function NewHydroponicScreen() {
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         {/* Form */}
-        <View style={[styles.formCard, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
+        <View
+          style={[
+            styles.formCard,
+            { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+          ]}
+        >
           <Text style={[styles.formTitle, { color: theme.colors.text }]}>
             Create Hydroponic System
           </Text>
@@ -155,14 +164,14 @@ export default function NewHydroponicScreen() {
             <TextInput
               style={[
                 styles.input,
-                { 
+                {
                   backgroundColor: theme.colors.background,
                   borderColor: errors.name ? theme.colors.error : theme.colors.border,
-                  color: theme.colors.text
-                }
+                  color: theme.colors.text,
+                },
               ]}
               value={name}
-              onChangeText={(text) => {
+              onChangeText={text => {
                 setName(text);
                 if (errors.name) {
                   setErrors(prev => ({ ...prev, name: '' }));
@@ -173,9 +182,7 @@ export default function NewHydroponicScreen() {
               maxLength={50}
             />
             {errors.name && (
-              <Text style={[styles.errorText, { color: theme.colors.error }]}>
-                {errors.name}
-              </Text>
+              <Text style={[styles.errorText, { color: theme.colors.error }]}>{errors.name}</Text>
             )}
           </View>
 
@@ -185,17 +192,19 @@ export default function NewHydroponicScreen() {
             <Text style={[styles.labelSubtext, { color: theme.colors.textSecondary }]}>
               Choose the hydroponic method you'll be using
             </Text>
-            
+
             <View style={styles.typeGrid}>
-              {SYSTEM_TYPES.map((systemType) => (
+              {SYSTEM_TYPES.map(systemType => (
                 <TouchableOpacity
                   key={systemType.id}
                   style={[
                     styles.typeCard,
                     {
-                      backgroundColor: type === systemType.name ? theme.colors.primary : theme.colors.background,
-                      borderColor: type === systemType.name ? theme.colors.primary : theme.colors.border,
-                    }
+                      backgroundColor:
+                        type === systemType.name ? theme.colors.primary : theme.colors.background,
+                      borderColor:
+                        type === systemType.name ? theme.colors.primary : theme.colors.border,
+                    },
                   ]}
                   onPress={() => setType(systemType.name)}
                   activeOpacity={0.7}
@@ -205,16 +214,20 @@ export default function NewHydroponicScreen() {
                     size={24}
                     color={type === systemType.name ? 'white' : theme.colors.primary}
                   />
-                  <Text style={[
-                    styles.typeName,
-                    { color: type === systemType.name ? 'white' : theme.colors.text }
-                  ]}>
+                  <Text
+                    style={[
+                      styles.typeName,
+                      { color: type === systemType.name ? 'white' : theme.colors.text },
+                    ]}
+                  >
                     {systemType.name}
                   </Text>
-                  <Text style={[
-                    styles.typeDescription,
-                    { color: type === systemType.name ? 'white' : theme.colors.textSecondary }
-                  ]}>
+                  <Text
+                    style={[
+                      styles.typeDescription,
+                      { color: type === systemType.name ? 'white' : theme.colors.textSecondary },
+                    ]}
+                  >
                     {systemType.description}
                   </Text>
                 </TouchableOpacity>
@@ -232,11 +245,11 @@ export default function NewHydroponicScreen() {
               style={[
                 styles.input,
                 styles.textArea,
-                { 
+                {
                   backgroundColor: theme.colors.background,
                   borderColor: theme.colors.border,
-                  color: theme.colors.text
-                }
+                  color: theme.colors.text,
+                },
               ]}
               value={notes}
               onChangeText={setNotes}
@@ -256,7 +269,7 @@ export default function NewHydroponicScreen() {
             style={[
               styles.submitButton,
               { backgroundColor: theme.colors.primary },
-              (!name.trim() || !type || isLoading) && styles.buttonDisabled
+              (!name.trim() || !type || isLoading) && styles.buttonDisabled,
             ]}
             onPress={handleSubmit}
             disabled={!name.trim() || !type || isLoading}
@@ -282,17 +295,25 @@ export default function NewHydroponicScreen() {
             activeOpacity={0.8}
           >
             <Ionicons name="close" size={20} color={theme.colors.textSecondary} />
-            <Text style={[styles.cancelButtonText, { color: theme.colors.textSecondary }]}>Cancel</Text>
+            <Text style={[styles.cancelButtonText, { color: theme.colors.textSecondary }]}>
+              Cancel
+            </Text>
           </TouchableOpacity>
         </View>
 
         {/* Info Card */}
-        <View style={[styles.infoCard, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
+        <View
+          style={[
+            styles.infoCard,
+            { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+          ]}
+        >
           <Ionicons name="information-circle" size={24} color={theme.colors.primary} />
           <View style={styles.infoContent}>
             <Text style={[styles.infoTitle, { color: theme.colors.text }]}>Getting Started</Text>
             <Text style={[styles.infoText, { color: theme.colors.textSecondary }]}>
-              After creating your system, you can monitor pH levels, nutrient concentrations, and set up automated reminders for maintenance tasks.
+              After creating your system, you can monitor pH levels, nutrient concentrations, and
+              set up automated reminders for maintenance tasks.
             </Text>
           </View>
         </View>

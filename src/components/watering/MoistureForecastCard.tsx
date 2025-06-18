@@ -113,4 +113,4 @@ export const MoistureForecastCard: React.FC<MoistureForecastCardProps> = ({
   if (!profile || !moistureScore) return null;
 
   // ... rest of the existing render code ...
-}; 
+};

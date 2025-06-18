@@ -34,7 +34,7 @@ class MockServerState {
     plants: {},
     journal: {},
     weather: {},
-    userPreferences: {}
+    userPreferences: {},
   };
   public events: EventEmitter;
 
@@ -56,7 +56,7 @@ class MockServerState {
       plants: {},
       journal: {},
       weather: {},
-      userPreferences: {}
+      userPreferences: {},
     };
     this.routeResponses.clear();
     this.requestLogs = [];
@@ -96,7 +96,7 @@ class MockServerState {
   updateState(key: keyof MockState, id: string, data: any) {
     this.state[key] = {
       ...this.state[key],
-      [id]: data
+      [id]: data,
     };
     this.events.emit('stateChange', { key, id, data });
   }
@@ -113,14 +113,14 @@ class MockServerState {
       status: 500,
       error: {
         code,
-        message: `Simulated network error: ${code}`
-      }
+        message: `Simulated network error: ${code}`,
+      },
     });
   }
 
   simulateTimeout(route: string, delay: number = 30000) {
     this.setMockResponse(route, {
-      delay
+      delay,
     });
   }
 
@@ -128,14 +128,14 @@ class MockServerState {
     this.setMockResponse(route, {
       status: 429,
       headers: {
-        'Retry-After': '60'
+        'Retry-After': '60',
       },
       error: {
         code: 'RATE_LIMITED',
-        message: 'Too many requests'
-      }
+        message: 'Too many requests',
+      },
     });
   }
 }
 
-export const mockServerState = MockServerState.getInstance(); 
+export const mockServerState = MockServerState.getInstance();

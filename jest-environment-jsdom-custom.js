@@ -14,4 +14,4 @@ class CustomEnvironment extends JSDOMEnvironment {
   }
 }
 
-module.exports = CustomEnvironment; 
+module.exports = CustomEnvironment;

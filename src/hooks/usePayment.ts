@@ -72,4 +72,4 @@ export const usePayment = (): UsePaymentReturn => {
     purchase,
     resetError,
   };
-}; 
+};

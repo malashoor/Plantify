@@ -44,7 +44,7 @@ export default function HydroponicSystemsScreen() {
     },
   ];
 
-  const getStatusColor = (status) => {
+  const getStatusColor = status => {
     switch (status) {
       case 'optimal':
         return '#4CAF50';
@@ -60,9 +60,7 @@ export default function HydroponicSystemsScreen() {
   return (
     <SafeAreaView style={[styles.container, isDark && styles.containerDark]}>
       <View style={styles.header}>
-        <Text style={[styles.title, isDark && styles.textDark]}>
-          {t('hydroponic.title')}
-        </Text>
+        <Text style={[styles.title, isDark && styles.textDark]}>{t('hydroponic.title')}</Text>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -73,26 +71,19 @@ export default function HydroponicSystemsScreen() {
             </Text>
             <TouchableOpacity style={styles.addButton}>
               <Ionicons name="add" size={20} color="white" />
-              <Text style={styles.addButtonText}>
-                {t('hydroponic.addSystem')}
-              </Text>
+              <Text style={styles.addButtonText}>{t('hydroponic.addSystem')}</Text>
             </TouchableOpacity>
           </View>
 
-          {hydroponicSystems.map((system) => (
+          {hydroponicSystems.map(system => (
             <TouchableOpacity
               key={system.id}
               style={[styles.systemCard, isDark && styles.cardDark]}
             >
-              <Image
-                source={{ uri: system.image }}
-                style={styles.systemImage}
-              />
+              <Image source={{ uri: system.image }} style={styles.systemImage} />
               <View style={styles.systemContent}>
                 <View style={styles.systemHeader}>
-                  <Text style={[styles.systemName, isDark && styles.textDark]}>
-                    {system.name}
-                  </Text>
+                  <Text style={[styles.systemName, isDark && styles.textDark]}>{system.name}</Text>
                   <View
                     style={[
                       styles.statusBadge,
@@ -100,17 +91,9 @@ export default function HydroponicSystemsScreen() {
                     ]}
                   >
                     <View
-                      style={[
-                        styles.statusDot,
-                        { backgroundColor: getStatusColor(system.status) },
-                      ]}
+                      style={[styles.statusDot, { backgroundColor: getStatusColor(system.status) }]}
                     />
-                    <Text
-                      style={[
-                        styles.statusText,
-                        { color: getStatusColor(system.status) },
-                      ]}
-                    >
+                    <Text style={[styles.statusText, { color: getStatusColor(system.status) }]}>
                       {system.status === 'optimal'
                         ? 'Optimal'
                         : system.status === 'warning'
@@ -120,30 +103,20 @@ export default function HydroponicSystemsScreen() {
                   </View>
                 </View>
 
-                <Text
-                  style={[styles.systemType, isDark && styles.textLightDark]}
-                >
+                <Text style={[styles.systemType, isDark && styles.textLightDark]}>
                   {system.type}
                 </Text>
 
                 <View style={styles.systemStats}>
                   <View style={styles.statItem}>
                     <Ionicons name="water" size={16} color={isDark ? '#AAAAAA' : '#666666'} />
-                    <Text
-                      style={[styles.statText, isDark && styles.textLightDark]}
-                    >
+                    <Text style={[styles.statText, isDark && styles.textLightDark]}>
                       {t('hydroponic.plants', { count: system.plants })}
                     </Text>
                   </View>
                   <View style={styles.statItem}>
-                    <Ionicons
-                      name="pulse"
-                      size={16}
-                      color={isDark ? '#AAAAAA' : '#666666'}
-                    />
-                    <Text
-                      style={[styles.statText, isDark && styles.textLightDark]}
-                    >
+                    <Ionicons name="pulse" size={16} color={isDark ? '#AAAAAA' : '#666666'} />
+                    <Text style={[styles.statText, isDark && styles.textLightDark]}>
                       {system.lastChecked}
                     </Text>
                   </View>
@@ -151,13 +124,9 @@ export default function HydroponicSystemsScreen() {
 
                 <View style={styles.systemActions}>
                   <TouchableOpacity style={styles.actionButton}>
-                    <Text style={styles.actionButtonText}>
-                      {t('hydroponic.viewDetails')}
-                    </Text>
+                    <Text style={styles.actionButtonText}>{t('hydroponic.viewDetails')}</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[styles.actionButton, styles.secondaryButton]}
-                  >
+                  <TouchableOpacity style={[styles.actionButton, styles.secondaryButton]}>
                     <Ionicons name="settings" size={16} color="#2E7D32" />
                   </TouchableOpacity>
                 </View>
@@ -173,36 +142,24 @@ export default function HydroponicSystemsScreen() {
             <View style={styles.statsGrid}>
               <View style={[styles.statCard, isDark && styles.cardDark]}>
                 <Ionicons name="thermometer" size={24} color="#2E7D32" />
-                <Text style={[styles.statValue, isDark && styles.textDark]}>
-                  23.5°C
-                </Text>
-                <Text
-                  style={[styles.statLabel, isDark && styles.textLightDark]}
-                >
+                <Text style={[styles.statValue, isDark && styles.textDark]}>23.5°C</Text>
+                <Text style={[styles.statLabel, isDark && styles.textLightDark]}>
                   {t('hydroponic.avgTemp')}
                 </Text>
               </View>
 
               <View style={[styles.statCard, isDark && styles.cardDark]}>
                 <Ionicons name="water" size={24} color="#2196F3" />
-                <Text style={[styles.statValue, isDark && styles.textDark]}>
-                  6.4
-                </Text>
-                <Text
-                  style={[styles.statLabel, isDark && styles.textLightDark]}
-                >
+                <Text style={[styles.statValue, isDark && styles.textDark]}>6.4</Text>
+                <Text style={[styles.statLabel, isDark && styles.textLightDark]}>
                   {t('hydroponic.avgPh')}
                 </Text>
               </View>
 
               <View style={[styles.statCard, isDark && styles.cardDark]}>
                 <Ionicons name="bar-chart" size={24} color="#FF9800" />
-                <Text style={[styles.statValue, isDark && styles.textDark]}>
-                  1.8
-                </Text>
-                <Text
-                  style={[styles.statLabel, isDark && styles.textLightDark]}
-                >
+                <Text style={[styles.statValue, isDark && styles.textDark]}>1.8</Text>
+                <Text style={[styles.statLabel, isDark && styles.textLightDark]}>
                   {t('hydroponic.avgEc')}
                 </Text>
               </View>

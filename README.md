@@ -161,6 +161,7 @@ EXPO_PUBLIC_APPLE_CLIENT_ID=your_apple_client_id
 3. Configure OAuth providers:
 
 #### Google OAuth Setup
+
 1. Go to [Google Cloud Console](https://console.cloud.google.com)
 2. Create a new project or select an existing one
 3. Enable the Google+ API
@@ -172,6 +173,7 @@ EXPO_PUBLIC_APPLE_CLIENT_ID=your_apple_client_id
 7. Add them to your Supabase project in Authentication → Providers → Google
 
 #### Apple Sign In Setup
+
 1. Go to [Apple Developer Console](https://developer.apple.com)
 2. Register your app and create a Service ID
 3. Configure Sign In with Apple:
@@ -183,16 +185,19 @@ EXPO_PUBLIC_APPLE_CLIENT_ID=your_apple_client_id
 ### 3. Testing the Authentication Flow
 
 1. Email/Password Authentication:
+
    ```bash
    # Start the development server
    npx expo start
    ```
+
    - Test sign up with a new email
    - Verify email confirmation (if enabled)
    - Test login with credentials
    - Verify session persistence
 
 2. Password Reset:
+
    - Request password reset
    - Check email for reset link
    - Set new password
@@ -240,6 +245,7 @@ npx expo run:android
 ## 🚀 Production-Ready Launch Instructions
 
 ### 🔐 Security & Auth
+
 - Ensure your `.env` contains valid Supabase credentials:
   - `EXPO_PUBLIC_SUPABASE_URL=https://olgxhameijbqxjafrvxz.supabase.co`
   - `EXPO_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9sZ3hoYW1laWpicXhqYWZydnh6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA4MzQzOTgsImV4cCI6MjA1NjQxMDM5OH0.ldF_a9ccd8odjpBtrACmo85RqMpJaoeXVLaVuBKVhkE`
@@ -248,23 +254,27 @@ npx expo run:android
 - Forgot password logic is implemented and verified with Supabase email.
 
 ### 🌱 Core Features
+
 - Registration flow works with new account creation.
 - Login with existing account is confirmed.
 - Dashboard loads with dynamic data from Supabase or mock fallback.
 - Logout clears session and redirects to onboarding/login.
 
 ### 🧭 Navigation
+
 - Tab-based routing (expo-router) works end-to-end.
 - Back navigation functions on web and device.
 - Links between login ↔ register ↔ forgot password are functional.
 - Dashboard quick actions route to the correct screens.
 
 ### 🌐 Internationalization
+
 - Language toggle visually updates the onboarding screen.
 - [Optional] i18n setup for translations using `react-i18next`.
 - [Optional] RTL mirrored layout confirmation.
 
 ### 🧪 Manual Testing
+
 - Test on web: `npx expo start` then press `w`.
 - Test on Android device: press `a` or scan QR with Expo Go.
 - Test on iOS simulator: press `i` or scan QR with Expo Go.
@@ -276,12 +286,14 @@ npx expo run:android
 ## 📦 Build & Deployment
 
 ### 🛠 Build Commands (Expo EAS)
+
 ```bash
 eas build --platform ios --profile production
 eas build --platform android --profile production
 ```
 
 ### 🔑 Apple + Google Accounts
+
 - Apple Developer Account ready
 - Google Play Console account set up
 - App icons and splash screen uploaded

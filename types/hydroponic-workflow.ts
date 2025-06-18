@@ -174,4 +174,4 @@ export interface UpdateArticleInput {
   published_at?: string;
   is_published?: boolean;
   thumbnail_url?: string;
-} 
+}

@@ -77,7 +77,7 @@ export const useReminders = () => {
 
     // Apply smart watering adjustments
     const adjustedReminders = await Promise.all(
-      upcoming.map(async (reminder) => {
+      upcoming.map(async reminder => {
         const seed = seeds.find(s => s.id === reminder.seedId);
         if (!seed) return reminder;
         return evaluateSmartWatering(reminder, seed);
@@ -87,7 +87,11 @@ export const useReminders = () => {
     return adjustedReminders;
   };
 
-  const createReminder = async (seed: Seed, type: Reminder['type'], date: Date): Promise<Reminder> => {
+  const createReminder = async (
+    seed: Seed,
+    type: Reminder['type'],
+    date: Date
+  ): Promise<Reminder> => {
     const reminder: Reminder = {
       id: Date.now().toString(),
       seedId: seed.id,
@@ -106,9 +110,9 @@ export const useReminders = () => {
   };
 
   const updateReminder = (id: string, updates: Partial<Reminder>) => {
-    setReminders(prev => prev.map(reminder => 
-      reminder.id === id ? { ...reminder, ...updates } : reminder
-    ));
+    setReminders(prev =>
+      prev.map(reminder => (reminder.id === id ? { ...reminder, ...updates } : reminder))
+    );
   };
 
   const deleteReminder = (id: string) => {
@@ -132,4 +136,4 @@ export const useReminders = () => {
     markCompleted,
     getRemindersBySystem,
   };
-}; 
+};

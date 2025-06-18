@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, FlatList, TouchableOpacity, Alert, Text, useColorScheme } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  Alert,
+  Text,
+  useColorScheme,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useSensorRulesService, SensorRule } from '../../hooks/useSensorRulesService';
 import NewSensorRuleModal from '@components/sensors/NewSensorRuleModal';
@@ -15,30 +23,35 @@ const createTheme = (colorScheme: 'light' | 'dark' | null) => ({
     surface: colorScheme === 'dark' ? '#1E1E1E' : '#FFFFFF',
     text: colorScheme === 'dark' ? '#FFFFFF' : '#000000',
     textSecondary: colorScheme === 'dark' ? '#BBBBBB' : '#666666',
-  }
+  },
 });
 
 // Custom Card component
-const Card = ({ children, containerStyle }: { children: React.ReactNode; containerStyle?: any }) => (
-  <View style={[styles.cardBase, containerStyle]}>
-    {children}
-  </View>
-);
+const Card = ({
+  children,
+  containerStyle,
+}: {
+  children: React.ReactNode;
+  containerStyle?: any;
+}) => <View style={[styles.cardBase, containerStyle]}>{children}</View>;
 
 // Custom Divider component
-const Divider = ({ style }: { style?: any }) => (
-  <View style={[styles.dividerBase, style]} />
-);
+const Divider = ({ style }: { style?: any }) => <View style={[styles.dividerBase, style]} />;
 
 // Custom FAB component
-const FAB = ({ onPress, style, testID, accessibilityLabel }: { 
-  onPress: () => void; 
-  style?: any; 
-  testID?: string; 
+const FAB = ({
+  onPress,
+  style,
+  testID,
+  accessibilityLabel,
+}: {
+  onPress: () => void;
+  style?: any;
+  testID?: string;
   accessibilityLabel?: string;
 }) => (
-  <TouchableOpacity 
-    style={[styles.fabBase, style]} 
+  <TouchableOpacity
+    style={[styles.fabBase, style]}
     onPress={onPress}
     testID={testID}
     accessibilityLabel={accessibilityLabel}
@@ -53,7 +66,7 @@ export default function SensorRulesScreen() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editRule, setEditRule] = useState<SensorRule | null>(null);
   const { rules, isLoading, deleteRule } = useSensorRulesService();
-  
+
   // Get permission checks for the current user
   const { canCreate, canEdit, canDelete } = useRolePermissions();
 
@@ -61,14 +74,14 @@ export default function SensorRulesScreen() {
   const handleDelete = (rule: SensorRule) => {
     // Don't show delete confirmation if user doesn't have permission
     if (!canDelete) return;
-    
+
     Alert.alert(
       'Confirm Delete',
       `Are you sure you want to delete this rule for ${rule.parameter}?`,
       [
         { text: 'Cancel', style: 'cancel' },
-        { 
-          text: 'Delete', 
+        {
+          text: 'Delete',
           style: 'destructive',
           onPress: async () => {
             try {
@@ -76,8 +89,8 @@ export default function SensorRulesScreen() {
             } catch (error) {
               Alert.alert('Error', 'Failed to delete rule');
             }
-          }
-        }
+          },
+        },
       ]
     );
   };
@@ -86,27 +99,40 @@ export default function SensorRulesScreen() {
   const handleEdit = (rule: SensorRule) => {
     // Don't allow editing if user doesn't have permission
     if (!canEdit) return;
-    
+
     setEditRule(rule);
     setIsModalVisible(true);
   };
 
   // Format the condition and threshold
   const formatCondition = (rule: SensorRule) => {
-    const condition = rule.condition === '<' ? 'below' : 
-                       rule.condition === '<=' ? 'below or equal to' :
-                       rule.condition === '>' ? 'above' : 'above or equal to';
-    
+    const condition =
+      rule.condition === '<'
+        ? 'below'
+        : rule.condition === '<='
+          ? 'below or equal to'
+          : rule.condition === '>'
+            ? 'above'
+            : 'above or equal to';
+
     let unit = '';
     switch (rule.parameter) {
-      case 'EC': unit = ' mS/cm'; break;
-      case 'temperature': unit = '°C'; break;
+      case 'EC':
+        unit = ' mS/cm';
+        break;
+      case 'temperature':
+        unit = '°C';
+        break;
       case 'nitrogen':
       case 'phosphorus':
-      case 'potassium': unit = ' ppm'; break;
-      case 'water_level': unit = '%'; break;
+      case 'potassium':
+        unit = ' ppm';
+        break;
+      case 'water_level':
+        unit = '%';
+        break;
     }
-    
+
     return `${condition} ${rule.threshold}${unit}`;
   };
 
@@ -115,10 +141,10 @@ export default function SensorRulesScreen() {
     <Card containerStyle={[styles.card, { backgroundColor: theme.colors.surface }]}>
       <View style={styles.cardHeader}>
         <Text style={[styles.parameter, { color: theme.colors.text }]}>{item.parameter}</Text>
-        
+
         <View style={styles.actionButtons}>
           {canEdit && (
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => handleEdit(item)}
               style={styles.iconButton}
               accessibilityLabel="Edit rule"
@@ -128,9 +154,9 @@ export default function SensorRulesScreen() {
               <Ionicons name="pencil" size={20} color={theme.colors.primary} />
             </TouchableOpacity>
           )}
-          
+
           {canDelete && (
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => handleDelete(item)}
               style={styles.iconButton}
               accessibilityLabel="Delete rule"
@@ -142,28 +168,38 @@ export default function SensorRulesScreen() {
           )}
         </View>
       </View>
-      
+
       <Divider style={styles.divider} />
-      
+
       <View style={styles.conditionContainer}>
-        <Text style={[styles.conditionLabel, { color: theme.colors.textSecondary }]}>When parameter is:</Text>
-        <Text style={[styles.conditionText, { color: theme.colors.text }]}>{formatCondition(item)}</Text>
+        <Text style={[styles.conditionLabel, { color: theme.colors.textSecondary }]}>
+          When parameter is:
+        </Text>
+        <Text style={[styles.conditionText, { color: theme.colors.text }]}>
+          {formatCondition(item)}
+        </Text>
       </View>
-      
+
       <View style={styles.conditionContainer}>
-        <Text style={[styles.conditionLabel, { color: theme.colors.textSecondary }]}>For at least:</Text>
-        <Text style={[styles.conditionText, { color: theme.colors.text }]}>{item.duration_minutes} minutes</Text>
+        <Text style={[styles.conditionLabel, { color: theme.colors.textSecondary }]}>
+          For at least:
+        </Text>
+        <Text style={[styles.conditionText, { color: theme.colors.text }]}>
+          {item.duration_minutes} minutes
+        </Text>
       </View>
-      
+
       <Divider style={styles.divider} />
-      
+
       <View style={styles.actionsContainer}>
         <Text style={[styles.actionsLabel, { color: theme.colors.textSecondary }]}>Actions:</Text>
         <View style={styles.actionsList}>
           {item.actions.notification && (
             <View style={styles.actionItem}>
               <Ionicons name="notifications" size={16} color={theme.colors.primary} />
-              <Text style={[styles.actionText, { color: theme.colors.text }]}>Push Notification</Text>
+              <Text style={[styles.actionText, { color: theme.colors.text }]}>
+                Push Notification
+              </Text>
             </View>
           )}
           {item.actions.sms && (
@@ -190,14 +226,18 @@ export default function SensorRulesScreen() {
       <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
         {isLoading ? (
           <View style={styles.centered}>
-            <Text style={[styles.loadingText, { color: theme.colors.text }]}>Loading sensor rules...</Text>
+            <Text style={[styles.loadingText, { color: theme.colors.text }]}>
+              Loading sensor rules...
+            </Text>
           </View>
         ) : rules.length === 0 ? (
           <View style={styles.centered}>
-            <Text style={[styles.emptyTitle, { color: theme.colors.text }]}>No sensor rules created yet</Text>
+            <Text style={[styles.emptyTitle, { color: theme.colors.text }]}>
+              No sensor rules created yet
+            </Text>
             <Text style={[styles.hint, { color: theme.colors.textSecondary }]}>
-              {canCreate 
-                ? 'Tap the Add button to create your first rule' 
+              {canCreate
+                ? 'Tap the Add button to create your first rule'
                 : 'Only Growers and Admins can create sensor rules'}
             </Text>
           </View>
@@ -205,7 +245,7 @@ export default function SensorRulesScreen() {
           <FlatList
             data={rules}
             renderItem={renderItem}
-            keyExtractor={(item) => item.id}
+            keyExtractor={item => item.id}
             contentContainerStyle={styles.list}
             testID="sensor-rules-list"
           />
@@ -351,4 +391,4 @@ const styles = StyleSheet.create({
   fab: {
     marginBottom: 16,
   },
-}); 
+});

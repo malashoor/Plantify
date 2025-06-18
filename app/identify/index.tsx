@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Alert, Image, StyleSheet, useColorScheme, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Alert,
+  Image,
+  StyleSheet,
+  useColorScheme,
+  ScrollView,
+} from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
@@ -19,7 +28,7 @@ const createTheme = (colorScheme: 'light' | 'dark' | null) => ({
     success: '#4CAF50',
     warning: '#FF9800',
     error: '#F44336',
-  }
+  },
 });
 
 export default function IdentifyScreen() {
@@ -38,10 +47,10 @@ export default function IdentifyScreen() {
     try {
       // Request camera permissions
       const cameraPermission = await ImagePicker.requestCameraPermissionsAsync();
-      
+
       // Request media library permissions
       const mediaPermission = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      
+
       if (cameraPermission.status === 'granted' && mediaPermission.status === 'granted') {
         setHasPermissions(true);
       } else {
@@ -50,7 +59,7 @@ export default function IdentifyScreen() {
           'Camera and photo library access are required to identify plants.',
           [
             { text: 'Cancel', style: 'cancel' },
-            { text: 'Settings', onPress: () => ImagePicker.requestCameraPermissionsAsync() }
+            { text: 'Settings', onPress: () => ImagePicker.requestCameraPermissionsAsync() },
           ]
         );
       }
@@ -131,10 +140,7 @@ export default function IdentifyScreen() {
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       {/* Header */}
       <View style={[styles.header, { borderBottomColor: theme.colors.border }]}>
-        <TouchableOpacity
-          onPress={() => router.back()}
-          style={styles.backButton}
-        >
+        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: theme.colors.text }]}>Identify Plant</Text>
@@ -143,19 +149,35 @@ export default function IdentifyScreen() {
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         {/* Instructions */}
-        <View style={[styles.instructionCard, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
-          <Ionicons name="camera" size={32} color={theme.colors.primary} style={styles.instructionIcon} />
+        <View
+          style={[
+            styles.instructionCard,
+            { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+          ]}
+        >
+          <Ionicons
+            name="camera"
+            size={32}
+            color={theme.colors.primary}
+            style={styles.instructionIcon}
+          />
           <Text style={[styles.instructionTitle, { color: theme.colors.text }]}>
             Plant Identification
           </Text>
           <Text style={[styles.instructionText, { color: theme.colors.textSecondary }]}>
-            Take a clear photo of the plant's leaves, flowers, or overall structure for best results.
+            Take a clear photo of the plant's leaves, flowers, or overall structure for best
+            results.
           </Text>
         </View>
 
         {/* Image Preview */}
         {selectedImage && (
-          <View style={[styles.imagePreviewCard, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
+          <View
+            style={[
+              styles.imagePreviewCard,
+              { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+            ]}
+          >
             <Image source={{ uri: selectedImage }} style={styles.previewImage} />
             <TouchableOpacity
               onPress={retakePhoto}
@@ -180,12 +202,17 @@ export default function IdentifyScreen() {
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.galleryButton, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}
+              style={[
+                styles.galleryButton,
+                { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+              ]}
               onPress={pickFromGallery}
               activeOpacity={0.8}
             >
               <Ionicons name="images" size={24} color={theme.colors.primary} />
-              <Text style={[styles.galleryButtonText, { color: theme.colors.primary }]}>Choose from Gallery</Text>
+              <Text style={[styles.galleryButtonText, { color: theme.colors.primary }]}>
+                Choose from Gallery
+              </Text>
             </TouchableOpacity>
           </View>
         )}
@@ -196,7 +223,7 @@ export default function IdentifyScreen() {
             style={[
               styles.identifyButton,
               { backgroundColor: theme.colors.primary },
-              isLoading && styles.buttonDisabled
+              isLoading && styles.buttonDisabled,
             ]}
             onPress={handleIdentifyPlant}
             disabled={isLoading}
@@ -218,7 +245,12 @@ export default function IdentifyScreen() {
 
         {/* Error Display */}
         {error && (
-          <View style={[styles.errorCard, { backgroundColor: theme.colors.surface, borderColor: theme.colors.error }]}>
+          <View
+            style={[
+              styles.errorCard,
+              { backgroundColor: theme.colors.surface, borderColor: theme.colors.error },
+            ]}
+          >
             <Ionicons name="alert-circle" size={24} color={theme.colors.error} />
             <Text style={[styles.errorText, { color: theme.colors.error }]}>
               Failed to identify plant. Please try again with a clearer photo.
@@ -228,41 +260,59 @@ export default function IdentifyScreen() {
 
         {/* Results */}
         {identification && (
-          <View style={[styles.resultCard, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
+          <View
+            style={[
+              styles.resultCard,
+              { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+            ]}
+          >
             <View style={styles.resultHeader}>
               <Ionicons name="leaf" size={24} color={theme.colors.success} />
               <Text style={[styles.resultTitle, { color: theme.colors.text }]}>
                 {identification.name}
               </Text>
             </View>
-            
+
             <Text style={[styles.scientific, { color: theme.colors.textSecondary }]}>
               {identification.scientificName}
             </Text>
-            
+
             <View style={styles.confidenceContainer}>
               <Text style={[styles.confidenceLabel, { color: theme.colors.textSecondary }]}>
                 Confidence:
               </Text>
-              <View style={[
-                styles.confidenceBadge,
-                { backgroundColor: identification.confidence > 0.7 ? theme.colors.success : theme.colors.warning }
-              ]}>
+              <View
+                style={[
+                  styles.confidenceBadge,
+                  {
+                    backgroundColor:
+                      identification.confidence > 0.7 ? theme.colors.success : theme.colors.warning,
+                  },
+                ]}
+              >
                 <Text style={styles.confidenceText}>
                   {Math.round(identification.confidence * 100)}%
                 </Text>
               </View>
             </View>
-            
+
             {identification.confidence < 0.5 && (
-              <View style={[styles.warningContainer, { backgroundColor: theme.colors.warning + '20', borderColor: theme.colors.warning }]}>
+              <View
+                style={[
+                  styles.warningContainer,
+                  {
+                    backgroundColor: theme.colors.warning + '20',
+                    borderColor: theme.colors.warning,
+                  },
+                ]}
+              >
                 <Ionicons name="warning" size={16} color={theme.colors.warning} />
                 <Text style={[styles.warningText, { color: theme.colors.warning }]}>
                   Low confidence - try a clearer photo for better results!
                 </Text>
               </View>
             )}
-            
+
             <View style={styles.actionButtons}>
               <TouchableOpacity
                 style={[styles.carePlanButton, { backgroundColor: theme.colors.primary }]}
@@ -272,30 +322,45 @@ export default function IdentifyScreen() {
                 <Ionicons name="book" size={16} color="white" />
                 <Text style={styles.carePlanButtonText}>View Care Plan</Text>
               </TouchableOpacity>
-              
+
               <TouchableOpacity
-                style={[styles.plantCareButton, { backgroundColor: theme.colors.surface, borderColor: theme.colors.primary }]}
+                style={[
+                  styles.plantCareButton,
+                  { backgroundColor: theme.colors.surface, borderColor: theme.colors.primary },
+                ]}
                 onPress={() => {
                   try {
                     console.log('🌱 Direct navigation to Plant Care');
                     router.push(`/plant-care/${identification.id}`);
                   } catch (error) {
                     console.error('Navigation error:', error);
-                    Alert.alert('Navigation Error', 'Could not open Plant Care screen. Please try again.');
+                    Alert.alert(
+                      'Navigation Error',
+                      'Could not open Plant Care screen. Please try again.'
+                    );
                   }
                 }}
                 activeOpacity={0.8}
               >
                 <Ionicons name="leaf" size={16} color={theme.colors.primary} />
-                <Text style={[styles.plantCareButtonText, { color: theme.colors.primary }]}>Plant Care Guide</Text>
+                <Text style={[styles.plantCareButtonText, { color: theme.colors.primary }]}>
+                  Plant Care Guide
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
         )}
 
         {/* Tips */}
-        <View style={[styles.tipsCard, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
-          <Text style={[styles.tipsTitle, { color: theme.colors.text }]}>Tips for Better Results</Text>
+        <View
+          style={[
+            styles.tipsCard,
+            { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+          ]}
+        >
+          <Text style={[styles.tipsTitle, { color: theme.colors.text }]}>
+            Tips for Better Results
+          </Text>
           <View style={styles.tipsList}>
             <View style={styles.tipItem}>
               <Ionicons name="checkmark-circle" size={16} color={theme.colors.success} />
@@ -568,4 +633,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
     flex: 1,
   },
-}); 
+});

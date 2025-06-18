@@ -55,12 +55,8 @@ export const WeatherAlerts: React.FC<WeatherAlertsProps> = ({ onAlertPress }) =>
   if (alerts.length === 0) return null;
 
   return (
-    <ScrollView
-      style={styles.container}
-      horizontal
-      showsHorizontalScrollIndicator={false}
-    >
-      {alerts.map((alert) => (
+    <ScrollView style={styles.container} horizontal showsHorizontalScrollIndicator={false}>
+      {alerts.map(alert => (
         <Animated.View
           key={alert.id}
           entering={FadeInUp}
@@ -68,9 +64,7 @@ export const WeatherAlerts: React.FC<WeatherAlertsProps> = ({ onAlertPress }) =>
           style={[
             styles.alertContainer,
             {
-              backgroundColor: theme.dark
-                ? theme.colors.elevation.level2
-                : theme.colors.background,
+              backgroundColor: theme.dark ? theme.colors.elevation.level2 : theme.colors.background,
               borderColor: AlertColor[alert.severity],
             },
           ]}
@@ -156,4 +150,4 @@ const styles = StyleSheet.create({
     opacity: 0.6,
     fontStyle: 'italic',
   },
-}); 
+});

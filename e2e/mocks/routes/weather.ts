@@ -12,8 +12,8 @@ router.get('/current', (req: Request, res: Response) => {
     return res.status(404).json({
       error: {
         code: 'WEATHER_NOT_FOUND',
-        message: 'Current weather data not available'
-      }
+        message: 'Current weather data not available',
+      },
     });
   }
 
@@ -29,8 +29,8 @@ router.get('/forecast', (req: Request, res: Response) => {
     return res.status(404).json({
       error: {
         code: 'FORECAST_NOT_FOUND',
-        message: 'Weather forecast data not available'
-      }
+        message: 'Weather forecast data not available',
+      },
     });
   }
 
@@ -41,7 +41,7 @@ router.get('/forecast', (req: Request, res: Response) => {
 router.put('/current', (req: Request, res: Response) => {
   const weatherData = {
     ...req.body,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   };
 
   mockServerState.updateState('weather', 'current', weatherData);
@@ -52,11 +52,11 @@ router.put('/current', (req: Request, res: Response) => {
 router.put('/forecast', (req: Request, res: Response) => {
   const forecastData = {
     ...req.body,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   };
 
   mockServerState.updateState('weather', 'forecast', forecastData);
   res.json(forecastData);
 });
 
-export default router; 
+export default router;

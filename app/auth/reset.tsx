@@ -55,19 +55,17 @@ export default function ResetPasswordScreen() {
           <View style={styles.successContainer}>
             <Text style={styles.successIcon}>📧</Text>
             <Text style={styles.successTitle}>Check Your Email</Text>
-            <Text style={styles.successMessage}>
-              We've sent a password reset link to {email}
-            </Text>
+            <Text style={styles.successMessage}>We've sent a password reset link to {email}</Text>
             <Text style={styles.successSubtext}>
               Click the link in the email to reset your password. The link will expire in 1 hour.
             </Text>
-            
+
             <Button
               title="Back to Login"
               onPress={() => router.replace('/auth/login')}
               style={styles.backButton}
             />
-            
+
             <Button
               title="Resend Email"
               onPress={() => {
@@ -97,7 +95,7 @@ export default function ResetPasswordScreen() {
           <AuthInput
             label="Email Address"
             value={email}
-            onChangeText={(text) => {
+            onChangeText={text => {
               setEmail(text);
               if (error) setError('');
             }}
@@ -107,7 +105,7 @@ export default function ResetPasswordScreen() {
           />
 
           <Button
-            title={loading ? "Sending..." : "Send Reset Link"}
+            title={loading ? 'Sending...' : 'Send Reset Link'}
             onPress={handleResetPassword}
             disabled={loading}
             style={styles.resetButton}
@@ -196,4 +194,4 @@ const styles = StyleSheet.create({
   resendButton: {
     marginTop: 12,
   },
-}); 
+});

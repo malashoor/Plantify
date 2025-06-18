@@ -21,7 +21,7 @@ class AnalyticsService {
 
   async init(): Promise<void> {
     if (this.initialized) return;
-    
+
     try {
       await this.mixpanel.init();
       const optOut = await AsyncStorage.getItem('analytics_opt_out');
@@ -36,7 +36,7 @@ class AnalyticsService {
 
   async identify(userId: string): Promise<void> {
     if (!this.enabled || !this.initialized) return;
-    
+
     try {
       await this.mixpanel.identify(userId);
     } catch (error) {
@@ -46,12 +46,12 @@ class AnalyticsService {
 
   async track(event: string, props: AnalyticsProperties = {}): Promise<void> {
     if (!this.enabled || !this.initialized) return;
-    
+
     try {
       await this.mixpanel.track(event, {
         ...props,
         device_id: DeviceInfo.getUniqueIdSync(),
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
     } catch (error) {
       console.error('Failed to track event:', error);
@@ -61,7 +61,7 @@ class AnalyticsService {
   async setOptOut(value: boolean): Promise<void> {
     this.enabled = !value;
     await AsyncStorage.setItem('analytics_opt_out', value ? 'true' : 'false');
-    
+
     if (this.initialized) {
       await this.mixpanel.optOutTracking(value);
     }
@@ -72,4 +72,4 @@ class AnalyticsService {
   }
 }
 
-export const analyticsService = new AnalyticsService(); 
+export const analyticsService = new AnalyticsService();

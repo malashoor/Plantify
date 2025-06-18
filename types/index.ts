@@ -22,4 +22,4 @@ export * from './diy-builder';
 export * from './learn';
 
 // Export crop advisor types
-export * from './crop-advisor'; 
+export * from './crop-advisor';

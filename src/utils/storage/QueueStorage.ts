@@ -105,8 +105,8 @@ export class QueueStorage {
     try {
       const entries = await this.loadQueue();
       const updateMap = new Map(updates.map(u => [u.id, u]));
-      
-      const updated = entries.map(entry => 
+
+      const updated = entries.map(entry =>
         updateMap.has(entry.id) ? updateMap.get(entry.id)! : entry
       );
 
@@ -115,4 +115,4 @@ export class QueueStorage {
       console.error('Failed to update retry queue entries:', error);
     }
   }
-} 
+}

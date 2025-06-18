@@ -14,31 +14,31 @@ export const plantScenarios = {
     let saveAttempts = 0;
 
     mockServerState.setMockResponse('/api/plants', {
-      status: (req) => {
+      status: req => {
         saveAttempts++;
         if (saveAttempts > successCount) {
           return 500;
         }
         return 201;
       },
-      data: (req) => {
+      data: req => {
         if (saveAttempts > successCount) {
           return {
             error: {
               code: 'SAVE_LIMIT_EXCEEDED',
-              message: 'Too many plant saves in short period'
-            }
+              message: 'Too many plant saves in short period',
+            },
           };
         }
         const plantId = `plant-${Date.now()}`;
         const plant = {
           id: plantId,
           ...req.body,
-          createdAt: new Date().toISOString()
+          createdAt: new Date().toISOString(),
         };
         mockServerState.updateState('plants', plantId, plant);
         return plant;
-      }
+      },
     });
   },
 
@@ -48,25 +48,25 @@ export const plantScenarios = {
   partialPhotoUploadFailure() {
     mockServerState.setMockResponse('/api/plants', {
       status: 201,
-      data: (req) => {
+      data: req => {
         const plantId = `plant-${Date.now()}`;
         const plant = {
           id: plantId,
           ...req.body,
           createdAt: new Date().toISOString(),
-          photoStatus: 'pending'
+          photoStatus: 'pending',
         };
         mockServerState.updateState('plants', plantId, plant);
         return plant;
-      }
+      },
     });
 
     mockServerState.setMockResponse('/api/plants/*/photo', {
       status: 500,
       error: {
         code: 'PHOTO_UPLOAD_FAILED',
-        message: 'Failed to upload photo to storage'
-      }
+        message: 'Failed to upload photo to storage',
+      },
     });
   },
 
@@ -79,8 +79,8 @@ export const plantScenarios = {
       status: 404,
       error: {
         code: 'PLANT_NOT_FOUND',
-        message: `Plant with ID ${plantId} was deleted`
-      }
+        message: `Plant with ID ${plantId} was deleted`,
+      },
     });
 
     // Also delete from state to simulate complete removal
@@ -98,9 +98,9 @@ export const plantScenarios = {
         error: {
           code: 'VALIDATION_ERROR',
           message: 'Invalid plant data',
-          details: errors
-        }
-      }
+          details: errors,
+        },
+      },
     });
   },
 
@@ -113,19 +113,19 @@ export const plantScenarios = {
     let updateAttempts = 0;
 
     mockServerState.setMockResponse(`/api/plants/${plantId}`, {
-      status: (req) => {
+      status: req => {
         updateAttempts++;
         if (updateAttempts >= attempts) {
           return 200;
         }
         return 500;
       },
-      data: (req) => {
+      data: req => {
         if (updateAttempts >= attempts) {
           const plant = {
             id: plantId,
             ...req.body,
-            updatedAt: new Date().toISOString()
+            updatedAt: new Date().toISOString(),
           };
           mockServerState.updateState('plants', plantId, plant);
           return plant;
@@ -133,10 +133,10 @@ export const plantScenarios = {
         return {
           error: {
             code: 'UPDATE_FAILED',
-            message: `Update attempt ${updateAttempts} failed`
-          }
+            message: `Update attempt ${updateAttempts} failed`,
+          },
         };
-      }
+      },
     });
   },
 
@@ -148,21 +148,22 @@ export const plantScenarios = {
     let attempts = 0;
 
     mockServerState.setMockResponse('/api/plants', {
-      status: (req) => {
+      status: req => {
         attempts++;
         if (attempts >= maxAttempts) {
           return 410; // Gone - indicates permanent failure
         }
         return 500;
       },
-      data: (req) => ({
+      data: req => ({
         error: {
           code: attempts >= maxAttempts ? 'PERMANENT_FAILURE' : 'TEMPORARY_ERROR',
-          message: attempts >= maxAttempts 
-            ? 'Operation permanently failed'
-            : `Attempt ${attempts} failed, may retry`
-        }
-      })
+          message:
+            attempts >= maxAttempts
+              ? 'Operation permanently failed'
+              : `Attempt ${attempts} failed, may retry`,
+        },
+      }),
     });
   },
 
@@ -172,5 +173,5 @@ export const plantScenarios = {
   reset() {
     mockServerState.clearMockResponse('/api/plants');
     mockServerState.clearMockResponse('/api/plants/*/photo');
-  }
-}; 
+  },
+};

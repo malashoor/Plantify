@@ -54,7 +54,14 @@ export interface SensorStatus {
   batteryLevel?: number; // percentage
 }
 
-export type PlantColor = 'vibrant_green' | 'light_green' | 'dark_green' | 'yellow' | 'purple' | 'brown' | 'pale';
+export type PlantColor =
+  | 'vibrant_green'
+  | 'light_green'
+  | 'dark_green'
+  | 'yellow'
+  | 'purple'
+  | 'brown'
+  | 'pale';
 export type RootHealthStatus = 'excellent' | 'good' | 'fair' | 'concerning' | 'poor';
 export type GrowthStage = 'seedling' | 'vegetative' | 'flowering' | 'fruiting' | 'harvesting';
 
@@ -73,11 +80,20 @@ export interface GrowthTrend {
   lastAnalyzed: Date;
 }
 
-export type TrendParameter = 
-  | 'growth_rate' | 'leaf_development' | 'plant_health' | 'yield_potential'
-  | 'nutrient_uptake' | 'light_response' | 'temperature_tolerance' 
-  | 'ph_stability' | 'ec_consistency' | 'root_development'
-  | 'disease_resistance' | 'stress_recovery' | 'photosynthesis_efficiency';
+export type TrendParameter =
+  | 'growth_rate'
+  | 'leaf_development'
+  | 'plant_health'
+  | 'yield_potential'
+  | 'nutrient_uptake'
+  | 'light_response'
+  | 'temperature_tolerance'
+  | 'ph_stability'
+  | 'ec_consistency'
+  | 'root_development'
+  | 'disease_resistance'
+  | 'stress_recovery'
+  | 'photosynthesis_efficiency';
 
 export type ConfidenceLevel = 'very_high' | 'high' | 'medium' | 'low' | 'very_low';
 
@@ -94,11 +110,24 @@ export interface StressIndicator {
   timeToAction: 'immediate' | 'within_hours' | 'within_day' | 'monitor';
 }
 
-export type StressType = 
-  | 'light_stress' | 'heat_stress' | 'cold_stress' | 'drought_stress' | 'overwatering'
-  | 'nutrient_deficiency' | 'nutrient_toxicity' | 'ph_lockout' | 'ec_imbalance'
-  | 'disease_early' | 'pest_presence' | 'root_rot' | 'algae_growth'
-  | 'co2_deficiency' | 'poor_airflow' | 'light_burn' | 'photoperiod_stress';
+export type StressType =
+  | 'light_stress'
+  | 'heat_stress'
+  | 'cold_stress'
+  | 'drought_stress'
+  | 'overwatering'
+  | 'nutrient_deficiency'
+  | 'nutrient_toxicity'
+  | 'ph_lockout'
+  | 'ec_imbalance'
+  | 'disease_early'
+  | 'pest_presence'
+  | 'root_rot'
+  | 'algae_growth'
+  | 'co2_deficiency'
+  | 'poor_airflow'
+  | 'light_burn'
+  | 'photoperiod_stress';
 
 export interface Recommendation {
   id: string;
@@ -108,28 +137,28 @@ export interface Recommendation {
   title: string;
   description: string;
   reasoning: string;
-  
+
   // Specific adjustments
   adjustments: RecommendationAdjustment[];
-  
+
   // Integration with existing modules
   moduleIntegration: ModuleIntegration[];
-  
+
   // Expected outcomes
   expectedResults: string[];
   timeframe: string; // "within 24 hours", "2-3 days", etc.
   successMetrics: string[];
-  
+
   // AI personality
   tone: AITone;
   voiceScript: string;
   voiceScriptAr?: string;
-  
+
   // User interaction
   userApprovalRequired: boolean;
   automationPossible: boolean;
   alternativeOptions: string[];
-  
+
   // Tracking
   createdAt: Date;
   appliedAt?: Date;
@@ -137,10 +166,16 @@ export interface Recommendation {
   effectivenessScore?: number; // 0-100
 }
 
-export type RecommendationType = 
-  | 'lighting_adjustment' | 'nutrient_adjustment' | 'environmental_control'
-  | 'water_management' | 'schedule_optimization' | 'preventive_action'
-  | 'emergency_intervention' | 'harvest_timing' | 'maintenance_reminder';
+export type RecommendationType =
+  | 'lighting_adjustment'
+  | 'nutrient_adjustment'
+  | 'environmental_control'
+  | 'water_management'
+  | 'schedule_optimization'
+  | 'preventive_action'
+  | 'emergency_intervention'
+  | 'harvest_timing'
+  | 'maintenance_reminder';
 
 export interface RecommendationAdjustment {
   parameter: string;
@@ -158,7 +193,13 @@ export interface ModuleIntegration {
   autoExecute: boolean;
 }
 
-export type AITone = 'encouraging' | 'urgent' | 'informative' | 'celebratory' | 'concerned' | 'professional';
+export type AITone =
+  | 'encouraging'
+  | 'urgent'
+  | 'informative'
+  | 'celebratory'
+  | 'concerned'
+  | 'professional';
 
 export interface PlantProfile {
   id: string;
@@ -169,27 +210,27 @@ export interface PlantProfile {
   plantedDate: Date;
   expectedHarvestDate: Date;
   currentStage: GrowthStage;
-  
+
   // Optimal ranges (learned from successful grows)
   optimalRanges: OptimalRanges;
-  
+
   // Growth characteristics
   characteristics: PlantCharacteristics;
-  
+
   // Historical performance
   growthHistory: GrowthTrend[];
   stressHistory: StressIndicator[];
   harvestHistory: HarvestRecord[];
-  
+
   // AI learning
   aiPersonality: AIPersonality;
   userPreferences: UserPreferences;
-  
+
   // Current status
   health: PlantHealthStatus;
   lastAssessment: Date;
   nextAssessment: Date;
-  
+
   // Integration data
   linkedNutrientRecipes: string[]; // recipe IDs
   linkedLightingSetups: string[]; // setup IDs
@@ -295,26 +336,26 @@ export interface ConversationalResponse {
   answerAr?: string;
   confidence: ConfidenceLevel;
   tone: AITone;
-  
+
   // Supporting information
   reasoning: string;
   dataPoints: string[]; // "pH has been declining", "PPFD is optimal"
   recommendations: Recommendation[];
-  
+
   // Interactive elements
   followUpQuestions: string[];
   actionButtons: ConversationAction[];
   visualAids: VisualAid[];
-  
+
   // Voice response
   voiceScript: string;
   voiceScriptAr?: string;
   voiceEmotion: 'neutral' | 'concerned' | 'excited' | 'reassuring' | 'urgent';
-  
+
   // Learning integration
   relatedLessons: string[]; // lesson IDs
   practiceActivities: string[];
-  
+
   timestamp: Date;
 }
 
@@ -364,29 +405,29 @@ export interface CropAdvisorState {
   activeRecommendations: Recommendation[];
   plantProfiles: PlantProfile[];
   selectedPlantId: string | null;
-  
+
   // Conversation
   conversationHistory: ConversationalResponse[];
   isThinking: boolean;
-  
+
   // Real-time monitoring
   latestSensorData: SensorSnapshot | null;
   monitoringActive: boolean;
   alertsEnabled: boolean;
-  
+
   // AI learning
   userFeedback: UserFeedback[];
   modelAccuracy: number;
   improvementSuggestions: string[];
-  
+
   // Integration status
   moduleConnections: ModuleConnection[];
   automationQueue: AutomationTask[];
-  
+
   // Settings
   aiPersonality: AIPersonality;
   userPreferences: UserPreferences;
-  
+
   // State management
   isLoading: boolean;
   error: string | null;
@@ -424,25 +465,25 @@ export interface AutomationTask {
 // Predefined AI responses for common scenarios
 export const AI_RESPONSES = {
   PLANT_HEALTHY: {
-    en: "Your plants are looking fantastic! All parameters are in optimal ranges.",
-    ar: "نباتاتك تبدو رائعة! جميع المعايير في النطاقات المثلى.",
-    tone: 'celebratory' as AITone
+    en: 'Your plants are looking fantastic! All parameters are in optimal ranges.',
+    ar: 'نباتاتك تبدو رائعة! جميع المعايير في النطاقات المثلى.',
+    tone: 'celebratory' as AITone,
   },
   MINOR_ADJUSTMENT: {
-    en: "I notice a small optimization opportunity. Would you like me to help?",
-    ar: "ألاحظ فرصة تحسين صغيرة. هل تريد مني المساعدة؟",
-    tone: 'encouraging' as AITone
+    en: 'I notice a small optimization opportunity. Would you like me to help?',
+    ar: 'ألاحظ فرصة تحسين صغيرة. هل تريد مني المساعدة؟',
+    tone: 'encouraging' as AITone,
   },
   URGENT_ACTION: {
     en: "Attention needed! I've detected a potential issue that requires immediate action.",
-    ar: "انتباه مطلوب! لقد اكتشفت مشكلة محتملة تتطلب إجراءً فورياً.",
-    tone: 'urgent' as AITone
+    ar: 'انتباه مطلوب! لقد اكتشفت مشكلة محتملة تتطلب إجراءً فورياً.',
+    tone: 'urgent' as AITone,
   },
   LEARNING_MOMENT: {
     en: "This is a great learning opportunity! Let me explain what's happening.",
-    ar: "هذه فرصة تعلم رائعة! دعني أشرح لك ما يحدث.",
-    tone: 'informative' as AITone
-  }
+    ar: 'هذه فرصة تعلم رائعة! دعني أشرح لك ما يحدث.',
+    tone: 'informative' as AITone,
+  },
 };
 
 // Common stress detection patterns
@@ -450,16 +491,16 @@ export const STRESS_PATTERNS = {
   LIGHT_STRESS: {
     symptoms: ['leaf_curling', 'bleaching', 'stunted_growth'],
     indicators: ['ppfd_too_high', 'dli_excessive', 'heat_buildup'],
-    solutions: ['reduce_intensity', 'increase_distance', 'adjust_schedule']
+    solutions: ['reduce_intensity', 'increase_distance', 'adjust_schedule'],
   },
   NUTRIENT_LOCKOUT: {
     symptoms: ['yellowing', 'brown_spots', 'slow_uptake'],
     indicators: ['ph_out_range', 'ec_too_high', 'imbalanced_ratios'],
-    solutions: ['flush_system', 'adjust_ph', 'reduce_concentration']
+    solutions: ['flush_system', 'adjust_ph', 'reduce_concentration'],
   },
   HEAT_STRESS: {
     symptoms: ['wilting', 'leaf_edges_brown', 'rapid_transpiration'],
     indicators: ['temperature_high', 'poor_airflow', 'excessive_light'],
-    solutions: ['increase_ventilation', 'reduce_temperature', 'adjust_lighting']
-  }
-}; 
+    solutions: ['increase_ventilation', 'reduce_temperature', 'adjust_lighting'],
+  },
+};

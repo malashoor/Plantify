@@ -20,17 +20,17 @@ export function ChartPanel({ title, data, type = 'line' }: ChartPanelProps) {
   const chartWidth = screenWidth - 64; // Account for padding
 
   // Simple bar visualization for now
-  const maxValue = Math.max(...data.datasets[0]?.data || [0]);
-  
+  const maxValue = Math.max(...(data.datasets[0]?.data || [0]));
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{title}</Text>
-      
+
       <View style={styles.chartContainer}>
         {data.labels.map((label, index) => {
           const value = data.datasets[0]?.data[index] || 0;
           const height = maxValue > 0 ? (value / maxValue) * 100 : 0;
-          
+
           return (
             <View key={index} style={styles.barContainer}>
               <View style={styles.barWrapper}>
@@ -106,4 +106,4 @@ const styles = StyleSheet.create({
     marginTop: 2,
     textAlign: 'center',
   },
-}); 
+});

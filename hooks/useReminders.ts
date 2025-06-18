@@ -55,7 +55,7 @@ export function useReminders() {
     try {
       setIsLoading(true);
       setError(null);
-      
+
       const stored = await AsyncStorage.getItem(STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored);
@@ -119,14 +119,14 @@ export function useReminders() {
       case 'once':
         if (reminderTime <= now) return null; // Don't schedule past reminders
         return { date: reminderTime };
-      
+
       case 'daily':
         return {
           hour: reminderTime.getHours(),
           minute: reminderTime.getMinutes(),
           repeats: true,
         };
-      
+
       case 'weekly':
         return {
           weekday: reminderTime.getDay() + 1, // Sunday = 1
@@ -134,7 +134,7 @@ export function useReminders() {
           minute: reminderTime.getMinutes(),
           repeats: true,
         };
-      
+
       default:
         return null;
     }
@@ -148,7 +148,9 @@ export function useReminders() {
     }
   };
 
-  const addReminder = async (reminderData: Omit<Reminder, 'id' | 'createdAt' | 'updatedAt' | 'notificationId'>) => {
+  const addReminder = async (
+    reminderData: Omit<Reminder, 'id' | 'createdAt' | 'updatedAt' | 'notificationId'>
+  ) => {
     try {
       setIsLoading(true);
       setError(null);
@@ -193,7 +195,7 @@ export function useReminders() {
       }
 
       const currentReminder = reminders[reminderIndex];
-      
+
       // Cancel existing notification if it exists
       if (currentReminder.notificationId) {
         await cancelNotification(currentReminder.notificationId);
@@ -206,14 +208,17 @@ export function useReminders() {
       };
 
       // Schedule new notification if needed
-      if (updatedReminder.isActive && (updates.time || updates.frequency || updates.title || updates.description)) {
+      if (
+        updatedReminder.isActive &&
+        (updates.time || updates.frequency || updates.title || updates.description)
+      ) {
         const notificationId = await scheduleNotification(updatedReminder);
         updatedReminder.notificationId = notificationId;
       }
 
       const updatedReminders = [...reminders];
       updatedReminders[reminderIndex] = updatedReminder;
-      
+
       setReminders(updatedReminders);
       await saveReminders(updatedReminders);
 
@@ -258,7 +263,7 @@ export function useReminders() {
 
   const markComplete = async (id: string) => {
     try {
-      await updateReminder(id, { 
+      await updateReminder(id, {
         isCompleted: true,
         updatedAt: new Date(),
       });
@@ -273,7 +278,7 @@ export function useReminders() {
     try {
       const reminder = reminders.find(r => r.id === id);
       if (!reminder) throw new Error('Reminder not found');
-      
+
       await updateReminder(id, { isActive: !reminder.isActive });
     } catch (err) {
       console.error('Error toggling reminder active state:', err);
@@ -288,14 +293,16 @@ export function useReminders() {
 
   const getUpcomingReminders = (days: number = 7) => {
     const now = new Date();
-    const futureDate = new Date(now.getTime() + (days * 24 * 60 * 60 * 1000));
-    
-    return reminders.filter(reminder => {
-      if (!reminder.isActive || reminder.isCompleted) return false;
-      
-      const reminderTime = new Date(reminder.time);
-      return reminderTime >= now && reminderTime <= futureDate;
-    }).sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime());
+    const futureDate = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
+
+    return reminders
+      .filter(reminder => {
+        if (!reminder.isActive || reminder.isCompleted) return false;
+
+        const reminderTime = new Date(reminder.time);
+        return reminderTime >= now && reminderTime <= futureDate;
+      })
+      .sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime());
   };
 
   const getRemindersByCategory = (category: Reminder['category']) => {
@@ -306,13 +313,15 @@ export function useReminders() {
     const today = new Date();
     const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
     const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
-    
-    return reminders.filter(reminder => {
-      if (!reminder.isActive || reminder.isCompleted) return false;
-      
-      const reminderTime = new Date(reminder.time);
-      return reminderTime >= startOfDay && reminderTime < endOfDay;
-    }).sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime());
+
+    return reminders
+      .filter(reminder => {
+        if (!reminder.isActive || reminder.isCompleted) return false;
+
+        const reminderTime = new Date(reminder.time);
+        return reminderTime >= startOfDay && reminderTime < endOfDay;
+      })
+      .sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime());
   };
 
   return {
@@ -379,4 +388,4 @@ async function createSampleReminders(): Promise<Reminder[]> {
       updatedAt: now,
     },
   ];
-} 
+}

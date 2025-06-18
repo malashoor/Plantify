@@ -11,10 +11,10 @@ interface PremiumBannerProps {
   onUpgrade?: () => void;
 }
 
-export default function PremiumBanner({ 
-  feature, 
+export default function PremiumBanner({
+  feature,
   variant = 'inline',
-  onUpgrade 
+  onUpgrade,
 }: PremiumBannerProps) {
   const { t } = useTranslation();
   const colorScheme = useColorScheme();
@@ -34,11 +34,7 @@ export default function PremiumBanner({
         style={[styles.minimalContainer, isDark && styles.minimalContainerDark]}
         onPress={handleUpgrade}
       >
-        <Ionicons 
-          name="lock-closed" 
-          size={16} 
-          color={isDark ? '#A3E635' : '#45B36B'} 
-        />
+        <Ionicons name="lock-closed" size={16} color={isDark ? '#A3E635' : '#45B36B'} />
         <Text style={[styles.minimalText, isDark && styles.minimalTextDark]}>
           {t('premium.upgrade')}
         </Text>
@@ -50,14 +46,8 @@ export default function PremiumBanner({
     return (
       <View style={[styles.overlayContainer, isDark && styles.overlayContainerDark]}>
         <View style={styles.content}>
-          <Ionicons 
-            name="lock-closed" 
-            size={32} 
-            color={isDark ? '#A3E635' : '#45B36B'} 
-          />
-          <Text style={[styles.title, isDark && styles.textDark]}>
-            {feature.name}
-          </Text>
+          <Ionicons name="lock-closed" size={32} color={isDark ? '#A3E635' : '#45B36B'} />
+          <Text style={[styles.title, isDark && styles.textDark]}>{feature.name}</Text>
           <Text style={[styles.description, isDark && styles.textLightDark]}>
             {feature.description}
           </Text>
@@ -65,9 +55,7 @@ export default function PremiumBanner({
             style={[styles.button, isDark && styles.buttonDark]}
             onPress={handleUpgrade}
           >
-            <Text style={styles.buttonText}>
-              {t('premium.unlockNow')}
-            </Text>
+            <Text style={styles.buttonText}>{t('premium.unlockNow')}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -77,15 +65,9 @@ export default function PremiumBanner({
   return (
     <View style={[styles.container, isDark && styles.containerDark]}>
       <View style={styles.content}>
-        <Ionicons 
-          name="lock-closed" 
-          size={24} 
-          color={isDark ? '#A3E635' : '#45B36B'} 
-        />
+        <Ionicons name="lock-closed" size={24} color={isDark ? '#A3E635' : '#45B36B'} />
         <View style={styles.textContainer}>
-          <Text style={[styles.title, isDark && styles.textDark]}>
-            {feature.name}
-          </Text>
+          <Text style={[styles.title, isDark && styles.textDark]}>{feature.name}</Text>
           <Text style={[styles.description, isDark && styles.textLightDark]}>
             {feature.description}
           </Text>
@@ -95,9 +77,7 @@ export default function PremiumBanner({
         style={[styles.button, isDark && styles.buttonDark]}
         onPress={handleUpgrade}
       >
-        <Text style={styles.buttonText}>
-          {t('premium.upgrade')}
-        </Text>
+        <Text style={styles.buttonText}>{t('premium.upgrade')}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -188,4 +168,4 @@ const styles = StyleSheet.create({
   textLightDark: {
     color: '#9CA3AF',
   },
-}); 
+});

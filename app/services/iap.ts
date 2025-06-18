@@ -23,12 +23,12 @@ const VALIDATION_SERVER_URL = 'https://your-server.vercel.app';
 export const PRODUCT_IDS = {
   ios: {
     premium: 'com.yourapp.premium',
-    subscription: 'com.yourapp.subscription'
+    subscription: 'com.yourapp.subscription',
   },
   android: {
     premium: 'com.yourapp.premium',
-    subscription: 'com.yourapp.subscription'
-  }
+    subscription: 'com.yourapp.subscription',
+  },
 } as const;
 
 class IAPService {
@@ -47,7 +47,7 @@ class IAPService {
   private async setupIAP() {
     try {
       await initConnection();
-      
+
       // Listen to purchase updates
       this.purchaseUpdateSubscription = purchaseUpdatedListener(
         async (purchase: ProductPurchase) => {
@@ -61,13 +61,13 @@ class IAPService {
       );
 
       // Listen to purchase errors
-      this.purchaseErrorSubscription = purchaseErrorListener(
-        (error: PurchaseError) => {
-          console.error('Purchase error:', error);
-          Alert.alert('Purchase Error', 'There was an error processing your purchase. Please try again.');
-        }
-      );
-
+      this.purchaseErrorSubscription = purchaseErrorListener((error: PurchaseError) => {
+        console.error('Purchase error:', error);
+        Alert.alert(
+          'Purchase Error',
+          'There was an error processing your purchase. Please try again.'
+        );
+      });
     } catch (err) {
       console.error('Error setting up IAP:', err);
       Alert.alert('Error', 'Failed to initialize in-app purchases. Please try again later.');
@@ -84,7 +84,6 @@ class IAPService {
 
       const products = await getProducts({ skus: productIds });
       return products;
-
     } catch (err) {
       console.error('Error getting products:', err);
       throw err;
@@ -110,17 +109,16 @@ class IAPService {
         const receipt = await validateReceiptIos({
           receiptBody: {
             'receipt-data': purchase.transactionReceipt || '',
-            'password': '', // Your shared secret will be added on the server
+            password: '', // Your shared secret will be added on the server
           },
         });
-        
+
         validationData = {
           platform: 'ios',
           receipt: purchase.transactionReceipt || '',
           productId: purchase.productId,
-          userId: this.userId
+          userId: this.userId,
         };
-
       } else {
         // For Android, validate the purchase token
         const receipt = await validateReceiptAndroid({
@@ -135,7 +133,7 @@ class IAPService {
           receipt: purchase.purchaseToken || '',
           productId: purchase.productId,
           signature: purchase.signatureAndroid || '',
-          userId: this.userId
+          userId: this.userId,
         };
       }
 
@@ -155,7 +153,6 @@ class IAPService {
       }
 
       return result;
-
     } catch (err) {
       console.error('Error validating purchase:', err);
       throw err;
@@ -165,27 +162,28 @@ class IAPService {
   async checkSubscriptionStatus() {
     try {
       const purchases = await getAvailablePurchases();
-      
+
       // Filter for active subscriptions
       const subscriptions = purchases.filter((purchase: Purchase) => {
         const subscription = purchase as SubscriptionPurchase;
-        
+
         // For iOS
         if (Platform.OS === 'ios') {
-          return subscription.originalTransactionDateIOS && 
-                 new Date(subscription.originalTransactionDateIOS).getTime() > Date.now();
+          return (
+            subscription.originalTransactionDateIOS &&
+            new Date(subscription.originalTransactionDateIOS).getTime() > Date.now()
+          );
         }
-        
+
         // For Android
         if (Platform.OS === 'android') {
           return subscription.autoRenewingAndroid || false;
         }
-        
+
         return false;
       });
 
       return subscriptions.length > 0;
-
     } catch (err) {
       console.error('Error checking subscription status:', err);
       throw err;
@@ -204,4 +202,4 @@ class IAPService {
   }
 }
 
-export const iapService = new IAPService(); 
+export const iapService = new IAPService();

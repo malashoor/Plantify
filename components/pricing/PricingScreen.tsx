@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-  useColorScheme,
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, useColorScheme } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 const createTheme = (colorScheme: 'light' | 'dark' | null) => ({
@@ -18,7 +11,7 @@ const createTheme = (colorScheme: 'light' | 'dark' | null) => ({
     primary: '#4CAF50',
     border: colorScheme === 'dark' ? '#444444' : '#E0E0E0',
     accent: '#45B36B',
-  }
+  },
 });
 
 interface PricingPlan {
@@ -115,9 +108,7 @@ const PricingCard: React.FC<{
       <Text style={[styles.planName, { color: theme.colors.text }]}>{plan.name}</Text>
       <View style={styles.priceContainer}>
         <Text style={[styles.price, { color: plan.color }]}>{plan.price}</Text>
-        <Text style={[styles.period, { color: theme.colors.textSecondary }]}>
-          /{plan.period}
-        </Text>
+        <Text style={[styles.period, { color: theme.colors.textSecondary }]}>/{plan.period}</Text>
       </View>
     </View>
 
@@ -125,9 +116,7 @@ const PricingCard: React.FC<{
       {plan.features.map((feature, index) => (
         <View key={index} style={styles.featureItem}>
           <Ionicons name="checkmark-circle" size={16} color={plan.color} />
-          <Text style={[styles.featureText, { color: theme.colors.text }]}>
-            {feature}
-          </Text>
+          <Text style={[styles.featureText, { color: theme.colors.text }]}>{feature}</Text>
         </View>
       ))}
     </View>
@@ -172,16 +161,14 @@ export const PricingScreen: React.FC = () => {
       showsVerticalScrollIndicator={false}
     >
       <View style={styles.header}>
-        <Text style={[styles.title, { color: theme.colors.text }]}>
-          Choose Your Plan
-        </Text>
+        <Text style={[styles.title, { color: theme.colors.text }]}>Choose Your Plan</Text>
         <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>
           Unlock the full potential of PlantAI with advanced features and expert guidance
         </Text>
       </View>
 
       <View style={styles.plansContainer}>
-        {PRICING_PLANS.map((plan) => (
+        {PRICING_PLANS.map(plan => (
           <PricingCard
             key={plan.id}
             plan={plan}
@@ -198,7 +185,7 @@ export const PricingScreen: React.FC = () => {
             30-day money-back guarantee
           </Text>
         </View>
-        
+
         <Text style={[styles.footerNote, { color: theme.colors.textSecondary }]}>
           Cancel anytime. No hidden fees. Secure payment with Stripe.
         </Text>
@@ -331,4 +318,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 20,
   },
-}); 
+});

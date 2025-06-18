@@ -6,7 +6,7 @@ import {
   StorageSimulator,
   QueueEventTracker,
   TestRetryQueue,
-  waitForQueueEvent
+  waitForQueueEvent,
 } from '../../utils/__tests__/testUtils';
 
 describe('JournalService Integration Tests', () => {
@@ -24,7 +24,7 @@ describe('JournalService Integration Tests', () => {
       mood: 4,
       note: 'Test journal entry',
       plantId: 'test-plant-id',
-      images: []
+      images: [],
     };
 
     it('should add entry with retry support', async () => {
@@ -35,7 +35,7 @@ describe('JournalService Integration Tests', () => {
         id: 'add-journal-entry',
         operationKey: RetryOperationKeys.ADD_JOURNAL_ENTRY,
         operationData: JSON.stringify([testEntry]),
-        maxRetries: 3
+        maxRetries: 3,
       });
 
       // Wait for retry and eventual success
@@ -50,7 +50,7 @@ describe('JournalService Integration Tests', () => {
       const operation = await queue.enqueue({
         id: 'add-entry-with-mood',
         operationKey: RetryOperationKeys.ADD_JOURNAL_ENTRY,
-        operationData: JSON.stringify([testEntry])
+        operationData: JSON.stringify([testEntry]),
       });
 
       // Wait for entry to be added
@@ -58,9 +58,8 @@ describe('JournalService Integration Tests', () => {
 
       // Check that mood update was triggered
       const events = QueueEventTracker.getEvents();
-      const moodUpdate = events.find(e => 
-        e.type === 'enqueue' && 
-        e.data.operationKey === RetryOperationKeys.LOG_PLANT_MOOD
+      const moodUpdate = events.find(
+        e => e.type === 'enqueue' && e.data.operationKey === RetryOperationKeys.LOG_PLANT_MOOD
       );
 
       expect(moodUpdate).toBeTruthy();
@@ -73,8 +72,8 @@ describe('JournalService Integration Tests', () => {
       id: 'test-entry-id',
       updates: {
         mood: 5,
-        note: 'Updated note'
-      }
+        note: 'Updated note',
+      },
     };
 
     it('should handle entry updates with dependencies', async () => {
@@ -83,7 +82,7 @@ describe('JournalService Integration Tests', () => {
         id: 'update-entry',
         operationKey: RetryOperationKeys.UPDATE_JOURNAL_ENTRY,
         operationData: JSON.stringify([testUpdate.id, testUpdate.updates]),
-        dependencies: ['add-entry']
+        dependencies: ['add-entry'],
       });
 
       // Operation should wait for dependency
@@ -93,10 +92,12 @@ describe('JournalService Integration Tests', () => {
       await queue.enqueue({
         id: 'add-entry',
         operationKey: RetryOperationKeys.ADD_JOURNAL_ENTRY,
-        operationData: JSON.stringify([{
-          mood: 3,
-          note: 'Original note'
-        }])
+        operationData: JSON.stringify([
+          {
+            mood: 3,
+            note: 'Original note',
+          },
+        ]),
       });
 
       // Wait for update to complete
@@ -109,16 +110,15 @@ describe('JournalService Integration Tests', () => {
       await queue.enqueue({
         id: 'update-no-mood-change',
         operationKey: RetryOperationKeys.UPDATE_JOURNAL_ENTRY,
-        operationData: JSON.stringify([testUpdate.id, { note: 'Just a note update' }])
+        operationData: JSON.stringify([testUpdate.id, { note: 'Just a note update' }]),
       });
 
       await waitForQueueEvent('success');
 
       // Check that no mood update was triggered
       const events = QueueEventTracker.getEvents();
-      const moodUpdate = events.find(e => 
-        e.type === 'enqueue' && 
-        e.data.operationKey === RetryOperationKeys.LOG_PLANT_MOOD
+      const moodUpdate = events.find(
+        e => e.type === 'enqueue' && e.data.operationKey === RetryOperationKeys.LOG_PLANT_MOOD
       );
 
       expect(moodUpdate).toBeUndefined();
@@ -133,7 +133,7 @@ describe('JournalService Integration Tests', () => {
         id: 'log-mood',
         operationKey: RetryOperationKeys.LOG_PLANT_MOOD,
         operationData: JSON.stringify(['test-plant-id', 4, 'Feeling good!']),
-        maxRetries: 2
+        maxRetries: 2,
       });
 
       await waitForQueueEvent('success');
@@ -145,7 +145,7 @@ describe('JournalService Integration Tests', () => {
         id: 'invalid-mood',
         operationKey: RetryOperationKeys.LOG_PLANT_MOOD,
         operationData: JSON.stringify(['test-plant-id', 10, 'Invalid mood']),
-        maxRetries: 1
+        maxRetries: 1,
       });
 
       await waitForQueueEvent('error');
@@ -158,7 +158,7 @@ describe('JournalService Integration Tests', () => {
       const entryWithImages = {
         mood: 4,
         note: 'Entry with images',
-        images: ['image1.jpg', 'image2.jpg']
+        images: ['image1.jpg', 'image2.jpg'],
       };
 
       // Add entry operation
@@ -166,7 +166,7 @@ describe('JournalService Integration Tests', () => {
         id: 'entry-with-images',
         operationKey: RetryOperationKeys.ADD_JOURNAL_ENTRY,
         operationData: JSON.stringify([entryWithImages]),
-        maxRetries: 3
+        maxRetries: 3,
       });
 
       await waitForQueueEvent('success');
@@ -183,25 +183,24 @@ describe('JournalService Integration Tests', () => {
         queue.enqueue({
           id: 'mood-1',
           operationKey: RetryOperationKeys.LOG_PLANT_MOOD,
-          operationData: JSON.stringify(['test-plant-id', 3, 'First mood'])
+          operationData: JSON.stringify(['test-plant-id', 3, 'First mood']),
         }),
         queue.enqueue({
           id: 'mood-2',
           operationKey: RetryOperationKeys.LOG_PLANT_MOOD,
-          operationData: JSON.stringify(['test-plant-id', 4, 'Second mood'])
+          operationData: JSON.stringify(['test-plant-id', 4, 'Second mood']),
         }),
         queue.enqueue({
           id: 'mood-3',
           operationKey: RetryOperationKeys.LOG_PLANT_MOOD,
-          operationData: JSON.stringify(['test-plant-id', 5, 'Third mood'])
-        })
+          operationData: JSON.stringify(['test-plant-id', 5, 'Third mood']),
+        }),
       ]);
 
       // Should batch updates
       const events = QueueEventTracker.getEvents();
-      const moodUpdates = events.filter(e => 
-        e.type === 'enqueue' && 
-        e.data.operationKey === RetryOperationKeys.LOG_PLANT_MOOD
+      const moodUpdates = events.filter(
+        e => e.type === 'enqueue' && e.data.operationKey === RetryOperationKeys.LOG_PLANT_MOOD
       );
 
       expect(moodUpdates.length).toBe(1);
@@ -215,20 +214,19 @@ describe('JournalService Integration Tests', () => {
         queue.enqueue({
           id: 'update-1',
           operationKey: RetryOperationKeys.UPDATE_JOURNAL_ENTRY,
-          operationData: JSON.stringify([entryId, { note: 'Update 1' }])
+          operationData: JSON.stringify([entryId, { note: 'Update 1' }]),
         }),
         queue.enqueue({
           id: 'update-2',
           operationKey: RetryOperationKeys.UPDATE_JOURNAL_ENTRY,
-          operationData: JSON.stringify([entryId, { note: 'Update 2' }])
-        })
+          operationData: JSON.stringify([entryId, { note: 'Update 2' }]),
+        }),
       ]);
 
       // Should process updates sequentially
       const events = QueueEventTracker.getEvents();
-      const updateEvents = events.filter(e => 
-        e.type === 'enqueue' && 
-        e.data.operationKey === RetryOperationKeys.UPDATE_JOURNAL_ENTRY
+      const updateEvents = events.filter(
+        e => e.type === 'enqueue' && e.data.operationKey === RetryOperationKeys.UPDATE_JOURNAL_ENTRY
       );
 
       expect(updateEvents[0].data.dependencies).toBeUndefined();
@@ -244,11 +242,13 @@ describe('JournalService Integration Tests', () => {
       const operation = await queue.enqueue({
         id: 'network-partition',
         operationKey: RetryOperationKeys.ADD_JOURNAL_ENTRY,
-        operationData: JSON.stringify([{
-          mood: 4,
-          note: 'Test recovery'
-        }]),
-        maxRetries: 3
+        operationData: JSON.stringify([
+          {
+            mood: 4,
+            note: 'Test recovery',
+          },
+        ]),
+        maxRetries: 3,
       });
 
       // Wait for first failure
@@ -267,11 +267,13 @@ describe('JournalService Integration Tests', () => {
       const operation = await queue.enqueue({
         id: 'partial-save',
         operationKey: RetryOperationKeys.ADD_JOURNAL_ENTRY,
-        operationData: JSON.stringify([{
-          mood: 4,
-          note: 'Test partial save',
-          images: ['failed-image.jpg']
-        }])
+        operationData: JSON.stringify([
+          {
+            mood: 4,
+            note: 'Test partial save',
+            images: ['failed-image.jpg'],
+          },
+        ]),
       });
 
       // Entry should save but mark images as failed
@@ -280,4 +282,4 @@ describe('JournalService Integration Tests', () => {
       expect(operation.result.failedImages).toEqual(['failed-image.jpg']);
     });
   });
-}); 
+});

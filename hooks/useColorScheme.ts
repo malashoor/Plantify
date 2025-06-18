@@ -13,4 +13,4 @@ export function useColorScheme(): ColorScheme {
     isDark,
     theme: isDark ? 'dark' : 'light',
   };
-} 
+}

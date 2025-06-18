@@ -6,33 +6,28 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   ScrollView,
-  Alert
+  Alert,
 } from 'react-native';
 import { usePayment } from '../hooks/usePayment';
 import { formatCurrency } from '../utils/currency';
 
 export const SubscriptionScreen: React.FC = () => {
-  const {
-    subscriptions,
-    loading,
-    processing,
-    purchaseSubscription,
-    restorePurchases
-  } = usePayment({
-    autoInit: true,
-    showErrorDialog: true,
-    onSuccess: (result) => {
-      Alert.alert(
-        'Success!',
-        'Thank you for subscribing to GreensAI Premium!',
-        [{ text: 'OK' }]
-      );
+  const { subscriptions, loading, processing, purchaseSubscription, restorePurchases } = usePayment(
+    {
+      autoInit: true,
+      showErrorDialog: true,
+      onSuccess: result => {
+        Alert.alert('Success!', 'Thank you for subscribing to GreensAI Premium!', [{ text: 'OK' }]);
+      },
     }
-  });
+  );
 
-  const handleSubscribe = useCallback(async (subscriptionId: string) => {
-    await purchaseSubscription(subscriptionId);
-  }, [purchaseSubscription]);
+  const handleSubscribe = useCallback(
+    async (subscriptionId: string) => {
+      await purchaseSubscription(subscriptionId);
+    },
+    [purchaseSubscription]
+  );
 
   if (loading) {
     return (
@@ -47,13 +42,11 @@ export const SubscriptionScreen: React.FC = () => {
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>GreensAI Premium</Text>
-        <Text style={styles.subtitle}>
-          Unlock all features and get personalized plant care
-        </Text>
+        <Text style={styles.subtitle}>Unlock all features and get personalized plant care</Text>
       </View>
 
       <View style={styles.plansContainer}>
-        {subscriptions.map((subscription) => (
+        {subscriptions.map(subscription => (
           <TouchableOpacity
             key={subscription.productId}
             style={[styles.planCard, processing && styles.planCardDisabled]}
@@ -64,15 +57,8 @@ export const SubscriptionScreen: React.FC = () => {
             <Text style={styles.planPrice}>
               {formatCurrency(subscription.price, subscription.currency)}
             </Text>
-            <Text style={styles.planDescription}>
-              {subscription.description}
-            </Text>
-            {processing && (
-              <ActivityIndicator
-                style={styles.processingIndicator}
-                color="#fff"
-              />
-            )}
+            <Text style={styles.planDescription}>{subscription.description}</Text>
+            {processing && <ActivityIndicator style={styles.processingIndicator} color="#fff" />}
           </TouchableOpacity>
         ))}
       </View>
@@ -94,9 +80,7 @@ export const SubscriptionScreen: React.FC = () => {
         onPress={restorePurchases}
         disabled={processing}
       >
-        <Text style={styles.restoreButtonText}>
-          Restore Previous Purchases
-        </Text>
+        <Text style={styles.restoreButtonText}>Restore Previous Purchases</Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -111,97 +95,97 @@ const FeatureItem: React.FC<{ text: string }> = ({ text }) => (
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   loadingText: {
     marginTop: 16,
     fontSize: 16,
-    color: '#666'
+    color: '#666',
   },
   header: {
     padding: 24,
     backgroundColor: '#2ecc71',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
     color: '#fff',
-    marginBottom: 8
+    marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
     color: '#fff',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   plansContainer: {
-    padding: 16
+    padding: 16,
   },
   planCard: {
     backgroundColor: '#2ecc71',
     borderRadius: 12,
     padding: 20,
     marginBottom: 16,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   planCardDisabled: {
-    opacity: 0.7
+    opacity: 0.7,
   },
   planTitle: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#fff',
-    marginBottom: 8
+    marginBottom: 8,
   },
   planPrice: {
     fontSize: 32,
     fontWeight: 'bold',
     color: '#fff',
-    marginBottom: 8
+    marginBottom: 8,
   },
   planDescription: {
     fontSize: 14,
     color: '#fff',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   processingIndicator: {
-    marginTop: 12
+    marginTop: 12,
   },
   featuresContainer: {
     padding: 24,
-    backgroundColor: '#f9f9f9'
+    backgroundColor: '#f9f9f9',
   },
   featuresTitle: {
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 16,
-    color: '#2c3e50'
+    color: '#2c3e50',
   },
   featuresList: {
-    marginBottom: 16
+    marginBottom: 16,
   },
   featureItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12
+    marginBottom: 12,
   },
   featureText: {
     fontSize: 16,
     color: '#2c3e50',
-    marginLeft: 8
+    marginLeft: 8,
   },
   restoreButton: {
     padding: 16,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   restoreButtonText: {
     fontSize: 16,
     color: '#2ecc71',
-    textDecorationLine: 'underline'
-  }
-}); 
+    textDecorationLine: 'underline',
+  },
+});

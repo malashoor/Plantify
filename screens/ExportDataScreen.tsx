@@ -25,21 +25,23 @@ const createTheme = (colorScheme: 'light' | 'dark' | null) => ({
     textSecondary: colorScheme === 'dark' ? '#AAAAAA' : '#757575',
     border: colorScheme === 'dark' ? '#333333' : '#E0E0E0',
     success: '#4CAF50',
-  }
+  },
 });
 
 export default function ExportDataScreen() {
   const router = useRouter();
   const colorScheme = useColorScheme();
   const theme = createTheme(colorScheme);
-  
+
   const [isExporting, setIsExporting] = useState(false);
 
   const exportUserData = async () => {
     try {
       setIsExporting(true);
-      
-      const { data: { user } } = await supabase.auth.getUser();
+
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) {
         throw new Error('No user found');
       }
@@ -69,40 +71,40 @@ export default function ExportDataScreen() {
               datePlanted: '2024-01-15',
               careHistory: [
                 { date: '2024-01-20', action: 'watered', notes: 'First watering' },
-                { date: '2024-01-25', action: 'fertilized', notes: 'Liquid fertilizer' }
-              ]
-            }
+                { date: '2024-01-25', action: 'fertilized', notes: 'Liquid fertilizer' },
+              ],
+            },
           ],
           identificationHistory: [
             {
               date: '2024-01-10',
               plantName: 'Snake Plant',
               confidence: 0.95,
-              location: 'Living Room'
-            }
-          ]
+              location: 'Living Room',
+            },
+          ],
         },
         settings: {
           notifications: {
             plantCareReminders: true,
             wateringAlerts: true,
-            diseaseAlerts: true
+            diseaseAlerts: true,
           },
           privacy: {
             dataSharing: false,
             analytics: true,
-            locationSharing: false
-          }
-        }
+            locationSharing: false,
+          },
+        },
       };
 
       // Convert to JSON string
       const jsonData = JSON.stringify(exportData, null, 2);
-      
+
       // Create filename with timestamp
       const timestamp = new Date().toISOString().split('T')[0];
       const fileName = `greensai_data_export_${timestamp}.json`;
-      
+
       // Save to device
       const fileUri = FileSystem.documentDirectory + fileName;
       await FileSystem.writeAsStringAsync(fileUri, jsonData);
@@ -123,10 +125,7 @@ export default function ExportDataScreen() {
       }
     } catch (error: any) {
       console.error('Export error:', error);
-      Alert.alert(
-        'Export Failed',
-        error.message || 'Failed to export data. Please try again.'
-      );
+      Alert.alert('Export Failed', error.message || 'Failed to export data. Please try again.');
     } finally {
       setIsExporting(false);
     }
@@ -160,10 +159,7 @@ export default function ExportDataScreen() {
     <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
       {/* Header */}
       <View style={[styles.header, { borderBottomColor: theme.colors.border }]}>
-        <TouchableOpacity
-          onPress={() => router.back()}
-          style={styles.backButton}
-        >
+        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: theme.colors.text }]}>Export Data</Text>
@@ -172,22 +168,30 @@ export default function ExportDataScreen() {
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         {/* Info Section */}
-        <View style={[styles.infoCard, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
+        <View
+          style={[
+            styles.infoCard,
+            { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+          ]}
+        >
           <Ionicons name="information-circle" size={32} color={theme.colors.primary} />
-          <Text style={[styles.infoTitle, { color: theme.colors.text }]}>
-            Export Your Data
-          </Text>
+          <Text style={[styles.infoTitle, { color: theme.colors.text }]}>Export Your Data</Text>
           <Text style={[styles.infoText, { color: theme.colors.textSecondary }]}>
-            Download all your plant data, photos, care history, and settings in a portable format. 
+            Download all your plant data, photos, care history, and settings in a portable format.
             Your data will remain secure and can be imported into other gardening apps.
           </Text>
         </View>
 
         {/* Export Options */}
-        <View style={[styles.section, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
+        <View
+          style={[
+            styles.section,
+            { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+          ]}
+        >
           <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>Export Formats</Text>
-          
-          {exportFormats.map((format) => (
+
+          {exportFormats.map(format => (
             <TouchableOpacity
               key={format.id}
               style={[styles.formatItem, { borderBottomColor: theme.colors.border }]}
@@ -197,11 +201,7 @@ export default function ExportDataScreen() {
             >
               <View style={styles.formatContent}>
                 <View style={styles.formatHeader}>
-                  <Ionicons 
-                    name={format.icon as any} 
-                    size={24} 
-                    color={theme.colors.primary} 
-                  />
+                  <Ionicons name={format.icon as any} size={24} color={theme.colors.primary} />
                   <Text style={[styles.formatTitle, { color: theme.colors.text }]}>
                     {format.title}
                   </Text>
@@ -213,19 +213,20 @@ export default function ExportDataScreen() {
                   {format.description}
                 </Text>
               </View>
-              <Ionicons 
-                name="chevron-forward" 
-                size={20} 
-                color={theme.colors.textSecondary} 
-              />
+              <Ionicons name="chevron-forward" size={20} color={theme.colors.textSecondary} />
             </TouchableOpacity>
           ))}
         </View>
 
         {/* What's Included */}
-        <View style={[styles.section, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
+        <View
+          style={[
+            styles.section,
+            { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+          ]}
+        >
           <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>What's Included</Text>
-          
+
           <View style={styles.includedList}>
             <View style={styles.includedItem}>
               <Ionicons name="person" size={16} color={theme.colors.success} />
@@ -261,11 +262,16 @@ export default function ExportDataScreen() {
         </View>
 
         {/* Note */}
-        <View style={[styles.noteCard, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
+        <View
+          style={[
+            styles.noteCard,
+            { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+          ]}
+        >
           <Ionicons name="shield-checkmark" size={20} color={theme.colors.primary} />
           <Text style={[styles.noteText, { color: theme.colors.textSecondary }]}>
-            Your data is exported securely and contains no sensitive information like passwords. 
-            The export file can be shared safely with other devices or apps.
+            Your data is exported securely and contains no sensitive information like passwords. The
+            export file can be shared safely with other devices or apps.
           </Text>
         </View>
       </ScrollView>
@@ -382,4 +388,4 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     flex: 1,
   },
-}); 
+});

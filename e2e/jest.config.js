@@ -10,8 +10,11 @@ module.exports = {
   testEnvironment: 'detox/runners/jest/testEnvironment',
   verbose: true,
   transform: {
-    '\\.tsx?$': ['ts-jest', {
-      tsconfig: 'e2e/tsconfig.json'
-    }]
-  }
-}; 
+    '\\.tsx?$': [
+      'ts-jest',
+      {
+        tsconfig: 'e2e/tsconfig.json',
+      },
+    ],
+  },
+};

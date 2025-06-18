@@ -11,7 +11,9 @@ export default function Favorites() {
   if (!favPlants.length) {
     return (
       <View style={styles.emptyContainer}>
-        <Text style={styles.emptyText}>No favorites yet—tap the heart on a plant to bookmark it!</Text>
+        <Text style={styles.emptyText}>
+          No favorites yet—tap the heart on a plant to bookmark it!
+        </Text>
       </View>
     );
   }
@@ -31,16 +33,16 @@ export default function Favorites() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
   listContainer: { padding: 16 },
-  emptyContainer: { 
-    flex: 1, 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    padding: 20 
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
   },
-  emptyText: { 
-    fontSize: 16, 
-    color: '#666', 
+  emptyText: {
+    fontSize: 16,
+    color: '#666',
     textAlign: 'center',
-    lineHeight: 24 
+    lineHeight: 24,
   },
-}); 
+});

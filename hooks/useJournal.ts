@@ -29,7 +29,7 @@ export function useJournal() {
         ...entryData,
         id: `entry-${Date.now()}`,
         created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       };
 
       setEntries(prev => [newEntry, ...prev]);
@@ -50,11 +50,11 @@ export function useJournal() {
       // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 1000));
 
-      setEntries(prev => prev.map(entry => 
-        entry.id === id 
-          ? { ...entry, ...updates, updated_at: new Date().toISOString() }
-          : entry
-      ));
+      setEntries(prev =>
+        prev.map(entry =>
+          entry.id === id ? { ...entry, ...updates, updated_at: new Date().toISOString() } : entry
+        )
+      );
       setIsLoading(false);
     } catch (err) {
       setError('Failed to update journal entry');
@@ -92,6 +92,6 @@ export function useJournal() {
     getEntries,
     getEntry,
     isLoading,
-    error
+    error,
   };
-} 
+}

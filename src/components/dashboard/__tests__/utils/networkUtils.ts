@@ -10,7 +10,7 @@ export const NETWORK_TIMEOUT = 30000;
 export const simulateNetworkTimeout = async () => {
   // Create a promise that never resolves
   const pendingPromise = new Promise(() => {});
-  
+
   // Advance timers past the timeout threshold
   await act(async () => {
     jest.advanceTimersByTime(NETWORK_TIMEOUT + 1000);
@@ -26,7 +26,7 @@ export const simulateNetworkTimeout = async () => {
 export const createNetworkPromise = <T>() => {
   let resolver: (value: T) => void;
   let rejecter: (error: Error) => void;
-  
+
   const promise = new Promise<T>((resolve, reject) => {
     resolver = resolve;
     rejecter = reject;
@@ -85,4 +85,4 @@ export const createMockNetworkService = () => {
       }
     },
   };
-}; 
+};

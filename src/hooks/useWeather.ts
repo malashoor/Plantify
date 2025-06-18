@@ -30,4 +30,4 @@ export const useWeather = () => {
     error,
     refetch: fetchWeather,
   };
-}; 
+};

@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  useColorScheme,
-  Alert,
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, useColorScheme, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 interface JournalEntry {
@@ -35,7 +28,7 @@ const createTheme = (colorScheme: 'light' | 'dark' | null) => ({
     primary: '#45B36B',
     border: colorScheme === 'dark' ? '#444444' : '#E0E0E0',
     error: '#F44336',
-  }
+  },
 });
 
 const MOOD_CONFIG = {
@@ -46,12 +39,7 @@ const MOOD_CONFIG = {
   terrible: { icon: 'sad', color: '#F44336', label: 'Terrible' },
 };
 
-export const JournalCard: React.FC<JournalCardProps> = ({
-  entry,
-  onPress,
-  onDelete,
-  onEdit,
-}) => {
+export const JournalCard: React.FC<JournalCardProps> = ({ entry, onPress, onDelete, onEdit }) => {
   const colorScheme = useColorScheme();
   const theme = createTheme(colorScheme);
 
@@ -116,7 +104,7 @@ export const JournalCard: React.FC<JournalCardProps> = ({
             {formatDate(entry.created_at)}
           </Text>
         </View>
-        
+
         {/* Actions */}
         <View style={styles.actions}>
           {onEdit && (
@@ -128,7 +116,7 @@ export const JournalCard: React.FC<JournalCardProps> = ({
               <Ionicons name="create-outline" size={20} color={theme.colors.textSecondary} />
             </TouchableOpacity>
           )}
-          
+
           {onDelete && (
             <TouchableOpacity
               style={styles.actionButton}
@@ -151,14 +139,8 @@ export const JournalCard: React.FC<JournalCardProps> = ({
         {/* Mood Indicator */}
         {moodConfig && (
           <View style={styles.moodContainer}>
-            <Ionicons
-              name={moodConfig.icon as any}
-              size={16}
-              color={moodConfig.color}
-            />
-            <Text style={[styles.moodText, { color: moodConfig.color }]}>
-              {moodConfig.label}
-            </Text>
+            <Ionicons name={moodConfig.icon as any} size={16} color={moodConfig.color} />
+            <Text style={[styles.moodText, { color: moodConfig.color }]}>{moodConfig.label}</Text>
           </View>
         )}
 
@@ -170,9 +152,7 @@ export const JournalCard: React.FC<JournalCardProps> = ({
                 key={index}
                 style={[styles.tag, { backgroundColor: theme.colors.primary + '20' }]}
               >
-                <Text style={[styles.tagText, { color: theme.colors.primary }]}>
-                  {tag}
-                </Text>
+                <Text style={[styles.tagText, { color: theme.colors.primary }]}>{tag}</Text>
               </View>
             ))}
             {entry.tags.length > 3 && (
@@ -279,4 +259,4 @@ const styles = StyleSheet.create({
     right: 16,
     bottom: 16,
   },
-}); 
+});

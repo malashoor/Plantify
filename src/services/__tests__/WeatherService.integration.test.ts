@@ -6,7 +6,7 @@ import {
   StorageSimulator,
   QueueEventTracker,
   TestRetryQueue,
-  waitForQueueEvent
+  waitForQueueEvent,
 } from '../../utils/__tests__/testUtils';
 
 describe('WeatherService Integration Tests', () => {
@@ -22,7 +22,7 @@ describe('WeatherService Integration Tests', () => {
   describe('fetchForecast', () => {
     const testLocation = {
       latitude: 37.7749,
-      longitude: -122.4194
+      longitude: -122.4194,
     };
 
     it('should fetch forecast with retry support', async () => {
@@ -34,7 +34,7 @@ describe('WeatherService Integration Tests', () => {
         operationKey: RetryOperationKeys.FETCH_FORECAST,
         operationData: JSON.stringify([testLocation.latitude, testLocation.longitude]),
         maxRetries: 3,
-        priority: 'high'
+        priority: 'high',
       });
 
       // Wait for retry and eventual success
@@ -50,7 +50,7 @@ describe('WeatherService Integration Tests', () => {
       const fetchOp = await queue.enqueue({
         id: 'fetch-forecast',
         operationKey: RetryOperationKeys.FETCH_FORECAST,
-        operationData: JSON.stringify([testLocation.latitude, testLocation.longitude])
+        operationData: JSON.stringify([testLocation.latitude, testLocation.longitude]),
       });
 
       // Wait for fetch success
@@ -58,9 +58,8 @@ describe('WeatherService Integration Tests', () => {
 
       // Check that cache update was triggered
       const events = QueueEventTracker.getEvents();
-      const cacheUpdate = events.find(e => 
-        e.type === 'enqueue' && 
-        e.data.operationKey === RetryOperationKeys.UPDATE_WEATHER_CACHE
+      const cacheUpdate = events.find(
+        e => e.type === 'enqueue' && e.data.operationKey === RetryOperationKeys.UPDATE_WEATHER_CACHE
       );
 
       expect(cacheUpdate).toBeTruthy();
@@ -73,7 +72,7 @@ describe('WeatherService Integration Tests', () => {
         id: 'fetch-invalid-location',
         operationKey: RetryOperationKeys.FETCH_FORECAST,
         operationData: JSON.stringify([999, 999]),
-        maxRetries: 2
+        maxRetries: 2,
       });
 
       await waitForQueueEvent('error');
@@ -86,7 +85,7 @@ describe('WeatherService Integration Tests', () => {
       temperature: 25,
       humidity: 65,
       conditions: 'Sunny',
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
 
     it('should handle volatile cache updates', async () => {
@@ -95,7 +94,7 @@ describe('WeatherService Integration Tests', () => {
         operationKey: RetryOperationKeys.UPDATE_WEATHER_CACHE,
         operationData: JSON.stringify([testWeatherData]),
         isVolatile: true,
-        priority: 'low'
+        priority: 'low',
       });
 
       await waitForQueueEvent('success');
@@ -104,7 +103,7 @@ describe('WeatherService Integration Tests', () => {
       const state = await StorageSimulator.getQueueState();
       expect(state.volatileOperations).toContainEqual(
         expect.objectContaining({
-          id: operation.id
+          id: operation.id,
         })
       );
     });
@@ -113,20 +112,19 @@ describe('WeatherService Integration Tests', () => {
       // Add stale data
       const staleData = {
         ...testWeatherData,
-        timestamp: Date.now() - (25 * 60 * 60 * 1000) // 25 hours old
+        timestamp: Date.now() - 25 * 60 * 60 * 1000, // 25 hours old
       };
 
       await queue.enqueue({
         id: 'update-stale-cache',
         operationKey: RetryOperationKeys.UPDATE_WEATHER_CACHE,
-        operationData: JSON.stringify([staleData])
+        operationData: JSON.stringify([staleData]),
       });
 
       // Should trigger a new fetch due to stale data
       const events = QueueEventTracker.getEvents();
-      const newFetch = events.find(e => 
-        e.type === 'enqueue' && 
-        e.data.operationKey === RetryOperationKeys.FETCH_FORECAST
+      const newFetch = events.find(
+        e => e.type === 'enqueue' && e.data.operationKey === RetryOperationKeys.FETCH_FORECAST
       );
 
       expect(newFetch).toBeTruthy();
@@ -141,7 +139,7 @@ describe('WeatherService Integration Tests', () => {
         id: 'rate-limited-fetch',
         operationKey: RetryOperationKeys.FETCH_FORECAST,
         operationData: JSON.stringify([37.7749, -122.4194]),
-        maxRetries: 3
+        maxRetries: 3,
       });
 
       await waitForQueueEvent('error');
@@ -159,7 +157,7 @@ describe('WeatherService Integration Tests', () => {
         id: 'partial-cache-update',
         operationKey: RetryOperationKeys.UPDATE_WEATHER_CACHE,
         operationData: JSON.stringify([partialData]),
-        maxRetries: 1
+        maxRetries: 1,
       });
 
       await waitForQueueEvent('error');
@@ -174,20 +172,19 @@ describe('WeatherService Integration Tests', () => {
         queue.enqueue({
           id: 'fetch-1',
           operationKey: RetryOperationKeys.FETCH_FORECAST,
-          operationData: JSON.stringify(location)
+          operationData: JSON.stringify(location),
         }),
         queue.enqueue({
           id: 'fetch-2',
           operationKey: RetryOperationKeys.FETCH_FORECAST,
-          operationData: JSON.stringify(location)
-        })
+          operationData: JSON.stringify(location),
+        }),
       ]);
 
       // Should deduplicate requests
       const events = QueueEventTracker.getEvents();
-      const fetchEvents = events.filter(e => 
-        e.type === 'enqueue' && 
-        e.data.operationKey === RetryOperationKeys.FETCH_FORECAST
+      const fetchEvents = events.filter(
+        e => e.type === 'enqueue' && e.data.operationKey === RetryOperationKeys.FETCH_FORECAST
       );
 
       expect(fetchEvents.length).toBe(1);
@@ -199,14 +196,11 @@ describe('WeatherService Integration Tests', () => {
       const operation = await queue.enqueue({
         id: 'slow-fetch',
         operationKey: RetryOperationKeys.FETCH_FORECAST,
-        operationData: JSON.stringify([37.7749, -122.4194])
+        operationData: JSON.stringify([37.7749, -122.4194]),
       });
 
       // Simulate slow network
-      await NetworkSimulator.simulateRequest(
-        () => Promise.resolve(),
-        { delay: 5000 }
-      );
+      await NetworkSimulator.simulateRequest(() => Promise.resolve(), { delay: 5000 });
 
       expect(operation.isProcessing).toBe(true);
       await waitForQueueEvent('success');
@@ -220,7 +214,7 @@ describe('WeatherService Integration Tests', () => {
         id: 'offline-fetch',
         operationKey: RetryOperationKeys.FETCH_FORECAST,
         operationData: JSON.stringify([37.7749, -122.4194]),
-        maxRetries: 2
+        maxRetries: 2,
       });
 
       await waitForQueueEvent('error');
@@ -232,4 +226,4 @@ describe('WeatherService Integration Tests', () => {
       expect(cacheRead).toBeTruthy();
     });
   });
-}); 
+});

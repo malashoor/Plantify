@@ -35,11 +35,9 @@ export function JournalCard({ entry, onPress }: JournalCardProps) {
         <Text style={styles.title}>{entry.title}</Text>
         <Text style={styles.date}>{formatDate(entry.date)}</Text>
       </View>
-      
-      <Text style={styles.content}>
-        {truncateContent(entry.content)}
-      </Text>
-      
+
+      <Text style={styles.content}>{truncateContent(entry.content)}</Text>
+
       {entry.tags.length > 0 && (
         <View style={styles.tagsContainer}>
           {entry.tags.slice(0, 3).map((tag, index) => (
@@ -47,9 +45,7 @@ export function JournalCard({ entry, onPress }: JournalCardProps) {
               <Text style={styles.tagText}>{tag}</Text>
             </View>
           ))}
-          {entry.tags.length > 3 && (
-            <Text style={styles.moreTags}>+{entry.tags.length - 3}</Text>
-          )}
+          {entry.tags.length > 3 && <Text style={styles.moreTags}>+{entry.tags.length - 3}</Text>}
         </View>
       )}
     </TouchableOpacity>
@@ -115,4 +111,4 @@ const styles = StyleSheet.create({
     color: '#999',
     fontStyle: 'italic',
   },
-}); 
+});

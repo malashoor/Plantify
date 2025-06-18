@@ -13,13 +13,13 @@ router.get('/', (req: Request, res: Response) => {
 router.get('/:id', (req: Request, res: Response) => {
   const state = mockServerState.getState();
   const plant = state.plants[req.params.id];
-  
+
   if (!plant) {
     return res.status(404).json({
       error: {
         code: 'PLANT_NOT_FOUND',
-        message: `Plant with ID ${req.params.id} not found`
-      }
+        message: `Plant with ID ${req.params.id} not found`,
+      },
     });
   }
 
@@ -32,7 +32,7 @@ router.post('/', (req: Request, res: Response) => {
   const plant = {
     id: plantId,
     ...req.body,
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
   };
 
   mockServerState.updateState('plants', plantId, plant);
@@ -48,15 +48,15 @@ router.put('/:id', (req: Request, res: Response) => {
     return res.status(404).json({
       error: {
         code: 'PLANT_NOT_FOUND',
-        message: `Plant with ID ${req.params.id} not found`
-      }
+        message: `Plant with ID ${req.params.id} not found`,
+      },
     });
   }
 
   const updatedPlant = {
     ...plant,
     ...req.body,
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
   };
 
   mockServerState.updateState('plants', req.params.id, updatedPlant);
@@ -72,8 +72,8 @@ router.delete('/:id', (req: Request, res: Response) => {
     return res.status(404).json({
       error: {
         code: 'PLANT_NOT_FOUND',
-        message: `Plant with ID ${req.params.id} not found`
-      }
+        message: `Plant with ID ${req.params.id} not found`,
+      },
     });
   }
 
@@ -81,4 +81,4 @@ router.delete('/:id', (req: Request, res: Response) => {
   res.sendStatus(204);
 });
 
-export default router; 
+export default router;

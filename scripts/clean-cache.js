@@ -3,13 +3,7 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 // Paths to clear
-const paths = [
-  '.expo',
-  'node_modules/.cache',
-  'ios/build',
-  'android/build',
-  'android/app/build',
-];
+const paths = ['.expo', 'node_modules/.cache', 'ios/build', 'android/build', 'android/app/build'];
 
 // Clear Metro bundler cache
 try {
@@ -43,4 +37,4 @@ paths.forEach(cachePath => {
   } catch (error) {
     console.error(`Error clearing ${cachePath}:`, error);
   }
-}); 
+});

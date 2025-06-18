@@ -28,7 +28,7 @@ export default function BackHeader({ title, onBack }: BackHeaderProps) {
   };
 
   return (
-    <View 
+    <View
       style={[styles.container, { paddingTop: insets.top }]}
       accessible={true}
       accessibilityRole="header"
@@ -42,15 +42,11 @@ export default function BackHeader({ title, onBack }: BackHeaderProps) {
         accessibilityRole="button"
         accessibilityHint={t('accessibility.back_hint_detail', 'Returns to the previous view')}
       >
-        <Ionicons 
-          name="chevron-back" 
-          size={24} 
-          color={isDark ? '#FFFFFF' : '#000000'} 
-        />
+        <Ionicons name="chevron-back" size={24} color={isDark ? '#FFFFFF' : '#000000'} />
       </TouchableOpacity>
-      <Text 
-        variant="title" 
-        style={[styles.title, isDark && styles.titleDark]} 
+      <Text
+        variant="title"
+        style={[styles.title, isDark && styles.titleDark]}
         numberOfLines={1}
         accessibilityRole="header"
       >
@@ -82,4 +78,4 @@ const styles = StyleSheet.create({
   titleDark: {
     color: '#FFFFFF',
   },
-}); 
+});

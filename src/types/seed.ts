@@ -33,4 +33,4 @@ export interface UpdateSeedInput {
   environment?: Environment;
   notes?: string;
   image_url?: string;
-} 
+}
