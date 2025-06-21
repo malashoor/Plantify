@@ -7,24 +7,39 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
+      "env": {
+        "NODE_ENV": "development"
+      },
       "ios": {
         "resourceClass": "m-medium"
-      }
+      },
+      "android": {
+        "gradleCommand": ":app:assembleDebug"
+      },
+      "channel": "development"
     },
     "preview": {
       "distribution": "internal",
+      "env": {
+        "NODE_ENV": "development"
+      },
       "ios": {
         "resourceClass": "m-medium"
-      }
+      },
+      "channel": "preview"
     },
     "production": {
       "distribution": "store",
+      "env": {
+        "NODE_ENV": "production"
+      },
       "ios": {
         "resourceClass": "m-medium"
       },
       "android": {
         "buildType": "app-bundle"
-      }
+      },
+      "channel": "production"
     }
   },
   "submit": {
